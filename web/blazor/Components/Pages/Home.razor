@@ -1,13 +1,18 @@
 ﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager Nav
 @using System.Text.Json
 @using FormFlow.Blazor.Models
-@inject HttpClient Http
 
-<h3>Blazor Dynamic Question</h3>
+<h3>Dynamic Question</h3>
 
-@if (question != null)
+@if (question is not null)
 {
     <QuestionRenderer Question="question" />
+}
+else
+{
+    <p>Loading...</p>
 }
 
 @code {
@@ -15,7 +20,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var json = await Http.GetStringAsync("sample-question.json");
-        question = JsonSerializer.Deserialize<QuestionDefinition>(json);
+        question = await LoadQuestionAsync("sample-question.json");
+    }
+
+    private async Task<QuestionDefinition?> LoadQuestionAsync(string path)
+    {
+        var json = await Http.GetStringAsync($"{Nav.BaseUri}{path}");
+
+        return JsonSerializer.Deserialize<QuestionDefinition>(json, 
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 }
+

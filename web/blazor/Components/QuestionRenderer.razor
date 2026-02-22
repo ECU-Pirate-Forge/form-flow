@@ -1,9 +1,10 @@
 @using FormFlow.Blazor.Models
 
-<div>
+@if (Question is not null)
+{
     <label>@Question.Label</label>
     <MudTextField @bind-Value="_value" />
-</div>
+}
 
 @code {
     [Parameter]
