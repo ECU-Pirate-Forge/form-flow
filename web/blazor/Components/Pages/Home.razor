@@ -1,7 +1,21 @@
 ﻿@page "/"
+@using System.Text.Json
+@using FormFlow.Blazor.Models
+@inject HttpClient Http
 
-<PageTitle>Home</PageTitle>
+<h3>Blazor Dynamic Question</h3>
 
-<h1>Hello, world!</h1>
+@if (question != null)
+{
+    <QuestionRenderer Question="question" />
+}
 
-Welcome to your new app.
+@code {
+    private QuestionDefinition? question;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var json = await Http.GetStringAsync("sample-question.json");
+        question = JsonSerializer.Deserialize<QuestionDefinition>(json);
+    }
+}
