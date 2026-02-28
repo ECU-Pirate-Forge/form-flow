@@ -1,0 +1,14 @@
+@using FormFlow.Blazor.Models
+
+@if (Question is not null)
+{
+    <label>@Question.Label</label>
+    <MudTextField @bind-Value="_value" />
+}
+
+@code {
+    [Parameter]
+    public QuestionDefinition? Question { get; set; }
+
+    private string? _value;
+}
