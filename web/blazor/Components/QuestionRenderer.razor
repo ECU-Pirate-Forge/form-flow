@@ -3,7 +3,11 @@
 @if (Question is not null)
 {
     <label>@Question.Label</label>
-    <MudTextField @bind-Value="_value" />
+    <MudTextField 
+    @bind-Value="_value" 
+    Placeholder="@Question.Placeholder"
+    Required="@(Question.Required ?? false)"
+    HelperText="@Question.HelpText"/>
 }
 
 @code {
@@ -11,4 +15,12 @@
     public QuestionDefinition? Question { get; set; }
 
     private string? _value;
+
+    protected override void OnParametersSet()
+    {
+        if(_value is null && Question?.DefaultValue is not null)
+        {
+            _value = Question.DefaultValue;
+        }
+    }
 }
