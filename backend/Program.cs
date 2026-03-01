@@ -1,3 +1,16 @@
+using FormFlow.Backend.Models;
+using FormFlow.Backend.Repositories;
+using LiteDB;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var databasePath = configuration.GetValue<string>("LiteDb:DatabasePath") ?? "formflow.db";
+    return new LiteDatabase(databasePath);
+});
+builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
 using backend.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,40 +33,60 @@ builder.Services.AddSingleton<database.services.IQuestionInserter, database.serv
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 // Map question endpoints
 app.MapQuestionEndpoints();
 
-// Sample weather endpoint (can be removed)
-var summaries = new[]
+app.MapPost("/api/responses", async (FormResponse request, IFormResponseRepository repository, CancellationToken cancellationToken) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var validationErrors = ValidateFormResponse(request);
+    if (validationErrors.Count > 0)
+    {
+        return Results.ValidationProblem(validationErrors);
+    }
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    var createdResponse = await repository.SaveAsync(request, cancellationToken);
+    return Results.Created($"/api/responses/{createdResponse.Id}", createdResponse);
 })
-.WithName("GetWeatherForecast");
+.WithName("CreateFormResponse");
+
+app.MapGet("/api/responses/{id}", async (string id, IFormResponseRepository repository, CancellationToken cancellationToken) =>
+{
+    if (string.IsNullOrWhiteSpace(id))
+    {
+        return Results.BadRequest(new { message = "The id route parameter is required." });
+    }
+
+    var response = await repository.GetByIdAsync(id, cancellationToken);
+    return response is null ? Results.NotFound() : Results.Ok(response);
+})
+.WithName("GetFormResponseById");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+static Dictionary<string, string[]> ValidateFormResponse(FormResponse response)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var errors = new Dictionary<string, string[]>();
+
+    if (string.IsNullOrWhiteSpace(response.FormId))
+    {
+        errors["formId"] = ["The formId field is required."];
+    }
+
+    if (response.Answers is null || response.Answers.Count == 0)
+    {
+        errors["answers"] = ["At least one answer is required."];
+    }
+    else if (response.Answers.Keys.Any(string.IsNullOrWhiteSpace))
+    {
+        errors["answers"] = ["Answer keys cannot be null, empty, or whitespace."];
+    }
+
+    return errors;
+}
+
+public partial class Program
+{
 }
