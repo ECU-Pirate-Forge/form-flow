@@ -7,7 +7,11 @@ interface Props {
 
 export const QuestionRenderer: React.FC<Props> = ({ question }) => {
     return (
-        <div style={{ maxWidth: "400px", marginBottom: "1rem"}}>
+        <div style={{ 
+            maxWidth: "400px", 
+            marginBottom: "1rem",
+            padding: "16px",
+          }}>
             <label style={{ display: "block", fontWeight: 600, marginBottom: "4px"}}>
                 {question.label}
                 {question.required && (
