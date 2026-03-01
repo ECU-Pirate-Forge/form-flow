@@ -11,11 +11,33 @@ builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
     return new LiteDatabase(databasePath);
 });
 builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
+using backend.Endpoints;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// register inserter so endpoints can depend on it (facilitates testing)
+builder.Services.AddSingleton<database.services.IQuestionInserter, database.services.QuestionInserter>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
+
+// Map question endpoints
+app.MapQuestionEndpoints();
 
 app.MapPost("/api/responses", async (FormResponse request, IFormResponseRepository repository, CancellationToken cancellationToken) =>
 {
