@@ -9,7 +9,7 @@ namespace database.services
     /// <summary>
     /// Service for inserting questions into LiteDB with schema validation
     /// </summary>
-    public class QuestionInserter
+    public class QuestionInserter : IQuestionInserter
     {
         private readonly QuestionValidator _validator;
         private readonly string _dbPath;

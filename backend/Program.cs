@@ -14,6 +14,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// register inserter so endpoints can depend on it (facilitates testing)
+builder.Services.AddSingleton<database.services.IQuestionInserter, database.services.QuestionInserter>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

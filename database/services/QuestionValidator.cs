@@ -149,44 +149,61 @@ console.log(JSON.stringify(result));
         {
             try
             {
-                // Escape the JSON for command line
-                var escapedJson = questionJson.Replace("\"", "\\\"");
+                // Create a temporary file to pass JSON safely
+                string tempFile = Path.Combine(Path.GetTempPath(), $"question_{Guid.NewGuid()}.json");
+                File.WriteAllText(tempFile, questionJson);
 
-                var processInfo = new ProcessStartInfo
+                try
                 {
-                    FileName = "node",
-                    Arguments = $"-e \"const validation = require('{_nodeScriptPath}'); const input = JSON.parse(process.argv[1]); const result = validation.validateQuestion(input); console.log(JSON.stringify(result));\" {escapedJson}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
-                };
+                    // Escape paths for shell
+                    string scriptPath = _nodeScriptPath.Replace("'", "'\\''");
+                    string tempPath = tempFile.Replace("'", "'\\''");
 
-                using (var process = Process.Start(processInfo))
-                {
-                    if (process == null)
+                    var processInfo = new ProcessStartInfo
                     {
-                        throw new InvalidOperationException("Failed to start validation process");
-                    }
+                        FileName = "/bin/sh",
+                        Arguments = $"-c \"node -e \\\"const validation = require('{scriptPath}'); const fs = require('fs'); const input = JSON.parse(fs.readFileSync('{tempPath}', 'utf-8')); const result = validation.validateQuestion(input); console.log(JSON.stringify(result));\\\"\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    };
 
-                    var output = process.StandardOutput.ReadToEnd();
-                    var error = process.StandardError.ReadToEnd();
-                    process.WaitForExit();
-
-                    if (!string.IsNullOrWhiteSpace(error))
+                    using (var process = Process.Start(processInfo))
                     {
-                        var result = new ValidationResult(false);
-                        result.Errors.Add(new ValidationError
+                        if (process == null)
                         {
-                            Field = "root",
-                            Property = "node_error",
-                            Message = $"Node.js error: {error}"
-                        });
-                        return result;
-                    }
+                            throw new InvalidOperationException("Failed to start validation process");
+                        }
 
-                    // Parse the validation result from Node.js
-                    return ParseValidationOutput(output);
+                        var output = process.StandardOutput.ReadToEnd();
+                        var error = process.StandardError.ReadToEnd();
+                        process.WaitForExit(5000); // 5 second timeout
+
+                        if (!string.IsNullOrWhiteSpace(error))
+                        {
+                            var result = new ValidationResult(false);
+                            result.Errors.Add(new ValidationError
+                            {
+                                Field = "root",
+                                Property = "node_error",
+                                Message = $"Node.js error: {error}"
+                            });
+                            return result;
+                        }
+
+                        // Parse the validation result from Node.js
+                        return ParseValidationOutput(output);
+                    }
+                }
+                finally
+                {
+                    // Clean up temp file
+                    try
+                    {
+                        File.Delete(tempFile);
+                    }
+                    catch { }
                 }
             }
             catch (Exception ex)
@@ -201,6 +218,7 @@ console.log(JSON.stringify(result));
                 return result;
             }
         }
+
 
         /// <summary>
         /// Parses the validation output from Node.js
