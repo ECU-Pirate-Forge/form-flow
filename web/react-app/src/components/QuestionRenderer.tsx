@@ -9,7 +9,19 @@ export const QuestionRenderer: React.FC<Props> = ({ question }) => {
     return (
         <div>
             <label>{question.label}</label>
-            <input type="text"
-/>        </div>
-    )
-}
+
+            <input 
+                type="text"
+                placeholder={question.placeholder}
+                required={question.required}
+                defaultValue={question.defaultValue}
+            />
+
+            {question.helpText && (
+                <small style={{ display: "block", marginTop: "4px"}}>
+                    {question.helpText}
+                </small>
+            )}        
+        </div>
+    );
+};

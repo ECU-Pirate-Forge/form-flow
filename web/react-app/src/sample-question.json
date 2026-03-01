@@ -1,5 +1,8 @@
 {
   "id": "q1",
   "label": "What is your name?",
-  "type": "text"
+  "type": "text",
+  "placeholder": "Enter your name",
+  "required": true,
+  "helpText": "Please enter your full first name."
 }
