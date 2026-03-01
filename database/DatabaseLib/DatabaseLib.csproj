@@ -11,4 +11,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- include shared models and services located outside of the DatabaseLib folder -->
+    <Compile Include="..\models\**\*.cs" />
+    <Compile Include="..\services\**\*.cs" />
+  </ItemGroup>
+
 </Project>

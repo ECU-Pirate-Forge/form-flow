@@ -15,7 +15,8 @@ namespace database.models
         public string DefaultValue { get; set; }
         public List<Option> Options { get; set; }
         public VisibleIf VisibleIf { get; set; }
-        public Validation ValidationRules { get; set; }
+        // changed to match ValidationRules class defined in validationRulesClass.cs
+        public ValidationRules ValidationRules { get; set; }
         public string HelpText { get; set; }
     }
 }

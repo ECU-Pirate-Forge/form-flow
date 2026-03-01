@@ -16,6 +16,10 @@ _ removed order property as order is not needed in reusuable question objects
 - updated questions class
 - created options and validationRules class
 - created visibleIf struct
+- updated nodejs json validator
+- created cs validator to connect to backend
+- updated questionInsertion to properly insert questions into database with error handling
+-
 
 
 ## 2. Data Schema (dynamic question)
