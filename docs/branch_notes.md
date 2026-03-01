@@ -13,6 +13,9 @@ This document is intended to capture what has been worked on in the current feat
 - Front‑end wire‑up: posting to the `/api/questions` endpoint; display error messages.
 _ removed order property as order is not needed in reusuable question objects
 - added conditional logic to options field
+- updated questions class
+- created options and validationRules class
+- created visibleIf struct
 
 
 ## 2. Data Schema (dynamic question)
