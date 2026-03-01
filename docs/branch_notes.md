@@ -11,7 +11,8 @@ This document is intended to capture what has been worked on in the current feat
 - Updated data model for dynamic questions and schema definition.
 - Adjusted database library and migrations to support new fields.
 - Front‑end wire‑up: posting to the `/api/questions` endpoint; display error messages.
-_
+_ removed order property as order is not needed in reusuable question objects
+- added conditional logic to options field
 
 
 ## 2. Data Schema (dynamic question)
@@ -24,10 +25,9 @@ The application uses a JSON Schema found at `backend/data/schemas/intialSchema.j
   "key": { "type": "string", "description": "Machine-friendly field name." },
   "label": { "type": "string", "description": "Text shown to the user." },
   "type": { "type": "string", "enum": ["text", "number", "yes_no", "dropdown"], "description": "Control type." },
-  "order": { "type": "integer", "description": "Display order." },
   "required": { "type": "boolean", "description": "Whether the question must be answered." },
   "placeholder": { "type": "string", "description": "Optional hint text." },
-  "defaultValue": { "type": ["string", "number"], "description": "Optional prefilled value." },
+  "defaultValue": { "type": [any], "description": "Optional prefilled value." },
   "options": {
     "type": "array",
     "items": {
@@ -54,10 +54,9 @@ The application uses a JSON Schema found at `backend/data/schemas/intialSchema.j
 
 ### Optional/conditional properties
 
-- `order` – determines display order when rendering a form.
 - `required` – when `true`, the UI will mark the field required and the backend will reject missing values.
 - `placeholder`, `defaultValue`, `helpText` – various UX helpers.
-- `options` – used only for dropdown types; must be an array of `{ value, label }` objects.
+- `options` – used only for dropdown,radio,checkbox, multiselect types; must be an array of `{ value, label }` objects.
 - `validation` – a free-form object; validation rules are implemented in `backend/data/schemas/validation/questionValidation.js` and the corresponding front‑end logic.  Add new rules here when expanding validation capabilities.
 
 
