@@ -1,13 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
+    <PackageReference Include="LiteDB" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+  </ItemGroup>
+
+  <!-- avoid pulling unit test files into the main backend build -->
+  <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\database\DatabaseLib\DatabaseLib.csproj" />
   </ItemGroup>
 
 </Project>
