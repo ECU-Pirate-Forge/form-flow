@@ -1,6 +1,7 @@
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
 using LiteDB;
+using backend.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +12,8 @@ builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
     return new LiteDatabase(databasePath);
 });
 builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
-using backend.Endpoints;
-
-var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
