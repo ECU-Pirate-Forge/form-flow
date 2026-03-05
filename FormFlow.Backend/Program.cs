@@ -1,3 +1,4 @@
+
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
 using FormFlow.Backend.Endpoints;
@@ -35,36 +36,17 @@ builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 // Map question endpoints
 app.MapQuestionEndpoints();
 
-app.MapPost("/api/responses", async (FormResponse request, IFormResponseRepository repository, CancellationToken cancellationToken) =>
-{
-    var validationErrors = ValidateFormResponse(request);
-    if (validationErrors.Count > 0)
-    {
-        return Results.ValidationProblem(validationErrors);
-    }
-
-    var createdResponse = await repository.SaveAsync(request, cancellationToken);
-    return Results.Created($"/api/responses/{createdResponse.Id}", createdResponse);
-})
-.WithName("CreateFormResponse");
-
-app.MapGet("/api/responses/{id}", async (string id, IFormResponseRepository repository, CancellationToken cancellationToken) =>
-{
-    if (string.IsNullOrWhiteSpace(id))
-    {
-        return Results.BadRequest(new { message = "The id route parameter is required." });
-    }
-
-    var response = await repository.GetByIdAsync(id, cancellationToken);
-    return response is null ? Results.NotFound() : Results.Ok(response);
-})
-.WithName("GetFormResponseById");
 
 app.Run();
 
