@@ -1,31 +1,6 @@
 @backend_HostAddress = http://localhost:5164
 
-POST {{backend_HostAddress}}/api/responses
-Content-Type: application/json
-
-{
-	"formId": "onboarding-form-2026",
-	"answers": {
-		"firstName": "Ada",
-		"lastName": "Lovelace",
-		"email": "ada@example.com"
-	},
-	"submittedBy": "user-123"
-}
-
-###
-
-GET {{backend_HostAddress}}/api/responses/d5f89e7b8b954f5e94f116c8f6a6d08f
+GET {{backend_HostAddress}}/weatherforecast/
 Accept: application/json
-
-###
-
-POST {{backend_HostAddress}}/api/responses
-Content-Type: application/json
-
-{
-	"formId": "",
-	"answers": {}
-}
 
 ###
