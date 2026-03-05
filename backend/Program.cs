@@ -1,5 +1,6 @@
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
+using backend.Endpoints;
 using LiteDB;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,9 +12,6 @@ builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
     return new LiteDatabase(databasePath);
 });
 builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
-using backend.Endpoints;
-
-var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddOpenApi();
@@ -85,8 +83,4 @@ static Dictionary<string, string[]> ValidateFormResponse(FormResponse response)
     }
 
     return errors;
-}
-
-public partial class Program
-{
 }
