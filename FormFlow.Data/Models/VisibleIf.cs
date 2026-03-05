@@ -1,4 +1,4 @@
-namespace database.models
+namespace FormFlow.Data.Models
 {
     public struct VisibleIf
     {

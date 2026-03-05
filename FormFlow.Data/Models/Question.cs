@@ -1,7 +1,7 @@
 using LiteDB;
 using System.Collections.Generic;
 
-namespace database.models
+namespace FormFlow.Data.Models
 {
     public class Question
     {

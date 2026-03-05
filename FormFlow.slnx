@@ -1,4 +1,5 @@
 <Solution>
     <Project Path="FormFlow.Backend/FormFlow.Backend.csproj" />
     <Project Path="FormFlow.Blazor/FormFlow.Blazor.csproj" />
+    <Project Path="FormFlow.Data/FormFlow.Data.csproj" />
 </Solution>
