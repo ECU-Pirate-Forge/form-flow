@@ -1,0 +1,39 @@
+@using FormFlow.Blazor.Models
+
+@if (Question is not null)
+{
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
+<div style="margin-bottom: 1rem;">
+    <label style="font-weight:600; margin-bottom:4px; display:block;">
+        @Question.Label
+        @if (Question.Required == true)
+        {
+            <span style="color:red">*</span>
+        }
+        </label>
+    <MudTextField 
+    @bind-Value="_value" 
+    Placeholder="@Question.Placeholder"
+    Required="@(Question.Required ?? false)"
+    HelperText="@Question.HelpText"
+    Class="my-input"
+    />
+   
+</div>
+</MudPaper>
+}
+
+@code {
+    [Parameter]
+    public QuestionDefinition? Question { get; set; }
+
+    private string? _value;
+
+    protected override void OnParametersSet()
+    {
+        if(_value is null && Question?.DefaultValue is not null)
+        {
+            _value = Question.DefaultValue;
+        }
+    }
+}
