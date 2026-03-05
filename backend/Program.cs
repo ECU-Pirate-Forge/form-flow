@@ -13,7 +13,6 @@ builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
 });
 builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
 
-
 // Add services to the container.
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -84,8 +83,4 @@ static Dictionary<string, string[]> ValidateFormResponse(FormResponse response)
     }
 
     return errors;
-}
-
-public partial class Program
-{
 }
