@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\database\DatabaseLib\DatabaseLib.csproj" />
+    <ProjectReference Include="..\FormFlow.Data\FormFlow.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,9 @@
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
-using backend.Endpoints;
+using FormFlow.Backend.Endpoints;
+using FormFlow.Data.Services;
 using LiteDB;
+using FormFlow.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
     return new LiteDatabase(databasePath);
 });
 builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
+
+builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 
 // Add services to the container.
 builder.Services.AddOpenApi();
@@ -26,7 +30,7 @@ builder.Services.AddCors(options =>
 });
 
 // register inserter so endpoints can depend on it (facilitates testing)
-builder.Services.AddSingleton<database.services.IQuestionInserter, database.services.QuestionInserter>();
+builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 
 var app = builder.Build();
 

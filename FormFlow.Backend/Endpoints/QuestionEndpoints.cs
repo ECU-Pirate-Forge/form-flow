@@ -1,9 +1,9 @@
-using database.models;
-using database.services;
+using FormFlow.Data.Models;
+using FormFlow.Data.Services;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc; // for [FromServices]
 
-namespace backend.Endpoints
+namespace FormFlow.Backend.Endpoints
 {
     /// <summary>
     /// API endpoints for managing questions with validation
