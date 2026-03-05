@@ -1,4 +1,4 @@
-using blazor.Components;
+using FormFlow.Blazor.Components;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
