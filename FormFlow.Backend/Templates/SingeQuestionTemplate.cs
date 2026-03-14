@@ -1,6 +1,6 @@
 using FormFlow.Data.Models;
 
-namespace FormFlow.SeedData
+namespace FormFlow.Templates
 {
     public static class SingleQuestionTemplate
     {
