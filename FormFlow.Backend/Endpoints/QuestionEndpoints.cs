@@ -1,7 +1,7 @@
 using FormFlow.Data.Models;
-using FormFlow.Templates;
+using FormFlow.Backend.Templates;
 
-namespace FormFlow.Endpoints
+namespace FormFlow.Backend.Endpoints
 {
     public static class QuestionEndpoints
     {
