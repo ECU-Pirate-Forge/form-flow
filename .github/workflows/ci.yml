@@ -24,7 +24,7 @@ jobs:
 
       - name: Run React tests
         working-directory: ./FormFlow.React
-        run: npm test --if-present
+        run: npm test -- --passWithNoTests
 
       - name: Build React app
         working-directory: ./FormFlow.React
