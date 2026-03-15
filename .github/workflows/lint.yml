@@ -24,11 +24,8 @@ jobs:
         run: npm run lint
 
       # --- Backend Formatting Check ---
-      - name: Verify .NET formatting (Backend)
-        working-directory: ./FormFlow.Backend
-        run: dotnet format --verify-no-changes
+      - name: Verify .NET formatting 
+        working-directory: ./
+        run: dotnet format FormFlow.slnx --verify-no-changes
 
-      # --- Blazor Formatting Check ---
-      - name: Verify .NET formatting (Blazor)
-        working-directory: ./FormFlow.Blazor
-        run: dotnet format --verify-no-changes
+    
