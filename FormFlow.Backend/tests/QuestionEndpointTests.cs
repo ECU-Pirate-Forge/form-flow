@@ -2,14 +2,14 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
-using FormFlow.Data.Models;
-using FormFlow.Data.Services;
-using Microsoft.AspNetCore.Mvc.Testing;
+using database.models;
+using database.services;
 
-namespace FormFlow.Tests
+namespace tests
 {
     public class QuestionEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     {

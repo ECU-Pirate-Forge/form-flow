@@ -1,6 +1,6 @@
 using Xunit;
-using FormFlow.Data.Models;
-using FormFlow.Data.Services;
+using database.models;
+using database.services;
 
 namespace tests
 {
@@ -11,8 +11,7 @@ namespace tests
         [Fact]
         public void Validate_NullQuestion_ReturnsInvalid()
         {
-            Question? nullQuestion = default;
-            var result = _validator.Validate(nullQuestion);
+            var result = _validator.Validate(null);
 
             Assert.False(result.Valid);
             Assert.Single(result.Errors);
