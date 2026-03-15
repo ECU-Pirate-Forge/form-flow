@@ -5,11 +5,25 @@ on: [pull_request]
 jobs:
   lint:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      # --- Frontend Linting (React) ---
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm run lint
+
+      - name: Install React dependencies
+        working-directory: ./FormFlow.React
+        run: npm install
+
+      - name: Run React linter
+        working-directory: ./FormFlow.React
+        run: npm run lint
+
+      # --- Backend Formatting Check ---
+      - name: Verify .NET formatting 
+        working-directory: ./
+        run: dotnet format FormFlow.slnx --verify-no-changes
