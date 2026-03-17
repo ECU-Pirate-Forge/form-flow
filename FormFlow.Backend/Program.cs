@@ -46,6 +46,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
+// temporary service look into IHostService or endpoints
+// Initialize the database on startup
+_ = app.Services.GetRequiredService<ILiteDbContext>();
+
 app.MapQuestionEndpoints();
 
 app.Run();
