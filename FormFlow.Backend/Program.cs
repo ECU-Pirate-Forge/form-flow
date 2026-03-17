@@ -2,6 +2,7 @@
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
 using FormFlow.Backend.Endpoints;
+using FormFlow.Backend.Data;
 using FormFlow.Data.Services;
 using LiteDB;
 using FormFlow.Data.Models;
@@ -14,6 +15,7 @@ builder.Services.AddSingleton<ILiteDatabase>(serviceProvider =>
     var databasePath = configuration.GetValue<string>("LiteDb:DatabasePath") ?? "formflow.db";
     return new LiteDatabase(databasePath);
 });
+builder.Services.AddSingleton<ILiteDbContext, LiteDbContext>();
 builder.Services.AddSingleton<IFormResponseRepository, LiteDbFormResponseRepository>();
 
 builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();

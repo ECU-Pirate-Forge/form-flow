@@ -1,4 +1,5 @@
 using FormFlow.Backend.Models;
+using FormFlow.Backend.Data;
 using LiteDB;
 
 namespace FormFlow.Backend.Repositories;
@@ -7,11 +8,9 @@ public class LiteDbFormResponseRepository : IFormResponseRepository
 {
     private readonly ILiteCollection<FormResponse> collection;
 
-    public LiteDbFormResponseRepository(ILiteDatabase database)
+    public LiteDbFormResponseRepository(ILiteDbContext context)
     {
-        collection = database.GetCollection<FormResponse>("responses");
-        collection.EnsureIndex(response => response.FormId);
-        collection.EnsureIndex(response => response.SubmittedAtUtc);
+        collection = context.FormResponses;
     }
 
     public Task<FormResponse> SaveAsync(FormResponse response, CancellationToken cancellationToken = default)
