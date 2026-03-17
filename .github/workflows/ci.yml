@@ -6,13 +6,54 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      # --- Frontend (React) ---
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm test
+
+      - name: Install React dependencies
+        working-directory: ./FormFlow.React
+        run: npm install
+
+      - name: Run React tests
+        working-directory: ./FormFlow.React
+        run: npm test -- --passWithNoTests
+
+      - name: Build React app
+        working-directory: ./FormFlow.React
+        run: npm run build --if-present
+
+      # --- .NET Setup ---
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # --- Backend Build ---
+      - name: Restore Backend
+        working-directory: ./FormFlow.Backend
+        run: dotnet restore
+
+      - name: Build Backend
+        working-directory: ./FormFlow.Backend
+        run: dotnet build --no-restore
+
+      # --- Blazor Build ---
+      - name: Restore Blazor
+        working-directory: ./FormFlow.Blazor
+        run: dotnet restore
+
+      - name: Build Blazor
+        working-directory: ./FormFlow.Blazor
+        run: dotnet build --no-restore
+
+      # --- Run All .NET Tests ---
+      - name: Run .NET tests
+        run: dotnet test --no-build --verbosity normal
