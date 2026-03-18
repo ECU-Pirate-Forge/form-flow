@@ -26,7 +26,7 @@ namespace FormFlow.Tests
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var question = await response.Content.ReadFromJsonAsync<Question>();
+            var question = await response.Content.ReadFromJsonAsync<QuestionDefinition>();
             Assert.NotNull(question);
 
             Assert.False(string.IsNullOrWhiteSpace(question.Label));
