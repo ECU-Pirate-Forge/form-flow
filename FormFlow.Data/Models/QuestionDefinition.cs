@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FormFlow.Data.Models
 {
-    public class Question
+    public class QuestionDefinition
     {
         [BsonId] // Mark this property as the document ID for LiteDB
         public Guid Id { get; set; }
