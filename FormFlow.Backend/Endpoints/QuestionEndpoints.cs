@@ -13,7 +13,7 @@ namespace FormFlow.Backend.Endpoints
                 return Results.Json(question);
             })
             .WithName("GetQuestionTemplate")
-            .Produces<Question>(StatusCodes.Status200OK)
+            .Produces<QuestionDefinition>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
