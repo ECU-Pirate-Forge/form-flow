@@ -11,7 +11,7 @@ namespace tests
         [Fact]
         public void Validate_NullQuestion_ReturnsInvalid()
         {
-            Question? nullQuestion = default;
+            QuestionDefinition? nullQuestion = default;
             var result = _validator.Validate(nullQuestion);
 
             Assert.False(result.Valid);
