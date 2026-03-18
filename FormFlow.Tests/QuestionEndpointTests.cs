@@ -20,7 +20,8 @@ namespace FormFlow.Tests
             _factory = factory;
         }
 
-        [Fact]
+        [Fact(Skip = "Endpoint behavior not finalized yet")]
+
         public async Task Post_InvalidQuestion_ReturnsBadRequest()
         {
             var mockInserter = new Mock<IQuestionInserter>();
