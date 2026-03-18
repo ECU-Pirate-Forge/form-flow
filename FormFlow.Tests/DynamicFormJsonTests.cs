@@ -13,7 +13,7 @@ namespace FormFlow.Tests
         {
             var json = File.ReadAllText("multiple-sample-questions.json");
 
-            var questions = JsonSerializer.Deserialize<List<QuestionDefinition>>(json, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+            var questions = JsonSerializer.Deserialize<List<QuestionDefinition>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             questions.Should().NotBeNull();
             questions.Should().HaveCountGreaterThan(0);
