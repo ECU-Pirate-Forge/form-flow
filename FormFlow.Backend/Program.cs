@@ -19,9 +19,9 @@ builder.Services.AddSingleton<ILiteDatabase>(sp =>
 builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 
 builder.Services.AddOpenApi();
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy => 
+    options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -40,5 +40,6 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 app.MapQuestionEndpoints();
+
 
 app.Run();
