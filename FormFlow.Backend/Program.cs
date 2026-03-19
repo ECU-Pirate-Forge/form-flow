@@ -52,23 +52,3 @@ app.MapQuestionEndpoints();
 
 app.Run();
 
-static Dictionary<string, string[]> ValidateFormResponse(FormResponse response)
-{
-    var errors = new Dictionary<string, string[]>();
-
-    if (string.IsNullOrWhiteSpace(response.FormId))
-    {
-        errors["formId"] = ["The formId field is required."];
-    }
-
-    if (response.Answers is null || response.Answers.Count == 0)
-    {
-        errors["answers"] = ["At least one answer is required."];
-    }
-    else if (response.Answers.Keys.Any(string.IsNullOrWhiteSpace))
-    {
-        errors["answers"] = ["Answer keys cannot be null, empty, or whitespace."];
-    }
-
-    return errors;
-}
