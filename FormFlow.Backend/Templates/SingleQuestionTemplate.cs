@@ -4,9 +4,9 @@ namespace FormFlow.Backend.Templates
 {
     public static class SingleQuestionTemplate
     {
-        public static Question Get()
+        public static QuestionDefinition Get()
         {
-            return new Question
+            return new QuestionDefinition
             {
                 Id = Guid.Empty,
                 Key = "exampleKey",

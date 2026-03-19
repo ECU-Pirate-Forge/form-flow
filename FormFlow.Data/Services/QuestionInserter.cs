@@ -54,7 +54,7 @@ namespace FormFlow.Data.Models
                 string jsonData = File.ReadAllText(jsonFilePath);
 
                 // Deserialize the JSON into a Question object
-                var question = JsonConvert.DeserializeObject<Question>(jsonData);
+                var question = JsonConvert.DeserializeObject<QuestionDefinition>(jsonData);
                 if (question == null)
                 {
                     return new InsertResult
@@ -88,7 +88,7 @@ namespace FormFlow.Data.Models
         /// Inserts a question object directly
         /// Validates before insertion and returns detailed error information
         /// </summary>
-        public InsertResult InsertQuestion(Question question)
+        public InsertResult InsertQuestion(QuestionDefinition question)
         {
             if (question == null)
             {
@@ -123,7 +123,7 @@ namespace FormFlow.Data.Models
                 // Connect to LiteDB and insert
                 using (var db = new LiteDatabase(_dbPath))
                 {
-                    var questionsCollection = db.GetCollection<Question>("question_data");
+                    var questionsCollection = db.GetCollection<QuestionDefinition>("question_data");
 
                     // Insert the validated question
                     var id = questionsCollection.Insert(question);
@@ -163,7 +163,7 @@ namespace FormFlow.Data.Models
                     };
                 }
 
-                var question = JsonConvert.DeserializeObject<Question>(jsonData);
+                var question = JsonConvert.DeserializeObject<QuestionDefinition>(jsonData);
                 return InsertQuestion(question);
             }
             catch (JsonSerializationException ex)
