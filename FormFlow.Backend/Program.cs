@@ -32,8 +32,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// register inserter so endpoints can depend on it (facilitates testing)
-builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 
 var app = builder.Build();
 
