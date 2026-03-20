@@ -1,4 +1,6 @@
 using FormFlow.Data.Models;
+using FormFlow.Data.Validation.Models;
+using FormFlow.Data.Validation;
 
 namespace FormFlow.Backend.Templates
 {
@@ -19,8 +21,8 @@ namespace FormFlow.Backend.Templates
                 VisibleIf = default,
                 ValidationRules = new List<IValidationConfig>
                 {
-                    MinLength = 1,
-                    MaxLength = 100
+                    new MinLengthValidationConfig { MinLength = 1 },
+                    new MaxLengthValidationConfig { MaxLength = 100 }
                 },
                 HelpText = "This is an example question."
             };
