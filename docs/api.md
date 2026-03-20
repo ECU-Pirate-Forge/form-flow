@@ -1,4 +1,3 @@
-
 # API Reference
 
 Document endpoints and examples.
@@ -70,7 +69,6 @@ None required.
 
 ### **Response Body (JSON)**
 
-```json
 {
   "id": "00000000-0000-0000-0000-000000000000",
   "key": "exampleKey",
@@ -84,31 +82,30 @@ None required.
     "questionKey": null,
     "equals": false
   },
-  "validationRules": {
-    "minLength": 1,
-    "maxLength": 100
-  },
+  "validationConfigs": [
+    { "ValidationType": "MinLength", "MinLength": 1 },
+    { "ValidationType": "MaxLength", "MaxLength": 100},
+],
   "helpText": "This is an example question."
 }
-```
 
 ### **Field Descriptions**
 
-| Field                         | Type             | Description                                                                                                 |
-| ----------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| `id`                        | `string(Guid)` | Unique identifier for the question. Template questions typically use an empty GUID.                         |
-| `key`                       | `string`       | Internal key used to reference this question in form submissions.                                           |
-| `label`                     | `string`       | The text displayed to the user.                                                                             |
-| `type`                      | `string`       | The question type (e.g.,`"text"`,`"number"`,`"dropdown"`)                                             |
-| `required`                  | `boolean`      | Whether the user must answer this question.                                                                 |
-| `placeholder`               | `string`       | Placeholder text shown inside input fields                                                                  |
-| `defaultValue`              | `any`          | Default value for the question (null if none).                                                              |
-| `options`                   | `array`        | List of selectable options (used for dropdown, radio, checkbox questions). Empty for text questions.        |
-| `visibleIf`                 | `object`       | Conditional visibility rules. Determines whether this question is shown based on another question’s value. |
-| `validationRules`           | `object`       | Validation constraints for the question.                                                                    |
-| `validationRules.minLength` | `number`       | Minimum allowed length for text input.                                                                      |
-| `validationRules.maxLength` | `number`       | Maximum allowed length for text input.                                                                      |
-| `helpText`                  | `string`       | Additional guidance shown beneath the question                                                              |
+| Field                         | Type             | Description                                                                                                          |
+| ----------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `id`                        | `string(Guid)` | Unique identifier for the question. Template questions typically use an empty GUID.                                  |
+| `key`                       | `string`       | Internal key used to reference this question in form submissions.                                                    |
+| `label`                     | `string`       | The text displayed to the user.                                                                                      |
+| `type`                      | `string`       | The question type (e.g.,`"text"`,`"number"`,`"dropdown"`)                                                      |
+| `required`                  | `boolean`      | Whether the user must answer this question.                                                                          |
+| `placeholder`               | `string`       | Placeholder text shown inside input fields                                                                           |
+| `defaultValue`              | `any`          | Default value for the question (null if none).                                                                       |
+| `options`                   | `array`        | List of selectable options (used for dropdown, radio, checkbox questions). Empty for text questions.                 |
+| `visibleIf`                 | `object`       | Conditional visibility rules. Determines whether this question is shown based on another question’s value.          |
+| `validationConfigs`         | `string`       | A JSON-serialized array of validation rule objects. Each rulei ncludes a `ValidationType` and optional parameters. |
+| `validationRules.minLength` | `number`       | Minimum allowed length for text input.                                                                               |
+| `validationRules.maxLength` | `number`       | Maximum allowed length for text input.                                                                               |
+| `helpText`                  | `string`       | Additional guidance shown beneath the question                                                                       |
 
 ---
 
