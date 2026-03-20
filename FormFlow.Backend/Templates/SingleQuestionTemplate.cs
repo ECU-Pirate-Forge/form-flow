@@ -17,7 +17,7 @@ namespace FormFlow.Backend.Templates
                 DefaultValue = null,
                 Options = new List<Option>(),
                 VisibleIf = default,
-                ValidationRules = new ValidationRules
+                ValidationRules = new List<IValidationConfig>
                 {
                     MinLength = 1,
                     MaxLength = 100

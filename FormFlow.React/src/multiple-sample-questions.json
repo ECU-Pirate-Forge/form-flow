@@ -1,30 +1,36 @@
 [
   {
-    "id": "q_text",
+    "id": "3f4c2c2e-9f7b-4b7a-8c3e-2a4b9d9f1a11",
     "key": "full_name",
     "label": "What is your full name?",
     "type": "text",
     "placeholder": "Enter your name",
     "defaultValue": "",
-    "validation": { "min_length": 1, "max_length": 100 }
+    "validationRules": [
+      { "validationType": "MinLength", "minLength": 1 },
+      { "validationType": "MaxLength", "maxLength": 100}
+    ]
   },
   {
-    "id": "q_number",
+    "id": "8b1e5c44-6d0a-4d8e-9b7c-3e2f1c4a5b22",
     "key": "age",
     "label": "How old are you?",
     "type": "number",
     "defaultValue": null,
-    "validation": { "min_length": 1, "max_length": 3 }
+    "validationRules": [
+      { "validationType": "MinLength", "minLength": 1},
+      { "validationType": "MaxLength", "maxLength": 3}
+    ]
   },
   {
-    "id": "q_yesno",
+    "id": "c9d3a1f7-2b4e-4c8f-9a1d-7e3b2c5d6e33",
     "key": "student",
     "label": "Are you a student?",
     "type": "yes_no",
     "defaultValue": null
   },
   {
-    "id": "q_dropdown",
+    "id": "f1a2b3c4-d5e6-4f7a-9b8c-1d2e3f4a5b44",
     "key": "favorite_color",
     "label": "Select your favorite color",
     "type": "dropdown",
@@ -35,7 +41,7 @@
     ]
   },
   {
-    "id": "q_radio",
+    "id": "a7b8c9d0-e1f2-4a3b-9c4d-5e6f7a8b9c55",
     "key": "contact_method",
     "label": "Preferred contact method",
     "type": "radio",
@@ -45,7 +51,7 @@
     ]
   },
   {
-    "id": "q_checkbox",
+    "id": "d4e5f6a7-b8c9-4d0e-9f1a-2b3c4d5e6f66",
     "key": "newsletter_topics",
     "label": "Which newsletters do you want to receive?",
     "type": "checkbox",
@@ -56,7 +62,7 @@
     ]
   },
   {
-    "id": "q_multiselect",
+    "id": "e7f8a9b0-c1d2-4e3f-9a4b-5c6d7e8f9a77",
     "key": "skills",
     "label": "Select all skills you have",
     "type": "multiselect",
