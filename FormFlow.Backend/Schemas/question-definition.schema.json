@@ -47,12 +47,20 @@
         "required": ["value", "label"]
       }
     },
-    "validation": {
-      "type": "object",
-      "description": "Validation rules for the question.",
-      "properties": {
-        "min_length": { "type": "integer" },
-        "max_length": { "type": "integer" }
+    "validationRules": {
+      "type": "array",
+      "description": "List of validation rules for the question.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "validationType": { "type": "string" },
+          "message": { "type": "string" },
+          "minLength": { "type": "integer" },
+          "maxLength": { "type": "integer" },
+          "minValue": { "type": "integer" },
+          "maxValue": { "type": "integer" }
+        },
+        "required": ["validationType"]
       }
     },
     "helpText": {
