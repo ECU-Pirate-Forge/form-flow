@@ -16,8 +16,7 @@ namespace FormFlow.Data.Models
         public string DefaultValue { get; set; }
         public List<Option> Options { get; set; }
         public VisibleIf VisibleIf { get; set; }
-        // changed to match ValidationRules class defined in validationRulesClass.cs
-        public List<IValidationConfig> ValidationRules { get; set; } = new();
+        public string? ValidationConfigs { get; set; }
         public string HelpText { get; set; }
     }
 }

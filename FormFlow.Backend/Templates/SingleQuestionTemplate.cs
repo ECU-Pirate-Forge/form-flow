@@ -8,6 +8,14 @@ namespace FormFlow.Backend.Templates
     {
         public static QuestionDefinition Get()
         {
+            var validationConfigs = new List<object>
+            {
+                new { ValidationType = "MinLength", MinLength = 1 },
+                new { ValidationType = "MaxLength", MaxLength = 100 }
+            };
+
+            var validationConfigsJson = System.Text.Json.JsonSerializer.Serialize(validationConfigs);
+
             return new QuestionDefinition
             {
                 Id = Guid.Empty,
@@ -19,11 +27,7 @@ namespace FormFlow.Backend.Templates
                 DefaultValue = null,
                 Options = new List<Option>(),
                 VisibleIf = default,
-                ValidationRules = new List<IValidationConfig>
-                {
-                    new MinLengthValidationConfig { MinLength = 1 },
-                    new MaxLengthValidationConfig { MaxLength = 100 }
-                },
+                ValidationConfigs = validationConfigsJson,
                 HelpText = "This is an example question."
             };
         }
