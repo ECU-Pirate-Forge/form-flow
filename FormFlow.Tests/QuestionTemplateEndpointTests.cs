@@ -31,6 +31,9 @@ namespace FormFlow.Tests
 
             Assert.False(string.IsNullOrWhiteSpace(question.Label));
             Assert.False(string.IsNullOrWhiteSpace(question.Type));
+
+            //ValidationConfigs must be a non-empty JSON string
+            Assert.False(string.IsNullOrWhiteSpace(question.ValidationConfigs));
         }
 
         [Fact]

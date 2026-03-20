@@ -6,7 +6,10 @@
     "type": "text",
     "placeholder": "Enter your name",
     "defaultValue": "",
-    "validation": { "min_length": 1, "max_length": 100 }
+    "validationRules": [
+      { "validationType": "MinLength", "minLength": 1 },
+      { "validationType": "MaxLength", "maxLength": 100}
+    ]
   },
   {
     "id": "8b1e5c44-6d0a-4d8e-9b7c-3e2f1c4a5b22",
@@ -14,7 +17,10 @@
     "label": "How old are you?",
     "type": "number",
     "defaultValue": null,
-    "validation": { "min_length": 1, "max_length": 3 }
+    "validationRules": [
+      { "validationType": "MinLength", "minLength": 1},
+      { "validationType": "MaxLength", "maxLength": 3}
+    ]
   },
   {
     "id": "c9d3a1f7-2b4e-4c8f-9a1d-7e3b2c5d6e33",
