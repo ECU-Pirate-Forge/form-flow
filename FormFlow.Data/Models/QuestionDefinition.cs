@@ -1,5 +1,6 @@
 using LiteDB;
 using System.Collections.Generic;
+using FormFlow.Data.Validation;
 
 namespace FormFlow.Data.Models
 {
@@ -15,8 +16,7 @@ namespace FormFlow.Data.Models
         public string DefaultValue { get; set; }
         public List<Option> Options { get; set; }
         public VisibleIf VisibleIf { get; set; }
-        // changed to match ValidationRules class defined in validationRulesClass.cs
-        public ValidationRules ValidationRules { get; set; }
+        public string? ValidationConfigs { get; set; }
         public string HelpText { get; set; }
     }
 }

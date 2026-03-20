@@ -1,6 +1,6 @@
 using FormFlow.Backend.Endpoints;
 using FormFlow.Data.Models;
-using FormFlow.Data.Services;
+//using FormFlow.Data.Services;
 
 using LiteDB;
 
@@ -16,7 +16,7 @@ builder.Services.AddSingleton<ILiteDatabase>(sp =>
 });
 
 // Register the QuestionInserter service
-builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
+//builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
