@@ -73,7 +73,7 @@ namespace FormFlow.Tests.Models
                 "type": "text",
                 "visibleIf": {
                     "key": "hasPet",
-                    "equals": true
+                    "shouldEqual": true
                 }
             }
             """;
@@ -175,8 +175,11 @@ namespace FormFlow.Tests.Models
             }
             """;
 
-            Assert.Throws<JsonException>(() =>
-                JsonSerializer.Deserialize<QuestionDefinition>(json, _jsonOptions));
+            var result = JsonSerializer.Deserialize<QuestionDefinition>(json, _jsonOptions);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.VisibleIf);
+            Assert.False(result.VisibleIf!.ShouldEqual);
         }
 
         [Fact]
