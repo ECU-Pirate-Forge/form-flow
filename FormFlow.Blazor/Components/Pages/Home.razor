@@ -7,7 +7,10 @@
 
 @if (questions is not null)
 {
-    <p>Loaded @questions.Count questions.</p>
+    @foreach (var q in questions)
+    {
+        <QuestionRenderer Question="q" />
+    }
 }
 else
 {
