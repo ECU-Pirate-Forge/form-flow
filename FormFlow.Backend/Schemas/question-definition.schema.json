@@ -32,7 +32,7 @@
       "type": "object",
       "properties": {
         "key": { "type": "string" },
-        "equals": { "type": "boolean" }
+        "shouldEqual": { "type": "boolean" }
       },
       "required": ["key", "equals"]
     },

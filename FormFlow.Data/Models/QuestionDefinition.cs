@@ -8,15 +8,17 @@ namespace FormFlow.Data.Models
     {
         [BsonId] // Mark this property as the document ID for LiteDB
         public Guid Id { get; set; }
-        public string Key { get; set; }
-        public string Label { get; set; }
-        public string Type { get; set; }
-        public bool Required { get; set; }
-        public string Placeholder { get; set; }
-        public string DefaultValue { get; set; }
-        public List<Option> Options { get; set; }
-        public VisibleIf VisibleIf { get; set; }
+        public required string Key { get; set; }
+        public required string Label { get; set; }
+        public required string Type { get; set; }
+
+        //default to required unless explicitly set
+        public bool Required { get; set; } = true;
+        public string? Placeholder { get; set; }
+        public string? DefaultValue { get; set; }
+        public List<Option> Options { get; set; } = new();
+        public VisibleIf? VisibleIf { get; set; }
         public string? ValidationConfigs { get; set; }
-        public string HelpText { get; set; }
+        public string? HelpText { get; set; }
     }
 }
