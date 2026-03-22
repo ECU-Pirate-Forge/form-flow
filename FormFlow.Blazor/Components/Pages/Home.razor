@@ -7,10 +7,14 @@
 
 @if (questions is not null)
 {
-    @foreach (var q in questions)
-    {
-        <QuestionRenderer Question="q" />
-    }
+    <p>Loaded @questions.Count questions.</p>
+
+    <MudStack Spacing="2">
+        @foreach (var question in questions)
+        {
+            <QuestionRenderer @key="question.Id" Question="question" />
+        }
+    </MudStack>
 }
 else
 {
