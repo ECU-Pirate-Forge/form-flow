@@ -1,3 +1,5 @@
+extern alias Backend;
+
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -9,19 +11,20 @@ using FormFlow.Data.Models;
 using FormFlow.Data.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
 
+using BackendProgram = Backend::Program;
+
 namespace FormFlow.Tests
 {
-    public class QuestionEndpointTests : IClassFixture<WebApplicationFactory<Program>>
+    public class QuestionEndpointTests : IClassFixture<WebApplicationFactory<BackendProgram>>
     {
-        private readonly WebApplicationFactory<Program> _factory;
+        private readonly WebApplicationFactory<BackendProgram> _factory;
 
-        public QuestionEndpointTests(WebApplicationFactory<Program> factory)
+        public QuestionEndpointTests(WebApplicationFactory<BackendProgram> factory)
         {
             _factory = factory;
         }
 
         [Fact(Skip = "Endpoint behavior not finalized yet")]
-
         public async Task Post_InvalidQuestion_ReturnsBadRequest()
         {
             var mockInserter = new Mock<IQuestionInserter>();
@@ -42,9 +45,6 @@ namespace FormFlow.Tests
             var content = new StringContent(invalidJson, Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync("/api/questions", content);
-            var body = await response.Content.ReadAsStringAsync();
-            // dump for debugging
-            System.Console.WriteLine("response body=" + body);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             mockInserter.Verify(i => i.InsertQuestionFromJson(It.IsAny<string>()), Times.Once);
