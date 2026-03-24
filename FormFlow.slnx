@@ -5,5 +5,4 @@
     <Project Path="FormFlow.Blazor/FormFlow.Blazor.csproj" />
     <Project Path="FormFlow.Data.Tests/FormFlow.Data.Tests.csproj" />
     <Project Path="FormFlow.Data/FormFlow.Data.csproj" />
-    <Project Path="FormFlow.Tests/FormFlow.Tests.csproj" />
 </Solution>
