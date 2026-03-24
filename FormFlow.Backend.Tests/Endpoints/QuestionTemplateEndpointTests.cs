@@ -1,16 +1,13 @@
-//extern alias Backend;
-
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using FormFlow.Data.Models;
 
-//using BackendProgram = Backend::Program;
 
 namespace FormFlow.Tests
 {
-    public class BackendFactory : WebApplicationFactory<FormFlow.Backend.Program>
+    public class BackendFactory : WebApplicationFactory<Program>
     {
     }
 
