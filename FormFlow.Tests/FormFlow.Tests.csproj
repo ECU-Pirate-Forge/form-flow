@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FormFlow.Backend\FormFlow.Backend.csproj" Aliases="Backend" />
+    <ProjectReference Include="..\FormFlow.Backend\FormFlow.Backend.csproj"/>
     <ProjectReference Include="..\FormFlow.Blazor\FormFlow.Blazor.csproj" />
     <ProjectReference Include="..\FormFlow.Data\FormFlow.Data.csproj" />
   </ItemGroup>
