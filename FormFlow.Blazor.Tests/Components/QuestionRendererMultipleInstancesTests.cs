@@ -4,7 +4,7 @@ using FluentAssertions;
 using FormFlow.Data.Models;
 using MudBlazor.Services;
 
-namespace FormFlow.Tests;
+namespace FormFlow.Blazor.Tests.Components;
 
 public class QuestionRendererMultipleInstancesTests : TestContext
 {

@@ -4,7 +4,7 @@ using Xunit;
 using FluentAssertions;
 using FormFlow.Data.Models;
 
-namespace FormFlow.Tests
+namespace FormFlow.Data.Tests.Models
 {
     public class DynamicFormJsonTests
     {

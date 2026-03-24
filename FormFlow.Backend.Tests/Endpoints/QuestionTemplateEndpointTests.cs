@@ -5,7 +5,7 @@ using Xunit;
 using FormFlow.Data.Models;
 
 
-namespace FormFlow.Tests
+namespace FormFlow.Backend.Tests.Endpoints
 {
     public class BackendFactory : WebApplicationFactory<Program>
     {
