@@ -6,7 +6,7 @@ using MudBlazor.Services;
 
 namespace FormFlow.Blazor.Tests.Components;
 
-public class QuestionRendererMultipleInstancesTests : TestContext
+public class QuestionRendererMultipleInstancesTests : BunitContext
 {
     public QuestionRendererMultipleInstancesTests()
     {
@@ -23,7 +23,7 @@ public class QuestionRendererMultipleInstancesTests : TestContext
             CreateTextQuestion("second", "Second", "Second placeholder", "second default")
         };
 
-        var cut = RenderComponent<QuestionRendererLoopHost>(parameters =>
+        var cut = Render<QuestionRendererLoopHost>(parameters =>
             parameters.Add(p => p.Questions, questions));
 
         var inputs = cut.FindAll("input");

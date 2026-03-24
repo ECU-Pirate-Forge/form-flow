@@ -29,4 +29,11 @@
     <ProjectReference Include="..\FormFlow.Data\FormFlow.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\FormFlow.Blazor\wwwroot\multiple-sample-questions.json">
+    <Link>multiple-sample-questions.json</Link>
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
+
 </Project>
