@@ -32,7 +32,7 @@
       "type": "object",
       "properties": {
         "key": { "type": "string" },
-        "equals": { "type": "boolean" }
+        "shouldEqual": { "type": "boolean" }
       },
       "required": ["key", "equals"]
     },
@@ -47,13 +47,9 @@
         "required": ["value", "label"]
       }
     },
-    "validation": {
-      "type": "object",
-      "description": "Validation rules for the question.",
-      "properties": {
-        "min_length": { "type": "integer" },
-        "max_length": { "type": "integer" }
-      }
+    "validationConfigs": {
+      "type": "string",
+      "description": "A JSON-serialized array of validation rule objects"
     },
     "helpText": {
       "type": "string",

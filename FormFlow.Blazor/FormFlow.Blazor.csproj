@@ -11,4 +11,8 @@
     <PackageReference Include="MudBlazor" Version="9.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FormFlow.Data\FormFlow.Data.csproj" />
+  </ItemGroup>
+
 </Project>

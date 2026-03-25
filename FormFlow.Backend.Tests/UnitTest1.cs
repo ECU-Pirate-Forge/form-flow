@@ -1,4 +1,4 @@
-﻿namespace tests;
+﻿namespace FormFlow.Backend.Tests;
 
 public class UnitTest1
 {

@@ -1,5 +1,8 @@
 <Solution>
+    <Project Path="FormFlow.Backend.Tests/FormFlow.Backend.Tests.csproj" />
     <Project Path="FormFlow.Backend/FormFlow.Backend.csproj" />
+    <Project Path="FormFlow.Blazor.Tests/FormFlow.Blazor.Tests.csproj" />
     <Project Path="FormFlow.Blazor/FormFlow.Blazor.csproj" />
+    <Project Path="FormFlow.Data.Tests/FormFlow.Data.Tests.csproj" />
     <Project Path="FormFlow.Data/FormFlow.Data.csproj" />
 </Solution>

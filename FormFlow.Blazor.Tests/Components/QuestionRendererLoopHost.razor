@@ -1,0 +1,12 @@
+@using FormFlow.Data.Models
+@using FormFlow.Blazor.Components
+
+@foreach (var question in Questions)
+{
+    <QuestionRenderer @key="question.Id" Question="question" />
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<QuestionDefinition> Questions { get; set; } = [];
+}

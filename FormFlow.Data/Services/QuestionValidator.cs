@@ -56,7 +56,7 @@ console.log(JSON.stringify(result));
         /// </summary>
         /// <param name="question">The question to validate</param>
         /// <returns>ValidationResult with details about any validation failures</returns>
-        public ValidationResult Validate(Question question)
+        public ValidationResult Validate(QuestionDefinition question)
         {
             if (question == null)
             {

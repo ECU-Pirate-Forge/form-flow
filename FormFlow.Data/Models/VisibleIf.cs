@@ -1,8 +1,8 @@
 namespace FormFlow.Data.Models
 {
-    public struct VisibleIf
+    public class VisibleIf
     {
-        public string QuestionKey { get; set; }
-        public bool Equals { get; set; }
+        public required string Key { get; set; }
+        public bool ShouldEqual { get; set; }
     }
 }
