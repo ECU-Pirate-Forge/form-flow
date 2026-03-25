@@ -4,7 +4,7 @@ using System.Text.Json;
 using FormFlow.Data.Models;
 using Xunit;
 
-namespace FormFlow.Tests.Models
+namespace FormFlow.Data.Tests.Models
 {
     public class QuestionDefinitionTests
     {
