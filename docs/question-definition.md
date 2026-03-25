@@ -80,24 +80,26 @@ This ensures seamless communication between backend and frontend.
 
 Although `validationConfigs` is stored and transmitted as a  **string** , the contents of that string must follow a well‑defined structure. Internally, the value must be a JSON array of validation rule objects with the following schema:
 
+```
 [
   {
-    "validationType": "string",
-    "minLength": "number (optional)",
-    "maxLength": "number (optional)",
-    "minValue": "number (optional)",
-    "maxValue": "number (optional)",
-    "pattern": "string (optional)",
-    "values": "array of strings (optional)",
+    "validationType": "string",          // One of: MinLength, MaxLength, MinValue, MaxValue, Range
+
+    "minLength": "integer (optional)",   // Required only for MinLength
+    "maxLength": "integer (optional)",   // Required only for MaxLength
+
+    "minValue": "integer (optional)",    // Required for MinValue or Range
+    "maxValue": "integer (optional)",    // Required for MaxValue or Range
+
     "message": "string (optional)"
   }
 ]
+```
+
 
 This describes the **expected shape** of the validation rules without including real example data.
 
-The backend validation engine deserializes this string and applies the rules accordingly.
-
----
+The backend validation engine deserializes this string into rule objects and applies the rules accordingly.
 
 ## **Serialization & Deserialization**
 
