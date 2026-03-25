@@ -50,8 +50,7 @@
     "validationConfigs": {
       "type": "string",
       "description": "A JSON-serialized array of validation rule objects",
-      "examples": ["[{\"ValidationType\":\"MinLength\",\"MinLength\":1},{\"ValidationType\":\"MaxLength\",\"MaxLength\":100}]"
-      ]
+      "examples": ["[{\"ValidationType\":\"MinLength\",\"MinLength\":1},{\"ValidationType\":\"MaxLength\",\"MaxLength\":100}]"]
     },
     "helpText": {
       "type": "string",
