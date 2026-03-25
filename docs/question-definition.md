@@ -1,4 +1,3 @@
-
 # **QuestionDefinition Model Documentation**
 
 This document describes the backend model used to represent a single question within the FormFlow system. The model mirrors the shared JSON schema used by the UI and API, ensuring consistent structure, validation, and behavior across the entire application.
@@ -76,6 +75,27 @@ The model is designed to match the JSON schema exactly:
 * JSON property names are preserved using `JsonPropertyName` where needed.
 
 This ensures seamless communication between backend and frontend.
+
+### **ValidationConfigs Internal Structure**
+
+Although `validationConfigs` is stored and transmitted as a  **string** , the contents of that string must follow a well‑defined structure. Internally, the value must be a JSON array of validation rule objects with the following schema:
+
+[
+  {
+    "validationType": "string",
+    "minLength": "number (optional)",
+    "maxLength": "number (optional)",
+    "minValue": "number (optional)",
+    "maxValue": "number (optional)",
+    "pattern": "string (optional)",
+    "values": "array of strings (optional)",
+    "message": "string (optional)"
+  }
+]
+
+This describes the **expected shape** of the validation rules without including real example data.
+
+The backend validation engine deserializes this string and applies the rules accordingly.
 
 ---
 
