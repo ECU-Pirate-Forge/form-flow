@@ -48,9 +48,29 @@
       }
     },
     "validationConfigs": {
-      "type": "string",
-      "description": "A JSON-serialized array of validation rule objects",
-      "examples": ["[{\"ValidationType\":\"MinLength\",\"MinLength\":1},{\"ValidationType\":\"MaxLength\",\"MaxLength\":100}]"]
+      "description" : "Represents the internal structure of validation rules. NOTE: Although this schema defines validationConfigs as an array for documentation and tooling, the backend actually stores this value as a JSON-serialized string. Example backend format: \"[{\\\"validationType\\\":\\\"MinLength\\\",\\\"minLength\\\":1}]\". The QuestionValidationEngine deserializes this string at runtime.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "validationType": { "type": "string", "enum": ["MinValue", "MaxValue", "MinLength", "MaxLength", "Range"] },
+          "minValue": { "type": "integer" },
+          "maxValue": { "type": "integer" },
+
+          "minLength": { "type": "integer"},
+          "maxLength": { "type": "integer"},
+
+          "message": { "type": "string"}
+        },
+        "required": ["validationType"]
+      },
+      "hints": [
+        { "validationType": "MinLength", "minLength": 1 },
+        { "validationType": "MaxLength", "maxLength": 100 },
+        { "validationType": "MinValue", "minValue": 0 },
+        { "validationType": "MaxValue", "maxValue": 120 },
+        { "validationType": "Range", "minValue": 0, "maxValue": 10 }
+      ]
     },
     "helpText": {
       "type": "string",
