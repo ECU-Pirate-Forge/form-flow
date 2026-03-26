@@ -23,7 +23,7 @@ export const QuestionRenderer: React.FC<Props> = ({ question }) => {
                 type="text"
                 placeholder={question.placeholder}
                 required={question.required}
-                defaultValue={question.defaultValue}
+                defaultValue={question.defaultValue ?? undefined}
                 style={{
                     padding: "8px",
                     borderRadius: "4px",
