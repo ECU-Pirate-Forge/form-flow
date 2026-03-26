@@ -19,7 +19,9 @@
         "questions": {
             "type": "array",
             "description": "List of questions in the survey.",
-            "items": {}
+            "items": {
+                "$ref": "question-definition.schema.json"
+            }
         },
         "version": {
             "type": "integer",
@@ -31,5 +33,5 @@
             "description": "Timestamp when the survey was created."
         }
     },
-    "required": ["surveyId", "title", "questions", "createdAt"]
+    "required": ["surveyId", "title", "questions", "description","createdAt"]
 }
