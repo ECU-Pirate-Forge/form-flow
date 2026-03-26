@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import sample from "./multiple-sample-questions.json";
+import { QuestionRenderer } from "./components/QuestionRenderer";
 import { QuestionDefinition } from "./types/QuestionDefinition";
 
 function App() {
@@ -13,6 +14,10 @@ function App() {
     <div>
       <h1>React Dynamic Question</h1>
       <p>Loaded {questions.length} questions.</p>
+
+      {questions.map((q) => (
+        <QuestionRenderer key={`${q.id}-${q.key}`} question={q} />
+      ))}
     </div>
   );
 }
