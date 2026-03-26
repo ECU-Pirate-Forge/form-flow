@@ -54,10 +54,7 @@ Here is a valid example  of a survey json object:
     "type": "text",
     "placeholder": "Enter your name",
     "defaultValue": "",
-    "validationRules": [
-      { "validationType": "MinLength", "minLength": 1 },
-      { "validationType": "MaxLength", "maxLength": 100}
-    ]
+    "validationConfigs": "[{\"validationType\":\"MinLength\",\"minLength\":1},{\"validationType\":\"MaxLength\",\"maxLength\":100}]"
   }
   ]
 ```
