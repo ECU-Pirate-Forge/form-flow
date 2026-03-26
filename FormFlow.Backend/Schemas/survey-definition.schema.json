@@ -1,7 +1,35 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Survey Schema",
-    "description": "",
+    "description": "Schema for defining a survey, which consists of multiple questions.",
     "type": "object",
-    "properties": {}
+    "properties": {
+        "surveyId": {
+            "type": "string",
+            "description": "Unique identifier for the survey."
+        },
+        "title": {
+            "type": "string",
+            "description": "Title of the survey."
+        },
+        "description": {
+            "type": "string",
+            "description": "Description of the survey."
+        },
+        "questions": {
+            "type": "array",
+            "description": "List of questions in the survey.",
+            "items": {}
+        },
+        "version": {
+            "type": "integer",
+            "description": "Version number of the survey definition."
+        },
+        "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the survey was created."
+        }
+    },
+    "required": ["surveyId", "title", "questions", "createdAt"]
 }
