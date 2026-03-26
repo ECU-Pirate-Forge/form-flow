@@ -21,7 +21,9 @@
             "description": "List of questions in the survey.",
             "items": {
                 "$ref": "question-definition.schema.json"
-            }
+            },
+            "minItems": 1
+            
         },
         "version": {
             "type": "integer",
