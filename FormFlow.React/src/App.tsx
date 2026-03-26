@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import sample from "./sample-question.json";
-import { QuestionRenderer } from "./components/QuestionRenderer";
+import sample from "./multiple-sample-questions.json";
 import { QuestionDefinition } from "./types/QuestionDefinition";
 
 function App() {
-  const [question, setQuestion] = useState<QuestionDefinition | null>(null);
+  const [questions, setQuestions] = useState<QuestionDefinition[]>([]);
 
   useEffect(() => {
-    setQuestion(sample);
+    setQuestions(sample);
   }, []);
 
   return (
     <div>
       <h1>React Dynamic Question</h1>
-      {question && <QuestionRenderer question={question} />}
+      <p>Loaded {questions.length} questions.</p>
     </div>
   );
 }
