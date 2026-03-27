@@ -82,8 +82,34 @@ describe("QuestionRenderer", () => {
     expect(countryInput.value).toBe("USA");
   });
 
+  test("renders duplicate question definitions as independent instances", () => {
+    const repeatedQuestion = makeQuestion({
+      id: "66666666-6666-6666-6666-666666666666",
+      key: "nickname",
+      label: "Nickname",
+      defaultValue: "Ada",
+    });
+
+    render(
+      <div>
+        {[0, 1].map((index) => (
+          <QuestionRenderer key={`${repeatedQuestion.id}-${index}`} question={repeatedQuestion} />
+        ))}
+      </div>
+    );
+
+    const nicknameInputs = screen.getAllByLabelText("Nickname") as HTMLInputElement[];
+    expect(nicknameInputs).toHaveLength(2);
+    expect(nicknameInputs[0].id).not.toBe(nicknameInputs[1].id);
+
+    fireEvent.change(nicknameInputs[0], { target: { value: "Countess" } });
+    expect(nicknameInputs[0].value).toBe("Countess");
+    expect(nicknameInputs[1].value).toBe("Ada");
+  });
+
   test("renders without React warnings or errors", () => {
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => undefined);
+    const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => undefined);
 
     render(
       <QuestionRenderer
@@ -98,6 +124,8 @@ describe("QuestionRenderer", () => {
     );
 
     expect(consoleErrorSpy).not.toHaveBeenCalled();
+    expect(consoleWarnSpy).not.toHaveBeenCalled();
     consoleErrorSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
   });
 });
