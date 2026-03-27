@@ -1,0 +1,25 @@
+{
+  "name": "formflow-react-tests",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "jest --config jest.config.cjs --runInBand",
+    "test:watch": "jest --config jest.config.cjs --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.14.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  }
+}
