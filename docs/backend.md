@@ -1,6 +1,6 @@
 # Backend and Schema Documentation
 
-This document is intended to describe the projects backend.This includes: recording the shape of data schemas used by the application,
+This document is intended to describe the projects backend. This includes: recording the shape of data schemas used by the application,
 
 ---
 
@@ -14,7 +14,7 @@ The application uses a JSON Schema found at `FormFlow.Backend/Schemas/survey-def
 
 ### Purpose and roles
 
-The purpose of this schema is to serve as source for the structure of all survey data within the system.Its primary roles are:
+The purpose of this schema is to serve as source for the structure of all survey data within the system. Its primary roles are:
  
 - Data Integrity: Ensures that every survey contains essential metadata (surveyId, Title, Questions, Description, Created Date) before it hits the database.
 - Business Logic Enforcement: Guarantees that a survey is never "empty" by enforcing a minimum of one question.
@@ -69,6 +69,6 @@ Here is a invalid example of a survey json object:
   "questions": [
   ]
 ```
-noticce the lack of question objects and improper formatting of when the survey was created.
+notice the lack of question objects and improper formatting of when the survey was created.
 
 ---
