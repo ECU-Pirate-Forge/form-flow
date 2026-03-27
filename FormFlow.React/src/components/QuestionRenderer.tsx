@@ -6,13 +6,16 @@ interface Props {
 }
 
 export const QuestionRenderer: React.FC<Props> = ({ question }) => {
+    const inputId = `question-${question.id}-${question.key}`;
+    const helpTextId = question.helpText ? `${inputId}-help` : undefined;
+
     return (
         <div style={{ 
             maxWidth: "400px", 
             marginBottom: "1rem",
             padding: "16px",
           }}>
-            <label style={{ display: "block", fontWeight: 600, marginBottom: "4px"}}>
+            <label htmlFor={inputId} style={{ display: "block", fontWeight: 600, marginBottom: "4px"}}>
                 {question.label}
                 {question.required && (
                     <span style={{ color: "red", marginLeft: "4px"}}>*</span>
@@ -20,10 +23,12 @@ export const QuestionRenderer: React.FC<Props> = ({ question }) => {
                 </label>
 
             <input 
+                id={inputId}
                 type="text"
                 placeholder={question.placeholder}
                 required={question.required}
                 defaultValue={question.defaultValue ?? undefined}
+                aria-describedby={helpTextId}
                 style={{
                     padding: "8px",
                     borderRadius: "4px",
@@ -33,7 +38,7 @@ export const QuestionRenderer: React.FC<Props> = ({ question }) => {
             />
 
             {question.helpText && (
-                <small style={{ display: "block", marginTop: "4px", color: '#666'}}>
+                <small id={helpTextId} style={{ display: "block", marginTop: "4px", color: '#666'}}>
                     {question.helpText}
                 </small>
             )}        
