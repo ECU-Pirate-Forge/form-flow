@@ -2,9 +2,11 @@
     <label>
         @QuestionLabel
     </label>
-    <input type="text"/>
+    <input type="text" @bind="CurrentResponse" />
 </div>
 
 @code {
+    [Parameter]
     public string QuestionLabel { get; set; } = "Awesome";
+    private string CurrentResponse { get; set; } = "";
 }
