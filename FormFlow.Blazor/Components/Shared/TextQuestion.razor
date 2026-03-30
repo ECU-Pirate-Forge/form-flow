@@ -1,6 +1,10 @@
 <div>
-    <label></label>
+    <label>
+        @QuestionLabel
+    </label>
     <input type="text"/>
 </div>
 
-@code {}
+@code {
+    public string QuestionLabel { get; set; } = "Awesome";
+}
