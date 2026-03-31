@@ -1,47 +1,19 @@
-
-
 @if (Question is not null)
 {
-    <MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
-        <div style="margin-bottom: 1rem;">
-            <label style="font-weight:600; margin-bottom:4px; display:block;">
-                @Question.Label
-                @if (Question.Required)
-                {
-                    <span style="color:red">*</span>
-                }
-            </label>
-            <MudTextField
-                @bind-Value="_value"
-                Placeholder="@Question.Placeholder"
-                Required="@Question.Required"
-                HelperText="@Question.HelpText"
-                Class="my-input"
-            />
-        </div>
-    </MudPaper>
+    @switch (Question.Type.ToLower())
+    {
+
+        case "dropdown":
+            <DropdownQuestion Question="Question" />
+            break;
+
+        default:
+            <p style="color:red">Unsupported question type: @Question.Type</p>
+            break;
+    }
 }
 
 @code {
     [Parameter, EditorRequired]
     public QuestionDefinition? Question { get; set; }
-
-    private string? _value;
-    private Guid? _boundQuestionId;
-
-    protected override void OnParametersSet()
-    {
-        if (Question is null)
-        {
-            _value = null;
-            _boundQuestionId = null;
-            return;
-        }
-
-        if (_boundQuestionId != Question.Id)
-        {
-            _boundQuestionId = Question.Id;
-            _value = Question.DefaultValue;
-        }
-    }
 }
