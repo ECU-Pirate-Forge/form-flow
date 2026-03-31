@@ -4,7 +4,7 @@ using FormFlow.Blazor.Components.Shared;
 
 namespace FormFlow.Blazor.Tests.Components;
 public class TextQuestionTests : BunitContext {
-        [Fact]
+    [Fact]
         public void TextQuestion_ShouldRenderCorrectLabelAndInput()
         {
             // 1. Arrange: Define the parameters we want to pass to the component
@@ -26,8 +26,8 @@ public class TextQuestionTests : BunitContext {
             // This finds the input and checks its attributes
             var inputHtml = cut.Find("input");
             Assert.Equal("text", inputHtml.GetAttribute("type"));
-            
-            // 5. Assert: Verify the value is correctly bound
-            Assert.Equal(expectedValue, inputHtml.GetAttribute("value"));
+
+        // 5. Assert: Verify the value is correctly bound
+        Assert.Equal(expectedValue, inputHtml.GetAttribute("value"));
         }
 }
