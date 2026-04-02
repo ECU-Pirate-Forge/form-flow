@@ -66,3 +66,17 @@ This JSON produces a dropdown with:
 - Three selectable options
 - Helper text below the field
 
+## RadioQuestion.razor
+The `RadioQuestion.razor` component renders a radio button group using MudBlazor's `MudRadioGroup` when a Questions `Type` is `"radio"`
+
+### Usage
+Within the parent component `QuestionRenderer.razor`
+```
+case "radio":
+            <RadioQuestion Question="Question" />
+            break;
+```
+### Rendering Behavior.
+- For each `Option` in `Question`, we wrap the value in `<MudRadio></MudRadio>` button. 
+- The MudRadio buttons are wrapped in a `<MudRadioGroup></MudRadioGroup>` parent wrapper component. This component binds the users selected option via two-way binding. e.g. ` @bind-SelectedOption="_value"`
+- The binded value gets passed to the parent componenent `QuestionRender.cs` which triggers a re-render and pushes the new data onto the screen.
