@@ -29,23 +29,18 @@ public class TextQuestionTests : BunitContext
     {
         SetupServices();
         var question = CreateTextQuestion("");
-        
         var cut = Render<TextQuestion>(p => p.Add(x => x.Question, question));
 
         cut.Markup.Should().Contain("Favorite Programmming Language");
         cut.Markup.Should().Contain("Python, C#, JavaScript, etc.");
-
         await DisposeAsync();
-        
     }
-
     [Fact]
     public async Task Should_Render_Asterisk_When_Required()
     {
         SetupServices();
         var question = CreateTextQuestion("");
         question.Required = true;
-        
 
         var cut = Render<TextQuestion>(p => p.Add(x => x.Question, question));
 
@@ -60,7 +55,6 @@ public class TextQuestionTests : BunitContext
     {
         SetupServices();
         var question = CreateTextQuestion("");
-        
         var cut = Render<TextQuestion>(p => p.Add(x => x.Question, question));
 
         var input = cut.Find("input");
