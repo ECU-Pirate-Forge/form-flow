@@ -66,7 +66,22 @@ This JSON produces a dropdown with:
 - Three selectable options
 - Helper text below the field
 
-Here you go — a **clean, polished, ready‑to‑paste documentation block** for your **CheckboxQuestion** component, written to perfectly match the structure, tone, and formatting of your existing `DropdownQuestion` docs.
+## TextQuestion Component
+`TextQuestion.razor` is a component that renders a text box under a question when the `Type` is `"text"`. A Question is defined at `QuestionDefinition.cs`.
+
+### When to used
+`QuestionRenderer` selects this component when:
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "text":
+        <TextQuestion Question="Question" />
+        break;
+}
+```
+### Rendering Behavior
+`TextQuestion` encloses the component in a `MudPaper`. Inside the Paper a label is rendered. An option asterisk is rendered if the question is required. A `MudTextField` is rendered and bounded to the componeent's internal state(`_value`). The input field also provides a placeholder and helper text. When a user types inpt the input field, the value is updated to reflect that input
 
 ---
 
@@ -75,8 +90,6 @@ Here you go — a **clean, polished, ready‑to‑paste documentation block** fo
 The `CheckboxQuestion` component renders a boolean input using MudBlazor’s `MudCheckBox`. It is used when a question’s `Type` is `"checkbox"`.
 
 ### When it is used
-
-`QuestionRenderer` selects this component when:
 
 ```razor
 @switch (Question.Type.ToLower())
@@ -130,3 +143,5 @@ This JSON produces a checkbox with:
 - Helper text below the field
 
 ---
+
+
