@@ -53,7 +53,7 @@ public class MultiSelectQuestionTests
         var checkboxes = cut.FindComponents<MudCheckBox<bool>>();
 
         // Toggle first checkbox ON
-       await cut.InvokeAsync(() => checkboxes[0].Instance.ValueChanged.InvokeAsync(true));
+        await cut.InvokeAsync(() => checkboxes[0].Instance.ValueChanged.InvokeAsync(true));
 
         // Toggle second checkbox ON
         await cut.InvokeAsync(() => checkboxes[1].Instance.ValueChanged.InvokeAsync(true));
