@@ -66,3 +66,19 @@ This JSON produces a dropdown with:
 - Three selectable options
 - Helper text below the field
 
+## TextQuestion Component
+`TextQuestion.razor` is a component that renders a text box under a question when the `Type` is `"text"`. A Question is defined at `QuestionDefinition.cs`.
+
+### When to used
+`QuestionRenderer` selects this component when:
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "text":
+        <TextQuestion Question="Question" />
+        break;
+}
+```
+### Rendering Behavior
+`TextQuestion` encloses the component in a `MudPaper`. Inside the Paper a label is rendered. An option asterisk is rendered if the question is required. A `MudTextField` is rendered and bounded to the componeent's internal state(`_value`). The input field also provides a placeholder and helper text. When a user types inpt the input field, the value is updated to reflect that input
