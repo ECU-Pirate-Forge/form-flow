@@ -17,13 +17,13 @@ The `DropdownQuestion` component renders a single‑select dropdown using MudBla
 
 ### Expected QuestionDefinition fields
 
-| Field          | Required | Description |
-|----------------|----------|-------------|
-| `Label`        | Yes      | The text shown above the dropdown. |
-| `Options`      | Yes      | A list of `{ Label, Value }` pairs. |
-| `DefaultValue` | No       | Pre‑selected value when the component loads. |
-| `Placeholder`  | No       | Text shown when no value is selected. |
-| `Required`     | No       | Adds a required indicator and validation. |
+| Field            | Required | Description                                    |
+| ---------------- | -------- | ---------------------------------------------- |
+| `Label`        | Yes      | The text shown above the dropdown.             |
+| `Options`      | Yes      | A list of `{ Label, Value }` pairs.          |
+| `DefaultValue` | No       | Pre‑selected value when the component loads.  |
+| `Placeholder`  | No       | Text shown when no value is selected.          |
+| `Required`     | No       | Adds a required indicator and validation.      |
 | `HelpText`     | No       | Optional helper text shown below the dropdown. |
 
 ### Rendering behavior
@@ -82,3 +82,66 @@ This JSON produces a dropdown with:
 ```
 ### Rendering Behavior
 `TextQuestion` encloses the component in a `MudPaper`. Inside the Paper a label is rendered. An option asterisk is rendered if the question is required. A `MudTextField` is rendered and bounded to the componeent's internal state(`_value`). The input field also provides a placeholder and helper text. When a user types inpt the input field, the value is updated to reflect that input
+
+---
+
+# CheckboxQuestion Component
+
+The `CheckboxQuestion` component renders a boolean input using MudBlazor’s `MudCheckBox`. It is used when a question’s `Type` is `"checkbox"`.
+
+### When it is used
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "checkbox":
+        <CheckboxQuestion Question="Question" />
+        break;
+}
+```
+
+### Expected QuestionDefinition fields
+
+| Field            | Required | Description                                                 |
+| ---------------- | -------- | ----------------------------------------------------------- |
+| `Label`        | Yes      | The text shown next to the checkbox.                        |
+| `Required`     | No       | Adds a required `*` indicator next to the label.          |
+| `HelpText`     | No       | Optional helper text shown below the checkbox.              |
+| `DefaultValue` | No       | Not used for checkboxes; checkbox always initializes false. |
+
+### Rendering behavior
+
+- The component wraps its content in a `MudPaper` for consistent styling.
+- The checkbox is rendered using `MudCheckBox<bool>`.
+- The checkbox always initializes to `false` (unchecked).
+- When the user toggles the checkbox, the component updates:
+  - its internal `_value`
+  - `Question.Answer` (so the parent form can collect responses)
+- A required `*` indicator is shown next to the label when `Question.Required` is true.
+- Optional helper text is displayed below the checkbox when provided.
+
+### Example JSON
+
+```json
+{
+  "id": "987",
+  "key": "accept_terms",
+  "label": "I agree to the terms and conditions",
+  "type": "checkbox",
+  "required": true,
+  "helpText": "You must agree before continuing."
+}
+```
+
+### Example UI
+
+This JSON produces a checkbox with:
+
+- A label: **I agree to the terms and conditions**
+- A required `*` indicator
+- An unchecked checkbox (always starts false)
+- Helper text below the field
+
+---
+
+

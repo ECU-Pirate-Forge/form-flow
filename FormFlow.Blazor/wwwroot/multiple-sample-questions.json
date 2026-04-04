@@ -46,14 +46,10 @@
   },
   {
     "id": "d4e5f6a7-b8c9-4d0e-9f1a-2b3c4d5e6f66",
-    "key": "newsletter_topics",
-    "label": "Which newsletters do you want to receive?",
-    "type": "checkbox",
-    "options": [
-      { "value": "tech", "label": "Tech" },
-      { "value": "sports", "label": "Sports" },
-      { "value": "news", "label": "News" }
-    ]
+    "key": "newsletter_consent",
+    "label": "I consent to receiving newsletters.",
+    "required": false,
+    "type": "checkbox"
   },
   {
     "id": "e7f8a9b0-c1d2-4e3f-9a4b-5c6d7e8f9a77",
