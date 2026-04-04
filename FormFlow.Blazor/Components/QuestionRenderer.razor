@@ -11,6 +11,10 @@
             <TextQuestion Question="Question" />
             break;
 
+        case "multiselect":
+            <MultiselectQuestion Question="Question" />
+            break; 
+
         case "checkbox":
             <CheckboxQuestion Question="Question" />
             break;
@@ -29,3 +33,4 @@
     [Parameter, EditorRequired]
     public QuestionDefinition? Question { get; set; }
 }
+

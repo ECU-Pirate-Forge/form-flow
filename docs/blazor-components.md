@@ -99,6 +99,19 @@ case "radio":
 
 ---
 
+# MultiSelectQuestion Component
+
+The `MultiSelectQuestion` component renders a list of checkboxes using MudBlazor’s `MudCheckBox<bool>`. It is used when a question’s `Type` is `"multiselect"`.
+
+### When it is used
+
+`QuestionRenderer` selects this component when:
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "multiselect":
+        <MultiSelectQuestion Question="Question" />
 # CheckboxQuestion Component
 
 The `CheckboxQuestion` component renders a boolean input using MudBlazor’s `MudCheckBox`. It is used when a question’s `Type` is `"checkbox"`.
@@ -108,6 +121,97 @@ The `CheckboxQuestion` component renders a boolean input using MudBlazor’s `Mu
 ```razor
 @switch (Question.Type.ToLower())
 {
+    case "checkbox":
+        <CheckboxQuestion Question="Question" />
+        break;
+}
+```
+
+### Expected QuestionDefinition fields
+
+| Field       | Required | Description                                           |
+|-------------|----------|-------------------------------------------------------|
+| `Label`     | Yes      | The text shown above the checkbox list.              |
+| `Options`   | Yes      | A list of `{ Label, Value }` pairs.                 |
+| `Required`  | No       | Adds a required indicator next to the label.         |
+| `HelpText`  | No       | Optional helper text shown below the checkbox list.  |
+| `DefaultValue` | No   | *(Not used)* — multi‑select always starts empty.      |
+| `Placeholder`  | No   | *(Not used)* — checkboxes do not support placeholders.|
+| Field            | Required | Description                                                 |
+| ---------------- | -------- | ----------------------------------------------------------- |
+| `Label`        | Yes      | The text shown next to the checkbox.                        |
+| `Required`     | No       | Adds a required `*` indicator next to the label.          |
+| `HelpText`     | No       | Optional helper text shown below the checkbox.              |
+| `DefaultValue` | No       | Not used for checkboxes; checkbox always initializes false. |
+
+### Rendering behavior
+
+- The component wraps its content in a `MudPaper` for consistent styling.
+- A label is rendered at the top, with a required `*` if applicable.
+- Each option is rendered as:
+  - a `MudCheckBox<bool>`  
+  - followed by the option’s label text
+- The component maintains its own internal selection state using a `HashSet<string>`.
+- When a checkbox is toggled:
+  - the internal `_selected` collection is updated  
+  - no value is written to `Question.Answer` (your current architecture keeps multi‑select local‑only)
+- The checkbox is rendered using `MudCheckBox<bool>`.
+- The checkbox always initializes to `false` (unchecked).
+- When the user toggles the checkbox, the component updates:
+  - its internal `_value`
+  - `Question.Answer` (so the parent form can collect responses)
+- A required `*` indicator is shown next to the label when `Question.Required` is true.
+- Optional helper text is displayed below the checkbox when provided.
+
+### Example JSON
+
+```json
+{
+  "id": "456",
+  "key": "favorite_fruits",
+  "label": "Favorite Fruits",
+  "type": "multiselect",
+  "required": false,
+  "options": [
+    { "label": "Apple", "value": "apple" },
+    { "label": "Banana", "value": "banana" },
+    { "label": "Cherry", "value": "cherry" }
+  ],
+  "helpText": "Pick all fruits you enjoy."
+  "id": "987",
+  "key": "accept_terms",
+  "label": "I agree to the terms and conditions",
+  "type": "checkbox",
+  "required": true,
+  "helpText": "You must agree before continuing."
+}
+```
+
+### Example UI
+
+This JSON produces a checkbox list with:
+
+- A label: **Favorite Fruits**
+- Three checkboxes (Apple, Banana, Cherry)
+- Optional helper text below the list
+- No dropdown — each option is visible immediately
+
+---
+This JSON produces a checkbox with:
+
+- A label: **I agree to the terms and conditions**
+- A required `*` indicator
+- An unchecked checkbox (always starts false)
+- Helper text below the field
+
+---
+
+# CheckboxQuestion Component
+
+The `CheckboxQuestion` component renders a boolean input using MudBlazor’s `MudCheckBox`. It is used when a question’s `Type` is `"checkbox"`.
+
+### When it is used
+
     case "checkbox":
         <CheckboxQuestion Question="Question" />
         break;
@@ -157,5 +261,7 @@ This JSON produces a checkbox with:
 - Helper text below the field
 
 ---
+
+
 
 
