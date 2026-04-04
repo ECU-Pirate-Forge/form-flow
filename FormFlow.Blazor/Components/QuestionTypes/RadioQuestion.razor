@@ -1,0 +1,40 @@
+@inherits QuestionComponentBase
+@using MudBlazor
+
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">    
+    <div style="margin-bottom: 1rem;">
+        <label style="font-weight:600; margin-bottom:4px; display:block;">
+            @Question.Label
+            @if (Question.Required)
+            {
+                <span style="color:red">*</span>
+            }
+        </label>
+        <MudRadioGroup T="string"
+                       @bind-SelectedOption="_value"
+                       Required="@Question.Required"
+                       Class="my-input">
+
+            @if (Question.Options is not null)
+            {
+                @foreach (var opt in Question.Options)
+                {
+                    <MudRadio T="string" Value="@opt.Value">
+                        @opt.Label
+                    </MudRadio>
+                }
+            }
+        </MudRadioGroup>
+    </div>
+</MudPaper>
+@code {
+    private string? _value;
+  
+    protected override void OnParametersSet()
+    {
+        if (_value is null && Question.DefaultValue is not null)
+        {
+            _value = Question.DefaultValue;
+        }
+    }
+}
