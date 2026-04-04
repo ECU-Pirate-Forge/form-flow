@@ -17,13 +17,13 @@ The `DropdownQuestion` component renders a single‑select dropdown using MudBla
 
 ### Expected QuestionDefinition fields
 
-| Field          | Required | Description |
-|----------------|----------|-------------|
-| `Label`        | Yes      | The text shown above the dropdown. |
-| `Options`      | Yes      | A list of `{ Label, Value }` pairs. |
-| `DefaultValue` | No       | Pre‑selected value when the component loads. |
-| `Placeholder`  | No       | Text shown when no value is selected. |
-| `Required`     | No       | Adds a required indicator and validation. |
+| Field            | Required | Description                                    |
+| ---------------- | -------- | ---------------------------------------------- |
+| `Label`        | Yes      | The text shown above the dropdown.             |
+| `Options`      | Yes      | A list of `{ Label, Value }` pairs.          |
+| `DefaultValue` | No       | Pre‑selected value when the component loads.  |
+| `Placeholder`  | No       | Text shown when no value is selected.          |
+| `Required`     | No       | Adds a required indicator and validation.      |
 | `HelpText`     | No       | Optional helper text shown below the dropdown. |
 
 ### Rendering behavior
@@ -66,6 +66,20 @@ This JSON produces a dropdown with:
 - Three selectable options
 - Helper text below the field
 
+## RadioQuestion.razor
+The `RadioQuestion.razor` component renders a radio button group using MudBlazor's `MudRadioGroup` when a Questions `Type` is `"radio"`
+
+### Usage
+Within the parent component `QuestionRenderer.razor`
+```
+case "radio":
+            <RadioQuestion Question="Question" />
+            break;
+```
+### Rendering Behavior.
+- For each `Option` in `Question`, we wrap the value in `<MudRadio></MudRadio>` button. 
+- The MudRadio buttons are wrapped in a `<MudRadioGroup></MudRadioGroup>` parent wrapper component. This component binds the users selected option via two-way binding. e.g. ` @bind-SelectedOption="_value"`
+- The binded value gets passed to the parent componenent `QuestionRender.cs` which triggers a re-render and pushes the new data onto the screen.
 ## TextQuestion Component
 `TextQuestion.razor` is a component that renders a text box under a question when the `Type` is `"text"`. A Question is defined at `QuestionDefinition.cs`.
 
@@ -98,6 +112,17 @@ The `MultiSelectQuestion` component renders a list of checkboxes using MudBlazor
 {
     case "multiselect":
         <MultiSelectQuestion Question="Question" />
+# CheckboxQuestion Component
+
+The `CheckboxQuestion` component renders a boolean input using MudBlazor’s `MudCheckBox`. It is used when a question’s `Type` is `"checkbox"`.
+
+### When it is used
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "checkbox":
+        <CheckboxQuestion Question="Question" />
         break;
 }
 ```
@@ -112,6 +137,12 @@ The `MultiSelectQuestion` component renders a list of checkboxes using MudBlazor
 | `HelpText`  | No       | Optional helper text shown below the checkbox list.  |
 | `DefaultValue` | No   | *(Not used)* — multi‑select always starts empty.      |
 | `Placeholder`  | No   | *(Not used)* — checkboxes do not support placeholders.|
+| Field            | Required | Description                                                 |
+| ---------------- | -------- | ----------------------------------------------------------- |
+| `Label`        | Yes      | The text shown next to the checkbox.                        |
+| `Required`     | No       | Adds a required `*` indicator next to the label.          |
+| `HelpText`     | No       | Optional helper text shown below the checkbox.              |
+| `DefaultValue` | No       | Not used for checkboxes; checkbox always initializes false. |
 
 ### Rendering behavior
 
@@ -124,6 +155,13 @@ The `MultiSelectQuestion` component renders a list of checkboxes using MudBlazor
 - When a checkbox is toggled:
   - the internal `_selected` collection is updated  
   - no value is written to `Question.Answer` (your current architecture keeps multi‑select local‑only)
+- The checkbox is rendered using `MudCheckBox<bool>`.
+- The checkbox always initializes to `false` (unchecked).
+- When the user toggles the checkbox, the component updates:
+  - its internal `_value`
+  - `Question.Answer` (so the parent form can collect responses)
+- A required `*` indicator is shown next to the label when `Question.Required` is true.
+- Optional helper text is displayed below the checkbox when provided.
 
 ### Example JSON
 
@@ -140,6 +178,12 @@ The `MultiSelectQuestion` component renders a list of checkboxes using MudBlazor
     { "label": "Cherry", "value": "cherry" }
   ],
   "helpText": "Pick all fruits you enjoy."
+  "id": "987",
+  "key": "accept_terms",
+  "label": "I agree to the terms and conditions",
+  "type": "checkbox",
+  "required": true,
+  "helpText": "You must agree before continuing."
 }
 ```
 
@@ -153,3 +197,13 @@ This JSON produces a checkbox list with:
 - No dropdown — each option is visible immediately
 
 ---
+This JSON produces a checkbox with:
+
+- A label: **I agree to the terms and conditions**
+- A required `*` indicator
+- An unchecked checkbox (always starts false)
+- Helper text below the field
+
+---
+
+
