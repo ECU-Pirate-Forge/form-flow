@@ -82,3 +82,34 @@ This JSON produces a dropdown with:
 ```
 ### Rendering Behavior
 `TextQuestion` encloses the component in a `MudPaper`. Inside the Paper a label is rendered. An option asterisk is rendered if the question is required. A `MudTextField` is rendered and bounded to the componeent's internal state(`_value`). The input field also provides a placeholder and helper text. When a user types inpt the input field, the value is updated to reflect that input
+
+## YesNoQuestion Component
+`YesNoQuestion.razor` renders a binary choice when the `Type` is `"yes_no"`.
+
+### When it is used
+`QuestionRenderer` selects this component when:
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "yes_no":
+        <YesNoQuestion Question="Question" />
+        break;
+}
+```
+
+### Rendering Behavior
+`YesNoQuestion` wraps the field in a `MudPaper`, shows the question label, and renders two radio options labeled **Yes** and **No**. The selected value is bound to an internal `bool?` and persisted back to `Question.DefaultValue` as `"true"` or `"false"`.
+
+### Example JSON
+```json
+{
+  "id": "c9d3a1f7-2b4e-4c8f-9a1d-7e3b2c5d6e33",
+  "key": "student",
+  "label": "Are you a student?",
+  "type": "yes_no",
+  "required": true,
+  "defaultValue": "false",
+  "helpText": "Choose one option."
+}
+```

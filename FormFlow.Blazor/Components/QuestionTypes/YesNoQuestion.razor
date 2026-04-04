@@ -1,0 +1,51 @@
+@inherits QuestionComponentBase
+@using MudBlazor
+
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
+    <div style="margin-bottom: 1rem;">
+        <label style="font-weight:600; margin-bottom:8px; display:block;">
+            @Question.Label
+            @if (Question.Required)
+            {
+                <span style="color:red">*</span>
+            }
+        </label>
+
+        <MudRadioGroup T="bool?"
+                       Value="_value"
+                       ValueChanged="OnValueChanged"
+                       Class="d-flex flex-column"
+                       Style="gap: 0.5rem;">
+            <MudRadio T="bool?" Value="@((bool?)true)" Color="Color.Primary">Yes</MudRadio>
+            <MudRadio T="bool?" Value="@((bool?)false)" Color="Color.Primary">No</MudRadio>
+        </MudRadioGroup>
+
+        @if (!string.IsNullOrWhiteSpace(Question.HelpText))
+        {
+            <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+                @Question.HelpText
+            </div>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    private bool? _value;
+
+    protected override void OnParametersSet()
+    {
+        if (_value is null &&
+            !string.IsNullOrWhiteSpace(Question.DefaultValue) &&
+            bool.TryParse(Question.DefaultValue, out var parsedValue))
+        {
+            _value = parsedValue;
+        }
+    }
+
+    private Task OnValueChanged(bool? value)
+    {
+        _value = value;
+        Question.DefaultValue = value?.ToString().ToLowerInvariant();
+        return Task.CompletedTask;
+    }
+}
