@@ -1,0 +1,51 @@
+@inherits QuestionComponentBase
+@using MudBlazor
+
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
+    <div style="margin-bottom: 1rem;">
+        <label style="font-weight:600; margin-bottom:4px; display:block;">
+            @Question.Label
+            @if (Question.Required)
+            {
+                <span style="color:red">*</span>
+            }
+        </label>
+
+        <MudSelect T="string"
+                   @bind-Value="_value"
+                   Required="@Question.Required"
+                   Placeholder="@Question.Placeholder"
+                   Class="my-input">
+
+            @if (Question.Options is not null)
+            {
+                @foreach (var opt in Question.Options)
+                {
+                    <MudSelectItem T="string" Value="@opt.Value">
+                        @opt.Label
+                    </MudSelectItem>
+                }
+            }
+        </MudSelect>
+
+        @if (!string.IsNullOrWhiteSpace(Question.HelpText))
+        {
+            <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+                @Question.HelpText
+            </div>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    private string? _value;
+
+    protected override void OnParametersSet()
+    {
+        
+        if (_value is null && Question.DefaultValue is not null)
+        {
+            _value = Question.DefaultValue;
+        }
+    }
+}

@@ -1,0 +1,49 @@
+@inherits QuestionComponentBase
+@using MudBlazor
+
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
+    <div style="margin-bottom: 1rem;">
+
+        <label style="font-weight:600; margin-bottom:4px; display:block;">
+            @Question.Label
+            @if (Question.Required)
+            {
+                <span style="color:red">*</span>
+            }
+        </label>
+
+        @if (Question.Options is not null)
+        {
+            @foreach (var opt in Question.Options)
+            {
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <MudCheckBox T="bool"
+                                 Value="@IsSelected(opt.Value)"
+                                 ValueChanged="@(isChecked => ToggleSelection(opt.Value, isChecked))" />
+                    <span>@opt.Label</span>
+                </div>
+            }
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Question.HelpText))
+        {
+            <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+                @Question.HelpText
+            </div>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    private HashSet<string> _selected = new();
+
+    private bool IsSelected(string value) => _selected.Contains(value);
+
+    private void ToggleSelection(string value, bool isChecked)
+    {
+        if (isChecked)
+            _selected.Add(value);
+        else
+            _selected.Remove(value);
+    }
+}

@@ -1,9 +1,20 @@
+import { Option } from "./Option";
+import { VisibleIf } from "./VisibleIf";
+
 export interface QuestionDefinition {
     id: string;
+    key: string;
     label: string;
     type: string;
-    placeholder?: string;
+
     required?: boolean;
-    defaultValue?: string | number;
+    placeholder?: string;
+    defaultValue?: string | number | null;
+
+    options?: Option[];
+    visibleIf?: VisibleIf;
+
+    validationConfigs?: string | null;
+
     helpText?: string;
 }

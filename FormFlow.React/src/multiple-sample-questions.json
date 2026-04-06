@@ -6,10 +6,7 @@
     "type": "text",
     "placeholder": "Enter your name",
     "defaultValue": "",
-    "validationRules": [
-      { "validationType": "MinLength", "minLength": 1 },
-      { "validationType": "MaxLength", "maxLength": 100}
-    ]
+    "validationConfigs": "[{\"validationType\":\"MinLength\",\"minLength\":1},{\"validationType\":\"MaxLength\",\"maxLength\":100}]"
   },
   {
     "id": "8b1e5c44-6d0a-4d8e-9b7c-3e2f1c4a5b22",
@@ -17,10 +14,7 @@
     "label": "How old are you?",
     "type": "number",
     "defaultValue": null,
-    "validationRules": [
-      { "validationType": "MinLength", "minLength": 1},
-      { "validationType": "MaxLength", "maxLength": 3}
-    ]
+    "validationConfigs": "[{\"validationType\":\"MinValue\",\"minValue\":0},{\"validationType\":\"MaxValue\",\"maxValue\":120}]"
   },
   {
     "id": "c9d3a1f7-2b4e-4c8f-9a1d-7e3b2c5d6e33",
