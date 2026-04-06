@@ -45,7 +45,6 @@
     private Task OnValueChanged(bool? value)
     {
         _value = value;
-        Question.DefaultValue = value?.ToString().ToLowerInvariant();
         return Task.CompletedTask;
     }
 }
