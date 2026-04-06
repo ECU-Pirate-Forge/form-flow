@@ -322,6 +322,39 @@ This JSON produces a number input with:
 - A placeholder: *Enter a number*
 - Helper text below the field
 
+---
+
+## YesNoQuestion Component
+`YesNoQuestion.razor` renders a binary choice when the `Type` is `"yes_no"`.
+
+### When it is used
+`QuestionRenderer` selects this component when:
+
+```razor
+@switch (Question.Type.ToLower())
+{
+    case "yes_no":
+        <YesNoQuestion Question="Question" />
+        break;
+}
+```
+
+### Rendering Behavior
+`YesNoQuestion` wraps the field in a `MudPaper`, shows the question label, and renders two radio options labeled **Yes** and **No**. The selected value is bound to an internal `bool?` and persisted back to `Question.DefaultValue` as `"true"` or `"false"`.
+
+### Example JSON
+```json
+{
+  "id": "c9d3a1f7-2b4e-4c8f-9a1d-7e3b2c5d6e33",
+  "key": "student",
+  "label": "Are you a student?",
+  "type": "yes_no",
+  "required": true,
+  "defaultValue": "false",
+  "helpText": "Choose one option."
+}
+```
+
 
 
 
