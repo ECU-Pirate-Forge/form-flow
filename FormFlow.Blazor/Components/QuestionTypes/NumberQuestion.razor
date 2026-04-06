@@ -1,0 +1,42 @@
+@inherits QuestionComponentBase
+@using MudBlazor
+
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
+    <div style="margin-bottom: 1rem;">
+        <label for="@_inputId" style="font-weight:600; margin-bottom:4px; display:block;">
+            @Question.Label
+            @if (Question.Required)
+            {
+                <span style="color:red">*</span>
+            }
+        </label>
+
+        <input id="@_inputId"
+               type="number"
+               @bind="_value"
+               @bind:event="oninput"
+               required="@Question.Required"
+               placeholder="@Question.Placeholder"
+               class="form-control my-input" />
+
+        @if (!string.IsNullOrWhiteSpace(Question.HelpText))
+        {
+            <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+                @Question.HelpText
+            </div>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    private readonly string _inputId = $"number-question-{Guid.NewGuid():N}";
+    private string? _value;
+
+    protected override void OnParametersSet()
+    {
+        if (_value is null && !string.IsNullOrWhiteSpace(Question.DefaultValue))
+        {
+            _value = Question.DefaultValue;
+        }
+    }
+}

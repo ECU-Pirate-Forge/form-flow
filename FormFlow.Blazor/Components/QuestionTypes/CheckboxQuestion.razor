@@ -1,0 +1,33 @@
+@inherits QuestionComponentBase
+@using MudBlazor
+
+<MudPaper Elevation="1" Class="pa-4" Style="max-width:400px;">
+    <div style="margin-bottom: 1rem;">
+
+        <div style="display:flex; align-items:center; gap:8px;">
+            <MudCheckBox
+                T="bool"
+                @bind-Checked="_value"
+                Class="my-input" />
+
+            <label style="font-weight:600;">
+                @Question.Label
+                @if (Question.Required)
+                {
+                    <span style="color:red">*</span>
+                }
+            </label>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Question.HelpText))
+        {
+            <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+                @Question.HelpText
+            </div>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    private bool _value = false;
+}

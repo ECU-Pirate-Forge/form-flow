@@ -14,6 +14,22 @@
         case "yes_no":
             <YesNoQuestion Question="Question" />
             break;
+            
+        case "number":
+            <NumberQuestion Question="Question" />
+            break; 
+            
+        case "multiselect":
+            <MultiselectQuestion Question="Question" />
+            break; 
+
+        case "checkbox":
+            <CheckboxQuestion Question="Question" />
+            break;
+
+        case "radio":
+            <RadioQuestion Question="Question" />
+            break;
 
         default:
             <p style="color:red">Unsupported question type: @Question.Type</p>
@@ -25,3 +41,4 @@
     [Parameter, EditorRequired]
     public QuestionDefinition? Question { get; set; }
 }
+
