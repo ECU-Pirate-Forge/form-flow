@@ -42,7 +42,7 @@ public class SurveyDefinitionTests
         Assert.Equal(1, survey.Version);
     }
 
-        [Fact]
+    [Fact]
     public void Deserialize_PreservesQuestionOrder()
     {
         var json = """
