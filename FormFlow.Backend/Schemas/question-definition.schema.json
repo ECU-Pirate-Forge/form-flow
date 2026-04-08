@@ -6,7 +6,8 @@
   "properties": {
     "id": {
       "type": "string",
-      "description": "Unique identifier for the question."
+      "description": "Unique identifier for the question.",
+      "format": "uuid"
     },
     "key": {
       "type": "string",
