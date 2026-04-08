@@ -1,39 +1,25 @@
+@using FormFlow.Blazor.Components.QuestionTypes
+@using FormFlow.Blazor.Components
+
 @if (Question is not null)
 {
-    @switch (Question.Type.ToLower())
+    var componentType = QuestionComponentMapper.Resolve(Question.Type);
+
+    if (componentType is null)
     {
+        <p style="color:red">Unsupported question type: @Question.Type</p>
+    }
+    else
+    {
+        var parameters = new Dictionary<string, object?>
+        {
+            ["Question"] = Question
+        };
 
-        case "dropdown":
-            <DropdownQuestion Question="Question" />
-            break;
-        
-        case "text":
-            <TextQuestion Question="Question" />
-            break;
-
-        case "yes_no":
-            <YesNoQuestion Question="Question" />
-            break;
-            
-        case "number":
-            <NumberQuestion Question="Question" />
-            break; 
-            
-        case "multiselect":
-            <MultiselectQuestion Question="Question" />
-            break; 
-
-        case "checkbox":
-            <CheckboxQuestion Question="Question" />
-            break;
-
-        case "radio":
-            <RadioQuestion Question="Question" />
-            break;
-
-        default:
-            <p style="color:red">Unsupported question type: @Question.Type</p>
-            break;
+        <DynamicComponent
+            Type="componentType"
+            @key="Question.Id"
+            Parameters="parameters" />
     }
 }
 
