@@ -55,9 +55,5 @@ namespace FormFlow.Backend
                 collection.InsertBulk(questionDefinitions);
             }
         }
-
-
     }
-
-   
 }
