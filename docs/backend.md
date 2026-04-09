@@ -1,14 +1,12 @@
-# Backend and Schema Documentation
+# Backend Documentation
 
 This document is intended to describe the projects backend. This includes: recording the shape of data schemas used by the application,
 
 ---
 
-## 1. Summary of Work
+## Schemas
 
-
-
-## 2. Survey Schema 
+## Survey Schema 
 
 The application uses a JSON Schema found at `FormFlow.Backend/Schemas/survey-definition.schema.json`. 
 
@@ -72,3 +70,17 @@ Here is a invalid example of a survey json object:
 notice the lack of question objects and improper formatting of when the survey was created.
 
 ---
+## Database Seeding
+We seed data to ensure our application has utility during development, allowing other parts of the app to not be blocked by not having data to use. The backend will automatically populate the database with seed data, if none exists already.
+### Where does data exist?
+Currently sample questions are defined inline within the `SeedInLine` method
+
+### How is data seeded?
+`Program.cs` triggers seeding during the app startup.
+
+- The app first resolves the LiteDb context
+- Then the app checks the `questions` collection
+- If there are no collections in LiteDb we use `collection.Count() == 0` to perform a `InsertBulk` to insert the sample questions
+
+### How to reset?
+The simplest way to reset the database is to delete the `.db` file LiteDb creates. It will create a new one on startup.
