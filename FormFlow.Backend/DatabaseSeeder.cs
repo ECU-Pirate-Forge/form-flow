@@ -7,19 +7,14 @@ namespace FormFlow.Backend
     public class DatabaseSeeder
     {
         private readonly ILiteDatabase _dbContext;
-        
 
         public DatabaseSeeder(ILiteDatabase dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
         }
-
-    
         public void SeedInLine(ILiteCollection<QuestionDefinition> collection)
         {
             //var questionDefinitionsCollection = _dbContext.GetCollection<QuestionDefinition>("question_definitions");
-            
-
             if (collection.Count() == 0)
             {
                 var questionDefinitions = new List<QuestionDefinition>
