@@ -18,6 +18,8 @@ namespace FormFlow.Backend.Endpoints
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status503ServiceUnavailable);
+
+            app.MapPost("/api/questions", () => {});
         }
     }
 }
