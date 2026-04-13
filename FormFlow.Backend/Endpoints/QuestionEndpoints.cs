@@ -7,6 +7,14 @@ namespace FormFlow.Backend.Endpoints
     {
         public static void MapQuestionEndpoints(this IEndpointRouteBuilder app)
         {
+            app.MapPost("/api/questions", () =>
+            {
+                // basic validation
+                //ensure unique id/key
+                //insert into questions collection
+                // return 201 response
+            });
+
             app.MapGet("/api/questions/template", () =>
             {
                 var question = SingleQuestionTemplate.Get();
@@ -19,7 +27,7 @@ namespace FormFlow.Backend.Endpoints
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status503ServiceUnavailable);
 
-            app.MapPost("/api/questions", () => {});
+            
         }
     }
 }
