@@ -72,3 +72,6 @@ Here is a invalid example of a survey json object:
 notice the lack of question objects and improper formatting of when the survey was created.
 
 ---
+### Endpoints
+## POST "/api/questions"
+Creates a new question and inserts into LiteDb `Questions` collection. We validate the question object. Then ensure that there is a unique Id and Key. Finally we insert into LiteDb.
