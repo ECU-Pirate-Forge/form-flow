@@ -40,7 +40,8 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
     var dbContext = scope.ServiceProvider.GetRequiredService<ILiteDatabase>();
     var collection = dbContext.GetCollection<QuestionDefinition>("question_definitions");
-    seeder.SeedInLine(collection);
+    //seeder.SeedInLine(collection);
+    seeder.SeedFromJson(collection);
 }
 if (app.Environment.IsDevelopment())
 {
