@@ -73,14 +73,14 @@ notice the lack of question objects and improper formatting of when the survey w
 ## Database Seeding
 We seed data to ensure our application has utility during development, allowing other parts of the app to not be blocked by not having data to use. The backend will automatically populate the database with seed data, if none exists already.
 ### Where does data exist?
-Currently sample questions are defined inline within the `SeedInLine` method
+Currently sample questions are defined in a JSON file at `FormFlow.Backend/SeedData/questions.json`
 
 ### How is data seeded?
 `Program.cs` triggers seeding during the app startup.
 
 - The app first resolves the LiteDb context
-- Then the app checks the `questions` collection
-- If there are no collections in LiteDb we use `collection.Count() == 0` to perform a `InsertBulk` to insert the sample questions
+- Then the app checks the `question_definitions` collection
+- If there are no documents in the collection (`collection.Count() == 0`), it calls `SeedFromJson` which reads the JSON file, deserializes the questions, and performs an `InsertBulk` to insert the sample questions
 
 ### How to reset?
 The simplest way to reset the database is to delete the `.db` file LiteDb creates. It will create a new one on startup.
