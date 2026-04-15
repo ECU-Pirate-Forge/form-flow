@@ -1,6 +1,14 @@
 const Ajv = require('ajv');
 const ajv = new Ajv({ allErrors: true });
 
+// Constants derived from schema
+const QUESTION_TYPES = ["text", "number", "yes_no", "dropdown", "radio", "checkbox", "multiselect"];
+const CHOICE_TYPES = ["dropdown", "radio", "checkbox", "multiselect"];
+const VALIDATION_TYPES = ["MinValue", "MaxValue", "MinLength", "MaxLength", "Range"];
+const TEXT_TYPES = ["text"];
+const NUMBER_TYPES = ["number"];
+const VALIDATION_APPLICABLE_TYPES = TEXT_TYPES.concat(NUMBER_TYPES);
+
 /**
  * JSON Schema for Question objects
  * Matches the C# Question model and intended question structure
@@ -13,6 +21,7 @@ const schema = {
   "properties": {
     "id": {
       "type": "string",
+      "format": "uuid",
       "description": "Unique identifier for the question (UUID format)."
     },
     "key": {
@@ -25,7 +34,7 @@ const schema = {
     },
     "type": {
       "type": "string",
-      "enum": ["text", "number", "yes_no", "dropdown", "radio", "checkbox", "multiselect"],
+      "enum": QUESTION_TYPES,
       "description": "Type of input control."
     },
     "required": {
@@ -65,31 +74,50 @@ const schema = {
           "type": "string",
           "description": "Key of the question that controls visibility."
         },
-        "equals": {
+        "shouldEqual": {
           "type": "boolean",
           "description": "The value that must be matched for this question to be visible."
         }
       },
-      "required": ["key", "equals"],
+      "required": ["key", "shouldEqual"],
       "additionalProperties": false,
       "description": "Conditional visibility rule."
     },
-    "validation": {
-      "type": ["object", "null"],
-      "properties": {
-        "min_length": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Minimum length for text fields."
+    "validationConfigs": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "properties": {
+          "validationType": {
+            "type": "string",
+            "enum": VALIDATION_TYPES,
+            "description": "Type of validation rule."
+          },
+          "minValue": {
+            "type": "integer",
+            "description": "Minimum value for number fields."
+          },
+          "maxValue": {
+            "type": "integer",
+            "description": "Maximum value for number fields."
+          },
+          "minLength": {
+            "type": "integer",
+            "description": "Minimum length for text fields."
+          },
+          "maxLength": {
+            "type": "integer",
+            "description": "Maximum length for text fields."
+          },
+          "message": {
+            "type": "string",
+            "description": "Custom error message for the validation rule."
+          }
         },
-        "max_length": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Maximum length for text fields."
-        }
+        "required": ["validationType"],
+        "additionalProperties": false
       },
-      "additionalProperties": false,
-      "description": "Validation rules applied to user input."
+      "description": "Array of validation rules applied to user input."
     },
     "helpText": {
       "type": "string",
@@ -101,7 +129,7 @@ const schema = {
   "if": {
     "properties": {
       "type": {
-        "enum": ["dropdown", "radio", "checkbox", "multiselect"]
+        "enum": CHOICE_TYPES
       }
     },
     "required": ["type"]
@@ -173,8 +201,7 @@ function performSemanticValidation(question) {
   const errors = [];
 
   // Validate that options are present for choice-based types
-  const choiceTypes = ['dropdown', 'radio', 'checkbox', 'multiselect'];
-  if (choiceTypes.includes(question.type) && (!question.options || question.options.length === 0)) {
+  if (CHOICE_TYPES.includes(question.type) && (!question.options || question.options.length === 0)) {
     errors.push({
       field: '/options',
       property: 'options_required',
@@ -191,17 +218,75 @@ function performSemanticValidation(question) {
     });
   }
 
-  // Validate validation rules if present
-  if (question.validation) {
-    if (question.validation.min_length !== undefined && question.validation.max_length !== undefined) {
-      if (question.validation.min_length > question.validation.max_length) {
+  // Validate validationConfigs if present
+  if (question.validationConfigs && Array.isArray(question.validationConfigs)) {
+    const minLengthRules = question.validationConfigs.filter(v => v.validationType === 'MinLength');
+    const maxLengthRules = question.validationConfigs.filter(v => v.validationType === 'MaxLength');
+    const minValueRules = question.validationConfigs.filter(v => v.validationType === 'MinValue');
+    const maxValueRules = question.validationConfigs.filter(v => v.validationType === 'MaxValue');
+    const rangeRules = question.validationConfigs.filter(v => v.validationType === 'Range');
+
+    // Check MinLength and MaxLength consistency
+    if (minLengthRules.length > 0 && maxLengthRules.length > 0) {
+      const minLen = Math.max(...minLengthRules.map(r => r.minLength || 0));
+      const maxLen = Math.min(...maxLengthRules.map(r => r.maxLength || Infinity));
+      if (minLen > maxLen) {
         errors.push({
-          field: '/validation',
-          property: 'min_max_order',
-          message: 'min_length cannot be greater than max_length'
+          field: '/validationConfigs',
+          property: 'min_max_length_order',
+          message: 'MinLength cannot be greater than MaxLength'
         });
       }
     }
+
+    // Check MinValue and MaxValue consistency
+    if (minValueRules.length > 0 && maxValueRules.length > 0) {
+      const minVal = Math.max(...minValueRules.map(r => r.minValue || -Infinity));
+      const maxVal = Math.min(...maxValueRules.map(r => r.maxValue || Infinity));
+      if (minVal > maxVal) {
+        errors.push({
+          field: '/validationConfigs',
+          property: 'min_max_value_order',
+          message: 'MinValue cannot be greater than MaxValue'
+        });
+      }
+    }
+
+    // Check Range consistency
+    rangeRules.forEach(rule => {
+      if (rule.minValue !== undefined && rule.maxValue !== undefined && rule.minValue > rule.maxValue) {
+        errors.push({
+          field: '/validationConfigs',
+          property: 'range_order',
+          message: 'In Range validation, minValue cannot be greater than maxValue'
+        });
+      }
+    });
+
+    // Validate that validation types are appropriate for the question type
+    question.validationConfigs.forEach((config, index) => {
+      if (TEXT_TYPES.includes(question.type) && !['MinLength', 'MaxLength'].includes(config.validationType)) {
+        errors.push({
+          field: `/validationConfigs/${index}`,
+          property: 'invalid_validation_type',
+          message: `Validation type '${config.validationType}' is not applicable for text questions`
+        });
+      }
+      if (NUMBER_TYPES.includes(question.type) && !['MinValue', 'MaxValue', 'Range'].includes(config.validationType)) {
+        errors.push({
+          field: `/validationConfigs/${index}`,
+          property: 'invalid_validation_type',
+          message: `Validation type '${config.validationType}' is not applicable for number questions`
+        });
+      }
+      if (!VALIDATION_APPLICABLE_TYPES.includes(question.type)) {
+        errors.push({
+          field: `/validationConfigs/${index}`,
+          property: 'validation_not_allowed',
+          message: `Validation rules are not applicable for question type '${question.type}'`
+        });
+      }
+    });
   }
 
   // Validate key format (should be snake_case or alphanumeric)
