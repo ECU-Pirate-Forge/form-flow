@@ -6,6 +6,11 @@ __pycache__/
 ##
 ## Get latest from `dotnet new gitignore`
 
+#LiteDB File
+formflow.db
+*.db
+
+
 # dotenv files
 .env
 

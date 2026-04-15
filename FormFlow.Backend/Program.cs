@@ -1,3 +1,4 @@
+using FormFlow.Backend;
 using FormFlow.Backend.Endpoints;
 using FormFlow.Backend.Repositories;
 using FormFlow.Data.Models;
@@ -19,6 +20,7 @@ builder.Services.AddSingleton<ILiteDatabase>(sp =>
 // Register the QuestionInserter service
 builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
+builder.Services.AddSingleton<DatabaseSeeder>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -33,6 +35,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ILiteDatabase>();
+    var collection = dbContext.GetCollection<QuestionDefinition>("questions");
+    //seeder.SeedInLine(collection);
+    seeder.SeedFromJson(collection);
+}
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
