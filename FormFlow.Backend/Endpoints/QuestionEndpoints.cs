@@ -2,34 +2,35 @@ using FormFlow.Data.Models;
 using FormFlow.Backend.Templates;
 using FormFlow.Backend.Repositories;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FormFlow.Backend.Endpoints
 {
+
+    public class QuestionValidation
+    {
+        public QuestionValidator Validator { get; } = new QuestionValidator();
+    }
+
+    public class QuestionInserterWrapper
+    {
+        public FormFlow.Data.Models.QuestionInserter Inserter { get; } = new FormFlow.Data.Models.QuestionInserter();
+    }
+
     public static class QuestionEndpoints
     {
+
+        private static readonly QuestionValidation _validation = new QuestionValidation();
+        private static readonly QuestionInserterWrapper _insertQuestion = new QuestionInserterWrapper();
         public static void MapQuestionEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository) =>
             {
-                // Basic validation
-                if (question == null)
+                // Validate the question object
+                var validationResult = _validation.Validator.Validate(question);
+                if (!validationResult.Valid)
                 {
-                    return Results.BadRequest("Question definition is required");
-                }
-
-                if (string.IsNullOrWhiteSpace(question.Key))
-                {
-                    return Results.BadRequest("Question key is required");
-                }
-
-                if (string.IsNullOrWhiteSpace(question.Label))
-                {
-                    return Results.BadRequest("Question label is required");
-                }
-
-                if (string.IsNullOrWhiteSpace(question.Type))
-                {
-                    return Results.BadRequest("Question type is required");
+                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.Message) });
                 }
 
                 // Check if key is unique
@@ -45,8 +46,12 @@ namespace FormFlow.Backend.Endpoints
                     question.Id = Guid.NewGuid();
                 }
 
-                // Insert into questions collection
-                repository.Questions.Insert(question);
+                // Insert using the inserter
+                var insertResult = _insertQuestion.Inserter.InsertQuestion(question);
+                if (!insertResult.Success)
+                {
+                    return Results.BadRequest(insertResult.Message);
+                }
 
                 // Return 201 Created
                 return Results.Created($"/api/questions/{question.Id}", question);

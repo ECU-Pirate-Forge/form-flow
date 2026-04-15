@@ -130,7 +130,7 @@ namespace FormFlow.Data.Models
                 // Connect to LiteDB and insert
                 using (var db = new LiteDatabase(_dbPath))
                 {
-                    var questionsCollection = db.GetCollection<QuestionDefinition>("question_data");
+                    var questionsCollection = db.GetCollection<QuestionDefinition>("questions");
 
                     // Insert the validated question
                     var id = questionsCollection.Insert(question);
