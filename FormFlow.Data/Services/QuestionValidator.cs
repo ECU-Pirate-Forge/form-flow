@@ -22,7 +22,7 @@ const result = validation.validateQuestion(input);
 console.log(JSON.stringify(result));
 ";
 
-        public QuestionValidator(string nodeScriptPath = "./data/schemas/validation/questionValidation.js")
+        public QuestionValidator(string nodeScriptPath = "/root/FormFlowPM/form-flow/FormFlow.Data/Services/Validation/questionValidation.js")
         {
             _nodeScriptPath = nodeScriptPath;
         }
@@ -46,9 +46,9 @@ console.log(JSON.stringify(result));
         /// </summary>
         public class ValidationError
         {
-            public string Field { get; set; }
-            public string Property { get; set; }
-            public string Message { get; set; }
+            public string? Field { get; set; }
+            public string? Property { get; set; }
+            public string? Message { get; set; }
         }
 
         /// <summary>

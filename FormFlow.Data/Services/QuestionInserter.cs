@@ -5,6 +5,7 @@ using FormFlow.Data.Models;
 using FormFlow.Data.Services;
 using Newtonsoft.Json;
 using LiteDB;
+using System.ComponentModel.DataAnnotations;
 
 namespace FormFlow.Data.Models
 {
@@ -28,9 +29,9 @@ namespace FormFlow.Data.Models
         public class InsertResult
         {
             public bool Success { get; set; }
-            public string Message { get; set; }
+            public string? Message { get; set; }
             public Guid? QuestionId { get; set; }
-            public QuestionValidator.ValidationResult ValidationResult { get; set; }
+            public required QuestionValidator.ValidationResult ValidationResult { get; set; }
         }
 
         /// <summary>
@@ -39,14 +40,16 @@ namespace FormFlow.Data.Models
         /// </summary>
         public InsertResult InsertQuestionFromFile(string jsonFilePath)
         {
+
             try
             {
                 if (!File.Exists(jsonFilePath))
                 {
-                    return new InsertResult
+                    return new InsertResult()
                     {
                         Success = false,
-                        Message = $"File not found: {jsonFilePath}"
+                        Message = $"File not found: {jsonFilePath}",
+                        ValidationResult = new QuestionValidator.ValidationResult(false)
                     };
                 }
 
@@ -60,7 +63,8 @@ namespace FormFlow.Data.Models
                     return new InsertResult
                     {
                         Success = false,
-                        Message = "No question data found in JSON file"
+                        Message = "No question data found in JSON file",
+                        ValidationResult = new QuestionValidator.ValidationResult(false)
                     };
                 }
 
@@ -71,7 +75,8 @@ namespace FormFlow.Data.Models
                 return new InsertResult
                 {
                     Success = false,
-                    Message = $"Error deserializing JSON: {ex.Message}"
+                    Message = $"Error deserializing JSON: {ex.Message}",
+                    ValidationResult = new QuestionValidator.ValidationResult(false)
                 };
             }
             catch (Exception ex)
@@ -79,7 +84,8 @@ namespace FormFlow.Data.Models
                 return new InsertResult
                 {
                     Success = false,
-                    Message = $"Error reading file: {ex.Message}"
+                    Message = $"Error reading file: {ex.Message}",
+                    ValidationResult = new QuestionValidator.ValidationResult(false)
                 };
             }
         }
@@ -88,14 +94,15 @@ namespace FormFlow.Data.Models
         /// Inserts a question object directly
         /// Validates before insertion and returns detailed error information
         /// </summary>
-        public InsertResult InsertQuestion(QuestionDefinition question)
+        public InsertResult InsertQuestion(QuestionDefinition? question)
         {
             if (question == null)
             {
                 return new InsertResult
                 {
                     Success = false,
-                    Message = "Question object cannot be null"
+                    Message = "Question object cannot be null",
+                    ValidationResult = new QuestionValidator.ValidationResult(false)
                 };
             }
 
@@ -132,7 +139,8 @@ namespace FormFlow.Data.Models
                     {
                         Success = true,
                         Message = "Question inserted successfully",
-                        QuestionId = (Guid?)id
+                        QuestionId = (Guid?)id,
+                        ValidationResult = new QuestionValidator.ValidationResult(false)
                     };
                 }
             }
@@ -141,7 +149,8 @@ namespace FormFlow.Data.Models
                 return new InsertResult
                 {
                     Success = false,
-                    Message = $"Error inserting question into database: {ex.Message}"
+                    Message = $"Error inserting question into database: {ex.Message}",
+                    ValidationResult = new QuestionValidator.ValidationResult(false)
                 };
             }
         }
@@ -159,7 +168,8 @@ namespace FormFlow.Data.Models
                     return new InsertResult
                     {
                         Success = false,
-                        Message = "JSON data cannot be empty"
+                        Message = "JSON data cannot be empty",
+                        ValidationResult = new QuestionValidator.ValidationResult(false)
                     };
                 }
 
@@ -171,7 +181,8 @@ namespace FormFlow.Data.Models
                 return new InsertResult
                 {
                     Success = false,
-                    Message = $"Error deserializing JSON: {ex.Message}"
+                    Message = $"Error deserializing JSON: {ex.Message}",
+                    ValidationResult = new QuestionValidator.ValidationResult(false)
                 };
             }
             catch (Exception ex)
@@ -179,7 +190,8 @@ namespace FormFlow.Data.Models
                 return new InsertResult
                 {
                     Success = false,
-                    Message = $"Error processing JSON: {ex.Message}"
+                    Message = $"Error processing JSON: {ex.Message}",
+                    ValidationResult = new QuestionValidator.ValidationResult(false)
                 };
             }
         }
