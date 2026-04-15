@@ -55,9 +55,14 @@ namespace FormFlow.Backend
         // }
         public void SeedFromJson(ILiteCollection<QuestionDefinition> collection)
         {
+            Console.WriteLine("Collection count BEFORE seeding: " + collection.Count());
+
             if (collection.Count() == 0)
             {
                 var seedDataPath = Path.Combine(_env.ContentRootPath, "SeedData", "questions.json");
+
+                Console.WriteLine("Seed data path: " + seedDataPath);
+                Console.WriteLine("Seed file exists: " + File.Exists(seedDataPath));
 
                 if (!File.Exists(seedDataPath))
                 {
@@ -84,6 +89,10 @@ namespace FormFlow.Backend
                 }
 
                 collection.InsertBulk(questionDefinitions);
+
+                Console.WriteLine("Inserted questions: " + questionDefinitions.Count);
+                Console.WriteLine("Collection count AFTER seeding: " + collection.Count());
+
             }
         }
     }
