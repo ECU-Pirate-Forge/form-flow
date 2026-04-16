@@ -1,5 +1,7 @@
 const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
 const ajv = new Ajv({ allErrors: true });
+addFormats(ajv);
 
 // Constants derived from schema
 const QUESTION_TYPES = ["text", "number", "yes_no", "dropdown", "radio", "checkbox", "multiselect"];
@@ -26,10 +28,12 @@ const schema = {
     },
     "key": {
       "type": "string",
+      "minLength": 1,
       "description": "Machine-friendly key for referencing this question."
     },
     "label": {
       "type": "string",
+      "minLength": 1,
       "description": "User-facing label displayed for the question."
     },
     "type": {
@@ -42,7 +46,7 @@ const schema = {
       "description": "Whether this question must be answered."
     },
     "placeholder": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "Placeholder text shown in the input field."
     },
     "defaultValue": {
@@ -120,7 +124,7 @@ const schema = {
       "description": "Array of validation rules applied to user input."
     },
     "helpText": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "Optional guidance or help text for the user."
     }
   },
@@ -319,6 +323,12 @@ function formatErrorMessage(error) {
     case 'additionalProperties':
       return `${path} contains unexpected property: ${error.params.additionalProperty}`;
     case 'minLength':
+      if (path === '/key') {
+        return 'Question key is required';
+      }
+      if (path === '/label') {
+        return 'Question label is required';
+      }
       return `${path} must be at least ${error.params.limit} characters long`;
     case 'maxLength':
       return `${path} must be at most ${error.params.limit} characters long`;
