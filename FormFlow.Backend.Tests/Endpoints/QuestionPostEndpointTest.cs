@@ -23,6 +23,7 @@ namespace FormFlow.Backend.Tests.Endpoints
             // Arrange
             var validQuestion = new QuestionDefinition
             {
+                Id = Guid.NewGuid(),
                 Key = "email",
                 Label = "Email Address",
                 Type = "text",
@@ -49,6 +50,7 @@ namespace FormFlow.Backend.Tests.Endpoints
             // Arrange
             var invalidQuestion = new QuestionDefinition
             {
+                Id = Guid.NewGuid(),
                 Key = "", // Empty key - invalid
                 Label = "Email Address",
                 Type = "text",
