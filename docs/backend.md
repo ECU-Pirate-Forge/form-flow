@@ -71,8 +71,7 @@ notice the lack of question objects and improper formatting of when the survey w
 
 ---
 ### Endpoints
-## POST "/api/questions"
-Creates a new question and inserts into LiteDb `Questions` collection. We validate the question object. Then ensure that there is a unique Id and Key. Finally we insert into LiteDb.
+
 ## Database Seeding
 We seed data to ensure our application has utility during development, allowing other parts of the app to not be blocked by not having data to use. The backend will automatically populate the database with seed data, if none exists already.
 ### Where does data exist?

@@ -28,6 +28,9 @@ Retrieve a default template question object.
 
 This endpoint is used to provide a starter question for form creation workflows.
 
+## POST `/api/questions`
+
+Creates a new question and uses `QuestionRepository.cs` to insert into `LiteDb`
 ---
 
 ## Request
