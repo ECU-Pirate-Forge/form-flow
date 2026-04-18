@@ -7,7 +7,7 @@ namespace FormFlow.Data.Models
         public string Type { get; set; } = string.Empty;
         public bool Required { get; set; } = true;
         public string? Placeholder { get; set; }
-        public string? DefaultValue {get; set; }
+        public string? DefaultValue { get; set; }
         public string? HelpText { get; set; }
     }
 }
