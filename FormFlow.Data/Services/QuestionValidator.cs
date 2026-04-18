@@ -116,16 +116,6 @@ namespace FormFlow.Data.Models
 
                 }
             }
-            if (question.Id == Guid.Empty)
-            {
-                result.Valid = false;
-                result.Errors.Add(new ValidationError
-                {
-                    Field = "id",
-                    Property = "required",
-                    Message = "Question Id must be a valid UUID"
-                });
-            }
             return result;
 
         }
