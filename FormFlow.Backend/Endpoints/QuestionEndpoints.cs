@@ -12,16 +12,10 @@ namespace FormFlow.Backend.Endpoints
         public QuestionValidator Validator { get; } = new QuestionValidator();
     }
 
-    public class QuestionInserterWrapper
-    {
-        public FormFlow.Data.Models.QuestionInserter Inserter { get; } = new FormFlow.Data.Models.QuestionInserter();
-    }
-
     public static class QuestionEndpoints
     {
 
         private static readonly QuestionValidation _validation = new QuestionValidation();
-        private static readonly QuestionInserterWrapper _insertQuestion = new QuestionInserterWrapper();
         public static void MapQuestionEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository) =>
@@ -46,12 +40,9 @@ namespace FormFlow.Backend.Endpoints
                     question.Id = Guid.NewGuid();
                 }
 
-                // Insert using the inserter
-                var insertResult = _insertQuestion.Inserter.InsertQuestion(question);
-                if (!insertResult.Success)
-                {
-                    return Results.BadRequest(insertResult.Message);
-                }
+                // Insert using repository
+                
+
 
                 // Return 201 Created
                 return Results.Created($"/api/questions/{question.Id}", question);
