@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 using FormFlow.Data.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,19 @@ namespace FormFlow.Backend.Tests.Endpoints
                     return new LiteDatabase($"Filename={dbPath};Connection=shared");
                 });
             });
+        }
+
+        protected override IHost CreateHost(IHostBuilder builder)
+        {
+            var host = base.CreateHost(builder);
+            // Clear the questions collection before each test
+            using (var scope = host.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ILiteDatabase>();
+                var questions = db.GetCollection<QuestionDefinition>("questions");
+                questions.DeleteAll();
+            }
+            return host;
         }
     }
 
