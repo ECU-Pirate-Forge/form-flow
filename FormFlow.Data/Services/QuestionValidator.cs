@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+
 using System.Text;
 using System.Text.Json;
-using FormFlow.Data.Models;
+using System.Linq;
 
 namespace FormFlow.Data.Models
 {
     /// <summary>
-    /// Validates Question objects using the JSON schema validation script
     /// Provides detailed error information for API responses
     /// </summary>
     public class QuestionValidator
     {
-
         /// <summary>
         /// Validation result containing success status and any errors
         /// </summary>
@@ -46,9 +41,10 @@ namespace FormFlow.Data.Models
         /// <returns>ValidationResult with details about any validation failures</returns>
         public ValidationResult Validate(QuestionDefinition question)
         {
+            var result = new ValidationResult(true);
             if (question == null)
             {
-                var result = new ValidationResult(false);
+                result.Valid = false;
                 result.Errors.Add(new ValidationError
                 {
                     Field = "root",
@@ -58,23 +54,80 @@ namespace FormFlow.Data.Models
                 return result;
             }
 
-            try
+            if (string.IsNullOrWhiteSpace(question.Key))
             {
-                
-
-                return validationResult;
-            }
-            catch (Exception ex)
-            {
-                var result = new ValidationResult(false);
+                result.Valid = false;
                 result.Errors.Add(new ValidationError
                 {
-                    Field = "root",
-                    Property = "exception",
-                    Message = $"Validation service error: {ex.Message}"
+                    Field = "key",
+                    Property = "required",
+                    Message = "Question key is required and cannot be empty"
                 });
-                return result;
             }
+            if (string.IsNullOrWhiteSpace(question.Label))
+            {
+                result.Valid = false;
+                result.Errors.Add(new ValidationError
+                {
+                    Field = "label",
+                    Property = "required",
+                    Message = "Question label is required and cannot be empty"
+                });
+            }
+            if (string.IsNullOrWhiteSpace(question.Type))
+            {
+                result.Valid = false;
+                result.Errors.Add(new ValidationError
+                {
+                    Field = "type",
+                    Property = "required",
+                    Message = "Question type is required and cannot be empty"
+                });
+            }
+            else
+            {
+                var validTypes = new[] {"text", "number", "yes_no", "dropdown", "radio", "checkbox", "multiselect" };
+                if (!validTypes.Contains(question.Type))
+                {
+                    result.Valid = false;
+                    result.Errors.Add(new ValidationError
+                    {
+                        Field = "type",
+                        Property = "enum",
+                        Message = $"Question type must be one of: {string.Join(", ", validTypes)}"
+                    });
+                }
+                else
+                {
+                    var choiceTypes = new[] {"dropdown", "radio", "checkbox", "multiselect"};
+                    if (choiceTypes.Contains(question.Type))
+                    {
+                        if (question.Options == null || !question.Options.Any())
+                        {
+                            result.Valid = false;
+                            result.Errors.Add(new ValidationError
+                            {
+                                Field = "options",
+                                Property = "required",
+                                Message = $"Question type '{question.Type}' requires at least one option"
+                            });
+                        }
+                    }
+
+                }
+            }
+            if (question.Id == Guid.Empty)
+            {
+                result.Valid = false;
+                result.Errors.Add(new ValidationError
+                {
+                    Field = "id",
+                    Property = "required",
+                    Message = "Question Id must be a valid UUID"
+                });
+            }
+            return result;
+
         }
 
         /// <summary>
@@ -96,10 +149,20 @@ namespace FormFlow.Data.Models
 
             try
             {
-                // Validate that it's proper JSON first
-                using (JsonDocument.Parse(jsonData)) { }
+                var question = JsonSerializer.Deserialize<QuestionDefinition>(jsonData);
+                if (question == null)
+                {
+                    var result = new ValidationResult(false);
+                    result.Errors.Add(new ValidationError
+                    {
+                        Field = "root",
+                        Property = "null",
+                        Message = "Deserialized question is null"
+                    });
+                    return result;
+                }
+                return Validate(question);
 
-                
             }
             catch (JsonException ex)
             {
@@ -124,8 +187,6 @@ namespace FormFlow.Data.Models
                 return result;
             }
         }
-
-
         /// <summary>
         /// Gets a human-readable error summary
         /// </summary>
