@@ -1,27 +1,18 @@
 using FormFlow.Data.Models;
 using FormFlow.Backend.Templates;
 using FormFlow.Backend.Repositories;
-using System;
-using System.Security.Cryptography.X509Certificates;
+
 
 namespace FormFlow.Backend.Endpoints
 {
-
-    public class QuestionValidation
-    {
-        public QuestionValidator Validator { get; } = new QuestionValidator();
-    }
-
     public static class QuestionEndpoints
     {
-
-        private static readonly QuestionValidation _validation = new QuestionValidation();
         public static void MapQuestionEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository) =>
+            app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository, QuestionValidator validator) =>
             {
                 // Validate the question object
-                var validationResult = _validation.Validator.Validate(question);
+                var validationResult = validator.Validate(question);
                 if (!validationResult.Valid)
                 {
                     return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.Message) });
@@ -39,13 +30,35 @@ namespace FormFlow.Backend.Endpoints
                 {
                     question.Id = Guid.NewGuid();
                 }
+                else
+                {
+                    // Check if id is unique
+                    var existingById = repository.Questions.FindOne(q => q.Id == question.Id);
+                    if (existingById != null)
+                    {
+                        return Results.Conflict($"A question with id '{question.Id}' already exists");
+                    }
+                }
 
                 // Insert using repository
+                try
+                {
+                    repository.Questions.Insert(question);
+                    return Results.Created($"/api/questions/{question.Id}", question);
+                }
+                catch(ArgumentNullException)
+                {
+                    return Results.BadRequest(new { errors = new[] { "Invalid question data provided" } });
+                }
+                catch (Exception)
+                {
+                    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+                }
+                
                 
 
 
-                // Return 201 Created
-                return Results.Created($"/api/questions/{question.Id}", question);
+                
             })
             .WithName("CreateQuestion")
             .Produces<QuestionDefinition>(StatusCodes.Status201Created)
