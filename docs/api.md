@@ -22,11 +22,11 @@ https://localhost:7209
 
 ---
 
-## GET `/api/questions/template`
+## GET `/api/questions/{id}`
 
-Retrieve a default template question object.
+Retrieve one question document by ID from the LiteDB `questions` collection.
 
-This endpoint is used to provide a starter question for form creation workflows.
+This endpoint is used by frontend clients to load and render real question data.
 
 ## POST `/api/questions`
 
@@ -44,7 +44,13 @@ GET
 ### **URL**
 
 ```
-/api/questions/template
+/api/questions/{id}
+```
+
+Example:
+
+```
+/api/questions/b5d8f0e1-1c5b-4f7b-8cfa-6cab5f7fd001
 ```
 
 ### **Headers**
@@ -65,38 +71,43 @@ None required.
 
 | Status Code                         | Meaning                                 |
 | ----------------------------------- | --------------------------------------- |
-| **200 OK**                    | Template question returned successfully |
-| **500 Internal Server Error** | Unexpected server error                 |
+| **200 OK**                    | Question returned successfully          |
+| **400 Bad Request**           | ID is empty, whitespace, or malformed   |
+| **404 Not Found**             | No question exists for the provided ID  |
 
 ---
 
-### **Response Body (JSON)**
+### **200 Response Body (JSON)**
 
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "key": "exampleKey",
-  "label": "Example question",
+  "id": "b5d8f0e1-1c5b-4f7b-8cfa-6cab5f7fd001",
+  "key": "first_name",
+  "label": "First Name",
   "type": "text",
   "required": true,
-  "placeholder": "Enter value",
+  "placeholder": "Enter your first name",
   "defaultValue": null,
   "options": [],
-  "visibleIf": {
-    "questionKey": null,
-    "equals": false
-  },
-  "validationConfigs": [
-    { "ValidationType": "MinLength", "MinLength": 1 },
-    { "ValidationType": "MaxLength", "MaxLength": 100},
-],
-  "helpText": "This is an example question."
+  "visibleIf": null,
+  "validationConfigs": null,
+  "helpText": null
 }
+
+### **400 Response Body (JSON)**
+
+{
+  "error": "Invalid question id. Provide a non-empty GUID value."
+}
+
+### **404 Response Body**
+
+No response body.
 
 ### **Field Descriptions**
 
 | Field                         | Type             | Description                                                                                                          |
 | ----------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `id`                        | `string(Guid)` | Unique identifier for the question. Template questions typically use an empty GUID.                                  |
+| `id`                        | `string(Guid)` | Unique identifier for the question.                                                                                  |
 | `key`                       | `string`       | Internal key used to reference this question in form submissions.                                                    |
 | `label`                     | `string`       | The text displayed to the user.                                                                                      |
 | `type`                      | `string`       | The question type (e.g.,`"text"`,`"number"`,`"dropdown"`)                                                      |
@@ -117,7 +128,7 @@ None required.
 ### **cURL**
 
 ```bash
-curl -X GET "https://localhost:7209/api/questions/template" \
+curl -X GET "https://localhost:7209/api/questions/b5d8f0e1-1c5b-4f7b-8cfa-6cab5f7fd001" \
      -H "Accept: application/json"
 ```
 
@@ -125,7 +136,7 @@ curl -X GET "https://localhost:7209/api/questions/template" \
 
 ```powershell
 Invoke-RestMethod -Method GET `
-  -Uri "https://localhost:7209/api/questions/template" `
+  -Uri "https://localhost:7209/api/questions/b5d8f0e1-1c5b-4f7b-8cfa-6cab5f7fd001" `
   -Headers @{ Accept = "application/json" }
 ```
 
@@ -135,7 +146,7 @@ Invoke-RestMethod -Method GET `
 2. Create a new **GET** request
 3. Enter the URL:
    ```
-   https://localhost:7209/api/questions/template
+  https://localhost:7209/api/questions/b5d8f0e1-1c5b-4f7b-8cfa-6cab5f7fd001
    ```
 4. Set header:
    ```
@@ -146,7 +157,7 @@ Invoke-RestMethod -Method GET `
 **Expected Response:**
 
 * Status: `200 OK`
-* Body: JSON object with `label` and `type`
+* Body: JSON object matching `QuestionDefinition`
 * Content-Type: `application/json; charset=utf-8`
 
 ---
@@ -155,12 +166,24 @@ Invoke-RestMethod -Method GET `
 
 The following integration tests validate this endpoint:
 
-### `Get_TemplateQuestion_Returns200AndValidQuestion`
+### `Get_QuestionById_Returns200AndRequestedQuestion`
 
 * Ensures the endpoint returns **200 OK**
-* Ensures the JSON body contains non‑empty `label` and `type`
+* Ensures the JSON body contains the requested question
 
-### `Get_TemplateQuestion_ProducesJson`
+### `Get_QuestionById_Returns404WhenQuestionDoesNotExist`
+
+* Ensures unknown IDs return **404 Not Found**
+
+### `Get_QuestionById_Returns400ForInvalidId`
+
+* Ensures invalid IDs return **400 Bad Request**
+
+### `Get_QuestionById_WithEmptyDatabase_Returns404AndDoesNotThrow`
+
+* Ensures empty database lookups return **404 Not Found** and do not throw exceptions
+
+### `Get_QuestionById_ProducesJson`
 
 * Ensures the response `Content-Type` is `application/json; charset=utf-8`
 
@@ -170,11 +193,11 @@ These tests run using `WebApplicationFactory<Program>` to spin up the real backe
 
 # Notes
 
-* This endpoint currently returns a static template question.
-* Future enhancements may include:
-  * Dynamic question templates
-  * Multiple question types
-  * User‑defined templates
-  * Database‑driven question generation
+* This endpoint is intentionally read-only.
+* Out of scope for this endpoint:
+  * GET all questions
+  * POST/PUT/DELETE
+  * Survey hydration
+  * Additional validation logic
 
 ---

@@ -1,6 +1,5 @@
-using FormFlow.Data.Models;
-using FormFlow.Backend.Templates;
 using FormFlow.Backend.Repositories;
+using FormFlow.Data.Models;
 
 
 namespace FormFlow.Backend.Endpoints
@@ -9,9 +8,31 @@ namespace FormFlow.Backend.Endpoints
     {
         public static void MapQuestionEndpoints(this IEndpointRouteBuilder app)
         {
+            app.MapGet("/api/questions/{id}", (string id, IQuestionRepository repository) =>
+            {
+                if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var parsedId))
+                {
+                    return Results.BadRequest(new
+                    {
+                        error = "Invalid question id. Provide a non-empty GUID value."
+                    });
+                }
+
+                var question = repository.Questions.FindById(parsedId);
+
+                if (question is null)
+                {
+                    return Results.NotFound();
+                }
+
+                return Results.Json(question);
+            })
+            .WithName("GetQuestionById")
+            .Produces<QuestionDefinition>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
             app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository, QuestionValidator validator) =>
             {
-                // Validate the question object
                 var validationResult = validator.Validate(question);
                 if (!validationResult.Valid)
                 {
@@ -46,27 +67,21 @@ namespace FormFlow.Backend.Endpoints
                     repository.Questions.Insert(question);
                     return Results.Created($"/api/questions/{question.Id}", question);
                 }
+                catch(ArgumentNullException)
+                {
+                    return Results.BadRequest(new { errors = new[] { "Invalid question data provided" } });
+                }
                 catch (Exception)
                 {
                     return Results.StatusCode(StatusCodes.Status500InternalServerError);
                 }
-            })
+                })
             .WithName("CreateQuestion")
             .Produces<QuestionDefinition>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict);
 
-            app.MapGet("/api/questions/template", () =>
-            {
-                var question = SingleQuestionTemplate.Get();
-                return Results.Json(question);
-            })
-            .WithName("GetQuestionTemplate")
-            .Produces<QuestionDefinition>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status500InternalServerError)
-            .Produces(StatusCodes.Status503ServiceUnavailable);
+            
         }
     }
 }
