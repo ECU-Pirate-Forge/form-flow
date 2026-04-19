@@ -3,6 +3,7 @@ using FluentAssertions;
 using FormFlow.Blazor.Components.QuestionTypes;
 using FormFlow.Data.Models;
 using MudBlazor.Services;
+using System.Reflection;
 
 namespace FormFlow.Blazor.Tests.Components;
 
@@ -36,8 +37,23 @@ public class YesNoQuestionTests
         cut.Markup.Should().Contain("No");
     }
 
+    private static bool? GetInternalValue(IRenderedComponent<YesNoQuestion> cut)
+    {
+        var field = cut.Instance
+            .GetType()
+            .GetField("_value", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // If the field isn't found, fail the test immediately
+        field.Should().NotBeNull("the YesNoQuestion component must contain a _value field");
+
+        var raw = field!.GetValue(cut.Instance);
+
+        return raw as bool?;
+    }
+
+
     [Fact]
-    public async Task Updates_Value_When_Selection_Changes()
+    public async Task Updates_Internal_Value_When_Selection_Changes()
     {
         await using var ctx = CreateContext();
 
@@ -46,11 +62,14 @@ public class YesNoQuestionTests
         var cut = ctx.Render<YesNoQuestion>(p => p.Add(x => x.Question, question));
 
         var radios = cut.FindAll("input[type='radio']");
-        radios[0].Click();
-        question.DefaultValue.Should().Be("true");
 
+        // Click "Yes"
+        radios[0].Click();
+        GetInternalValue(cut).Should().Be(true);
+
+        // Click "No"
         radios[1].Click();
-        question.DefaultValue.Should().Be("false");
+        GetInternalValue(cut).Should().Be(false);
     }
 
     private static BunitContext CreateContext()
