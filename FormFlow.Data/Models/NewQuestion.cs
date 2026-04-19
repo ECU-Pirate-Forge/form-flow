@@ -9,5 +9,6 @@ namespace FormFlow.Data.Models
         public string? Placeholder { get; set; }
         public string? DefaultValue { get; set; }
         public string? HelpText { get; set; }
+        public List<Option> Options { get; set; } = new();
     }
 }
