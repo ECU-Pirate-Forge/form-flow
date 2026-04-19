@@ -1,6 +1,7 @@
 using Bunit;
 using FluentAssertions;
 using FormFlow.Blazor.Components.Pages.Admin;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
@@ -143,6 +144,9 @@ public class AdminCreateQuestionTests
         return ctx;
     }
 
+    private static readonly MethodInfo? _stateHasChanged =
+        typeof(ComponentBase).GetMethod("StateHasChanged", BindingFlags.Instance | BindingFlags.NonPublic);
+
     private static async Task SetTypeAsync(IRenderedComponent<AdminCreateQuestion> cut, string type)
     {
         var typeField = typeof(AdminCreateQuestion)
@@ -154,6 +158,7 @@ public class AdminCreateQuestionTests
         {
             var question = typeField!.GetValue(cut.Instance);
             question!.GetType().GetProperty("Type")!.SetValue(question, type);
+            _stateHasChanged!.Invoke(cut.Instance, null);
         });
     }
 
@@ -165,7 +170,11 @@ public class AdminCreateQuestionTests
 
         method.Should().NotBeNull();
 
-        await cut.InvokeAsync(() => method!.Invoke(cut.Instance, null));
+        await cut.InvokeAsync(() =>
+        {
+            method!.Invoke(cut.Instance, null);
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
     }
 
     private static async Task InvokeRemoveOptionAsync(IRenderedComponent<AdminCreateQuestion> cut, int index)
@@ -176,7 +185,11 @@ public class AdminCreateQuestionTests
 
         method.Should().NotBeNull();
 
-        await cut.InvokeAsync(() => method!.Invoke(cut.Instance, new object[] { index }));
+        await cut.InvokeAsync(() =>
+        {
+            method!.Invoke(cut.Instance, new object[] { index });
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
     }
 
     private static async Task InvokeCreateQuestionAsync(IRenderedComponent<AdminCreateQuestion> cut)
