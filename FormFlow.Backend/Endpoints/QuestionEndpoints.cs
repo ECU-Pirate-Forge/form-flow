@@ -66,7 +66,7 @@ namespace FormFlow.Backend.Endpoints
                     repository.Questions.Insert(question);
                     return Results.Created($"/api/questions/{question.Id}", question);
                 }
-                catch(ArgumentNullException)
+                catch (ArgumentNullException)
                 {
                     return Results.BadRequest(new { errors = new[] { "Invalid question data provided" } });
                 }
@@ -74,13 +74,13 @@ namespace FormFlow.Backend.Endpoints
                 {
                     return Results.StatusCode(StatusCodes.Status500InternalServerError);
                 }
-                })
+            })
             .WithName("CreateQuestion")
             .Produces<QuestionDefinition>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict);
 
-            
+
         }
     }
 }
