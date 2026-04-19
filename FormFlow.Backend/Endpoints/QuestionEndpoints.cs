@@ -1,5 +1,5 @@
+using FormFlow.Backend.Repositories;
 using FormFlow.Data.Models;
-using FormFlow.Backend.Templates;
 
 namespace FormFlow.Backend.Endpoints
 {
@@ -7,17 +7,29 @@ namespace FormFlow.Backend.Endpoints
     {
         public static void MapQuestionEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/questions/template", () =>
+            app.MapGet("/api/questions/{id}", (string id, IQuestionRepository repository) =>
             {
-                var question = SingleQuestionTemplate.Get();
+                if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var parsedId))
+                {
+                    return Results.BadRequest(new
+                    {
+                        error = "Invalid question id. Provide a non-empty GUID value."
+                    });
+                }
+
+                var question = repository.Questions.FindById(parsedId);
+
+                if (question is null)
+                {
+                    return Results.NotFound();
+                }
+
                 return Results.Json(question);
             })
-            .WithName("GetQuestionTemplate")
+            .WithName("GetQuestionById")
             .Produces<QuestionDefinition>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status500InternalServerError)
-            .Produces(StatusCodes.Status503ServiceUnavailable);
+            .Produces(StatusCodes.Status404NotFound);
         }
     }
 }
