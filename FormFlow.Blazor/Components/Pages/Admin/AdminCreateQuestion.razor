@@ -1,0 +1,96 @@
+@page "/admin/questions/create"
+
+<MudPaper Class="pa-6" MaxWidth="600px">
+    <MudText Typo="Typo.h5" Class="mb-4">Create Question</MudText>
+
+    <MudForm @ref="_form" Model="@newQuestion" @bind-IsValid="_isValid">
+        <MudTextField T="string"
+                      Label="Label"
+                      @bind-Value="newQuestion.Label"
+                      Required="true"
+                      RequiredError="Label is required."
+                      Immediate="true"
+                      Class="mb-3" />
+
+        <MudTextField T="string"
+                      Label="Key"
+                      @bind-Value="newQuestion.Key"
+                      Required="true"
+                      RequiredError="Key is required."
+                      Immediate="true"
+                      Class="mb-3" />
+
+        <MudSelect T="string"
+                   Label="Type"
+                   @bind-Value="newQuestion.Type"
+                   Required="true"
+                   RequiredError="Type is required."
+                   Immediate="true"
+                   Class="mb-3">
+            <MudSelectItem Value='@("dropdown")'>Dropdown</MudSelectItem>
+            <MudSelectItem Value='@("text")'>Text</MudSelectItem>
+            <MudSelectItem Value='@("yes_no")'>Yes/No</MudSelectItem>
+            <MudSelectItem Value='@("number")'>Number</MudSelectItem>
+            <MudSelectItem Value='@("multiselect")'>Multi-Select</MudSelectItem>
+            <MudSelectItem Value='@("checkbox")'>Checkbox</MudSelectItem>
+            <MudSelectItem Value='@("radio")'>Radio</MudSelectItem>
+        </MudSelect>
+
+        <MudSwitch T="bool"
+                   Label="Required"
+                   @bind-Value="newQuestion.Required"
+                   Color="Color.Primary"
+                   Class="mb-3" />
+
+        <MudTextField T="string"
+                      Label="Placeholder"
+                      @bind-Value="newQuestion.Placeholder"
+                      Immediate="true"
+                      Class="mb-3" />
+
+        <MudTextField T="string"
+                      Label="Default Value"
+                      @bind-Value="newQuestion.DefaultValue"
+                      Immediate="true"
+                      Class="mb-3" />
+
+        <MudTextField T="string"
+                      Label="Help Text"
+                      @bind-Value="newQuestion.HelpText"
+                      Immediate="true"
+                      Lines="3"
+                      Class="mb-4" />
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@(!CanCreate)"
+                   OnClick="CreateQuestion">
+            Create Question
+        </MudButton>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private MudForm? _form;
+    private bool _isValid;
+
+    private NewQuestion newQuestion = new();
+
+    private bool CanCreate =>
+        _isValid &&
+        !string.IsNullOrWhiteSpace(newQuestion.Label) &&
+        !string.IsNullOrWhiteSpace(newQuestion.Key) &&
+        !string.IsNullOrWhiteSpace(newQuestion.Type);
+
+    private async Task CreateQuestion()
+    {
+        if (_form is null)
+            return;
+
+        await _form.ValidateAsync();
+
+        if (!CanCreate)
+            return;
+
+    }
+}
