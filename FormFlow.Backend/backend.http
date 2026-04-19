@@ -9,8 +9,8 @@ POST {{backend_HostAddress}}/api/questions
 Content-Type: application/json
 
 {
-  "key": "firstname",
-  "label": "First Name",
+  "key": "test",
+  "label": "test",
   "type": "text",
   "required": true
 }
