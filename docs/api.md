@@ -28,6 +28,9 @@ Retrieve one question document by ID from the LiteDB `questions` collection.
 
 This endpoint is used by frontend clients to load and render real question data.
 
+## POST `/api/questions`
+
+Creates a new question and uses `QuestionRepository.cs` to insert into `LiteDb`
 ---
 
 ## Request

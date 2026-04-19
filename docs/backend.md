@@ -70,6 +70,7 @@ Here is a invalid example of a survey json object:
 notice the lack of question objects and improper formatting of when the survey was created.
 
 ---
+
 ## Database Seeding
 We seed data to ensure our application has utility during development, allowing other parts of the app to not be blocked by not having data to use. The backend will automatically populate the database with seed data, if none exists already.
 ### Where does data exist?

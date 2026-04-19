@@ -4,3 +4,15 @@ GET {{backend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{backend_HostAddress}}/api/questions
+Content-Type: application/json
+
+{
+  "key": "test",
+  "label": "test",
+  "type": "text",
+  "required": true
+}
+
+###

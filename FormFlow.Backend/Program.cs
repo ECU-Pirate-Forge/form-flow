@@ -20,6 +20,7 @@ builder.Services.AddSingleton<ILiteDatabase>(sp =>
 // Register the QuestionInserter service
 builder.Services.AddSingleton<IQuestionInserter, QuestionInserter>();
 builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
+builder.Services.AddSingleton<QuestionValidator>();
 builder.Services.AddSingleton<DatabaseSeeder>();
 
 builder.Services.AddOpenApi();
