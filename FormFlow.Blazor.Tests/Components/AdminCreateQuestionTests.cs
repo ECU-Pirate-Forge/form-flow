@@ -1,6 +1,7 @@
 using Bunit;
 using FluentAssertions;
 using FormFlow.Blazor.Components.Pages.Admin;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
@@ -45,6 +46,90 @@ public class AdminCreateQuestionTests
         });
     }
 
+    [Theory]
+    [InlineData("dropdown")]
+    [InlineData("radio")]
+    [InlineData("checkbox")]
+    [InlineData("multiselect")]
+    public async Task OptionsEditor_Appears_For_OptionBasedTypes(string type)
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await SetTypeAsync(cut, type);
+
+        cut.WaitForAssertion(() =>
+            cut.Markup.Should().Contain("Add Option"));
+    }
+
+    [Theory]
+    [InlineData("text")]
+    [InlineData("number")]
+    [InlineData("yes_no")]
+    public async Task OptionsEditor_Hidden_For_NonOptionTypes(string type)
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await SetTypeAsync(cut, type);
+
+        cut.WaitForAssertion(() =>
+            cut.Markup.Should().NotContain("Add Option"));
+    }
+
+    [Fact]
+    public async Task AddOption_AddsOptionRow()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await SetTypeAsync(cut, "dropdown");
+
+        cut.WaitForAssertion(() =>
+            cut.Markup.Should().Contain("Add Option"));
+
+        await InvokeAddOptionAsync(cut);
+
+        cut.WaitForAssertion(() =>
+            cut.FindAll("[data-option-row]").Should().HaveCount(1));
+    }
+
+    [Fact]
+    public async Task RemoveOption_RemovesOptionRow()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await SetTypeAsync(cut, "radio");
+
+        await InvokeAddOptionAsync(cut);
+        await InvokeAddOptionAsync(cut);
+
+        cut.WaitForAssertion(() =>
+            cut.FindAll("[data-option-row]").Should().HaveCount(2));
+
+        await InvokeRemoveOptionAsync(cut, 0);
+
+        cut.WaitForAssertion(() =>
+            cut.FindAll("[data-option-row]").Should().HaveCount(1));
+    }
+
+    [Fact]
+    public async Task AddOption_MultipleRows_TrackedCorrectly()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await SetTypeAsync(cut, "multiselect");
+
+        await InvokeAddOptionAsync(cut);
+        await InvokeAddOptionAsync(cut);
+        await InvokeAddOptionAsync(cut);
+
+        cut.WaitForAssertion(() =>
+            cut.FindAll("[data-option-row]").Should().HaveCount(3));
+    }
+
     private static BunitContext CreateContext()
     {
         var ctx = new BunitContext();
@@ -57,6 +142,54 @@ public class AdminCreateQuestionTests
         ctx.Render<MudSnackbarProvider>();
 
         return ctx;
+    }
+
+    private static readonly MethodInfo? _stateHasChanged =
+        typeof(ComponentBase).GetMethod("StateHasChanged", BindingFlags.Instance | BindingFlags.NonPublic);
+
+    private static async Task SetTypeAsync(IRenderedComponent<AdminCreateQuestion> cut, string type)
+    {
+        var typeField = typeof(AdminCreateQuestion)
+            .GetField("newQuestion", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        typeField.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            var question = typeField!.GetValue(cut.Instance);
+            question!.GetType().GetProperty("Type")!.SetValue(question, type);
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
+    }
+
+    private static async Task InvokeAddOptionAsync(IRenderedComponent<AdminCreateQuestion> cut)
+    {
+        var method = typeof(AdminCreateQuestion).GetMethod(
+            "AddOption",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+
+        method.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            method!.Invoke(cut.Instance, null);
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
+    }
+
+    private static async Task InvokeRemoveOptionAsync(IRenderedComponent<AdminCreateQuestion> cut, int index)
+    {
+        var method = typeof(AdminCreateQuestion).GetMethod(
+            "RemoveOption",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+
+        method.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            method!.Invoke(cut.Instance, new object[] { index });
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
     }
 
     private static async Task InvokeCreateQuestionAsync(IRenderedComponent<AdminCreateQuestion> cut)

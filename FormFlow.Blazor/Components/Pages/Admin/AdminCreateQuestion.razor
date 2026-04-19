@@ -61,6 +61,44 @@
                       Lines="3"
                       Class="mb-4" />
 
+        @if (IsOptionBasedType)
+        {
+            <MudText Typo="Typo.subtitle1" Class="mb-2">Options</MudText>
+
+            @for (int i = 0; i < newQuestion.Options.Count; i++)
+            {
+                var index = i;
+                <MudGrid Class="mb-2" data-option-row="@index">
+                    <MudItem xs="5">
+                        <MudTextField T="string"
+                                      Label="Label"
+                                      @bind-Value="newQuestion.Options[index].Label"
+                                      Immediate="true" />
+                    </MudItem>
+                    <MudItem xs="5">
+                        <MudTextField T="string"
+                                      Label="Value"
+                                      @bind-Value="newQuestion.Options[index].Value"
+                                      Immediate="true" />
+                    </MudItem>
+                    <MudItem xs="2" Class="d-flex align-center">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       Color="Color.Error"
+                                       aria-label="Remove option"
+                                       OnClick="() => RemoveOption(index)" />
+                    </MudItem>
+                </MudGrid>
+            }
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="AddOption"
+                       Class="mb-4">
+                Add Option
+            </MudButton>
+        }
+
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
                    Disabled="@(!CanCreate)"
@@ -76,11 +114,26 @@
 
     private NewQuestion newQuestion = new();
 
+    private static readonly HashSet<string> OptionBasedTypes =
+        new(StringComparer.OrdinalIgnoreCase) { "dropdown", "radio", "checkbox", "multiselect" };
+
+    private bool IsOptionBasedType => OptionBasedTypes.Contains(newQuestion.Type);
+
     private bool CanCreate =>
         _isValid &&
         !string.IsNullOrWhiteSpace(newQuestion.Label) &&
         !string.IsNullOrWhiteSpace(newQuestion.Key) &&
         !string.IsNullOrWhiteSpace(newQuestion.Type);
+
+    private void AddOption()
+    {
+        newQuestion.Options.Add(new Option { Label = string.Empty, Value = string.Empty });
+    }
+
+    private void RemoveOption(int index)
+    {
+        newQuestion.Options.RemoveAt(index);
+    }
 
     private async Task CreateQuestion()
     {
