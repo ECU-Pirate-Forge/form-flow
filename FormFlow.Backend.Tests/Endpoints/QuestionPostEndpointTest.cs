@@ -23,7 +23,7 @@ namespace FormFlow.Backend.Tests.Endpoints
                 {
                     services.Remove(existingDatabaseRegistration);
                 }
-                
+
                 services.AddSingleton<ILiteDatabase>(_ =>
                     new LiteDatabase($"Filename={tempDbPath};Connection=shared"));
             });
@@ -39,7 +39,7 @@ namespace FormFlow.Backend.Tests.Endpoints
         }
     }
 
-    
+
     public class QuestionPostEndpointTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
