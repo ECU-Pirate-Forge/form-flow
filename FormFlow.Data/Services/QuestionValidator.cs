@@ -88,7 +88,7 @@ namespace FormFlow.Data.Models
             {
                 var validTypes = new[] { "text", "number", "yes_no", "dropdown", "radio", "checkbox", "multiselect" };
 
-                if (!validTypes.Contains(question.Type))
+                if (!validTypes.Contains(question.Type.ToLower()))
                 {
                     result.Valid = false;
                     result.Errors.Add(new ValidationError
@@ -101,7 +101,7 @@ namespace FormFlow.Data.Models
                 else
                 {
                     var choiceTypes = new[] { "dropdown", "radio", "checkbox", "multiselect" };
-                    if (choiceTypes.Contains(question.Type))
+                    if (choiceTypes.Contains(question.Type.ToLower()))
                     {
                         if (question.Options == null || !question.Options.Any())
                         {
