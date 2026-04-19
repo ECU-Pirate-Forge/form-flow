@@ -1,5 +1,4 @@
 @page "/admin/questions"
-@using MudBlazor
 
 <PageTitle>Question Management</PageTitle>
 
@@ -10,7 +9,8 @@
     <p>This page will contain the admin UI for creating and managing questions.</p>
 
     <MudButton Variant="Variant.Filled"
-                Color="Color.Primary">
+                Color="Color.Primary"
+                Href="/admin/questions/create">
         Create New Question            
     </MudButton>
 </MudPaper>
