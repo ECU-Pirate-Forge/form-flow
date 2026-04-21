@@ -30,6 +30,14 @@ namespace FormFlow.Backend.Endpoints
             .Produces<QuestionDefinition>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound);
+
+            app.MapGet("/api/questions",(IQuestionRepository repository) =>
+            {
+                return Results.Json(repository.Questions.FindAll().ToList());
+            })
+            .WithName("GetAllQuestions")
+            .Produces<List<QuestionDefinition>>(StatusCodes.Status200OK);
+            
             app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository, QuestionValidator validator) =>
             {
                 var validationResult = validator.Validate(question);
