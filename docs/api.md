@@ -35,7 +35,7 @@ Maps `NewQuestion` to `QuestionDefinition` and uses `QuestionRepository.cs` to i
 ## GET `/api/questions`
 
 This endpoint uses `QuestionRepository.cs` to find all the questions in the `questions` collection. 
-It then produces a list of all the questions in the database. 
+It then produces a list of all the questions in the database.
 
 ---
 
