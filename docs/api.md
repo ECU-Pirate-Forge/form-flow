@@ -31,6 +31,11 @@ This endpoint is used by frontend clients to load and render real question data.
 ## POST `/api/questions`
 
 Creates a new question and uses `QuestionRepository.cs` to insert into `LiteDb`
+
+## GET `/api/questions`
+
+This endpoint uses `QuestionRepository.cs` to find all the questions in the `questions` collection. 
+It then produces a list of all the questions in the database. 
 ---
 
 ## Request
