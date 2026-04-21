@@ -11,7 +11,7 @@ namespace FormFlow.Backend.Repositories
         {
             Surveys = db.GetCollection<SurveyDefinition>("surveys");
 
-            Surveys.EnsureIndex(s => s.Id);
+            Surveys.EnsureIndex(s => s.Id, true);
         }
     }
 
