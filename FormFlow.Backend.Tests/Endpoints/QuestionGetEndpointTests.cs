@@ -119,6 +119,40 @@ namespace FormFlow.Backend.Tests.Endpoints
                 response.Content.Headers.ContentType?.ToString());
         }
 
+        [Fact]
+        public async Task Get_All_Questions_Returns200_AndListsAllQuestions()
+        {
+            EnsureKnownQuestionExists();
+
+            var response = await _client.GetAsync("/api/questions");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var questions = await response.Content.ReadFromJsonAsync<List<QuestionDefinition>>();
+            Assert.NotNull(questions);
+            Assert.Single(questions);
+            Assert.Equal(ExistingQuestionId, questions.First(q => q.Id == ExistingQuestionId).Id);
+        }
+
+        [Fact]
+        public async Task Get_All_Questions_WithEmptyDatabase_ReturnsEmptyList()
+        {
+            using (var database = new LiteDatabase($"Filename={_factory.DatabasePath};Connection=shared"))
+            {
+                database.DropCollection("questions");
+            }
+
+            var response = await _client.GetAsync("/api/questions");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var questions = await response.Content.ReadFromJsonAsync<List<QuestionDefinition>>();
+            Assert.NotNull(questions);
+            Assert.Empty(questions);
+
+        }
+
+
         private void EnsureKnownQuestionExists()
         {
             using var database = new LiteDatabase($"Filename={_factory.DatabasePath};Connection=shared");

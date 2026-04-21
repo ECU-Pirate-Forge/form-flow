@@ -16,3 +16,8 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{backend_HostAddress}}/api/questions
+Accept: application/json
+
+###
