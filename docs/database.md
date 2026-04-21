@@ -1,6 +1,7 @@
- # Initial Database Reference
+# Initial Database Reference
 
- # Name of DB File:
+# Name of DB File:
+
     formflow.db
 
 # Program.cs so Far:
@@ -10,9 +11,9 @@
 
     # Questions Collection Access
 
-    The backend exposes the LiteDB `questions` collection through a repository:
+    The backend exposes the LiteDB`questions` collection through a repository:
 
-    - Repository: `FormFlow.Backend.Repositories.QuestionRepository`
+    - Repository:`FormFlow.Backend.Repositories.QuestionRepository`
     - Interface: `FormFlow.Backend.Repositories.IQuestionRepository`
     - Collection type: `ILiteCollection<QuestionDefinition>`
     - Collection name: `questions`
@@ -26,11 +27,19 @@
     {
         private readonly IQuestionRepository _questionRepository;
 
-        public SomeService(IQuestionRepository questionRepository)
+    public SomeService(IQuestionRepository questionRepository)
         {
             _questionRepository = questionRepository;
         }
     }
-    ```
-    
- 
+
+   ```
+
+# Repositories
+
+## SurveyRepository
+
+The SurveyRepository provides access to the LiteDB "surveys" collection.
+It exposes a strongly typed ILiteCollection `<SurveyDefinition>` and is registered
+in dependency injection as ISurveyRepository. This allows endpoints and services
+to store and retrieve survey documents in a consistent and structured way.
