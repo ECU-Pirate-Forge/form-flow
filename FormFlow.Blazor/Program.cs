@@ -7,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("AdminApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7209");
+}
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
