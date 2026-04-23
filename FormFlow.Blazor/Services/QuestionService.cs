@@ -5,16 +5,22 @@ namespace FormFlow.Blazor.Services
 {
     public class QuestionService(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient = httpClient;
 
-        public async Task<IEnumerable<QuestionDefinition>?> GetAllQuestionsAsync()
+        public async Task<List<QuestionDefinition>?> GetAllQuestionsAsync()
         {
-            IEnumerable<QuestionDefinition>? questions = await _httpClient
-                .GetFromJsonAsync<IEnumerable<QuestionDefinition>>("questions");
+            var response = await httpClient.GetAsync("/api/questions");
 
-            return questions;
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API ERROR: {(int)response.StatusCode} {response.ReasonPhrase}");
+                Console.WriteLine($"Body: {errorContent}");
+
+                return new List<QuestionDefinition>();
+            }
+
+            return await httpClient.GetFromJsonAsync<List<QuestionDefinition>>("api/questions")
+                ?? new List<QuestionDefinition>();
         }
-
-
     }
 }
