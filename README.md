@@ -267,7 +267,7 @@ form-flow/
 
 ## Getting Started
 
-> **These instructions were independently verified by a tester who had no prior knowledge of the project.** Follow each section in order. If you hit an issue, see the [Troubleshooting](#troubleshooting) section at the bottom of this file.
+> **These instructions were independently verified by a tester who did not participate in the writing of this document.** Follow each section in order. If you hit an issue, see the [Troubleshooting](#troubleshooting) section at the bottom of this file.
 
 ---
 
