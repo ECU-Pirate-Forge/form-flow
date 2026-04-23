@@ -438,3 +438,16 @@ This JSON produces a number input with:
   "helpText": "Choose one option."
 }
 ```
+# Services
+### Whats the point?
+We utilize services to seperate concerns. Services act as a "middleman" between the backend and blazor. A pages interest lies in UI user interaction e.g. `Home.razor`, while a service focuses on data retrival and logic.
+## QuestionService.cs
+By using a `QuestionService`, our `Home.razor` page doesn't even know it's talking to an HTTP endpoint; it just asks for a list of questions, making the code much easier to test and read.
+
+### Architecture
+`QuestionService` is registered with `builder.Services.AddHttpClient<QuestionService>()` to create a typed client.A typed client allows for:
+- Encapsulation: All logic for communicating with the "Questions" part of our API is in one file.
+
+- Type Safety: We don't have to deal with raw strings or manual JSON parsing in our UI components.
+
+- Maintenance: If the API URL changes from `/api/questions` to `/api/v2/questions`, we change it in one service file instead of multiple different `.razor` pages.
