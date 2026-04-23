@@ -6,153 +6,157 @@
 
 <MudPaper Class="pa-6" Elevation="2">
 
-    <MudText Typo="Typo.h4" Class="mb-4">Create Survey</MudText>
+        <MudText Typo="Typo.h4" Class="mb-4">Create Survey</MudText>
 
-    <MudTextField @bind-Value="Title"
-                Label="Survey Title"
-                Variant="Variant.Outlined"
-                Class="mb-4"
-                Required="true" />
+        <MudForm @ref="_form" @bind-IsValid="_isValid">
 
-    <MudTextField @bind-Value="Description"
-                Label="Description"
-                Variant="Variant.Outlined"
-                TextArea="true"
-                Lines="4"
-                Class="mb-6" />
+            <MudTextField @bind-Value="newSurvey.Title"
+                        Label="Survey Title"
+                        Variant="Variant.Outlined"
+                        Class="mb-4"
+                        Immediate="true"
+                        Required="true"
+                        RequiredError="Title is required" />
 
-    <MudDivider Class="my-4" />
+            <MudTextField @bind-Value="newSurvey.Description"
+                        Label="Description"
+                        Variant="Variant.Outlined"
+                        TextArea="true"
+                        Lines="4"
+                        Class="mb-6"
+                        Immediate=true
+                        Required="true"
+                        RequiredError="Description is required." />
 
-    <MudText Typo="Typo.h5" Class="mb-2">Select Questions</MudText>
+            <MudDivider Class="my-4" />
 
-    @if (QuestionBank is null)
-    {
-        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-    }  
-    else if (!QuestionBank.Any())
-    {
-        <MudText>No questions found.</MudText>
-    }
-    else
-    {
-        <MudPaper Style="max-height: 300px; overflow-y: auto;">
-            <MudList T="QuestionDefinition" Dense="true" Class="mb-6">
-                @foreach (var q in QuestionBank)
-                {
-                    <MudListItem>
-                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="w-100">
-                            <div>
-                                <MudText Typo="Typo.subtitle1">@q.Label</MudText>
-                                <MudText Typo="Typo.caption" Color="Color.Secondary">@q.Type</MudText>
-                            </div>
+            <MudText Typo="Typo.h5" Class="mb-2">Select Questions</MudText>
 
-                            <MudButton Variant="Variant.Filled"
-                                    Color="Color.Primary"
-                                    Disabled="@IsSelected(q)""
-                                    OnClick="@(() => AddQuestion(q))">
-                                @(IsSelected(q) ? "Added" : "Add")        
-                            </MudButton>
-                        </MudStack>
-                    </MudListItem>
-                }
-            </MudList>
-        </MudPaper>
-    }
-
-    <MudDivider Class="my-4" />
-
-    <MudText Typo="Typo.h5" Class="mb-2">Selected Questions</MudText>
-
-    @if (!SelectedQuestions.Any())
-    {
-        <MudText>No questions selected yet.</MudText>
-    }
-    else
-    {
-        <MudList T="QuestionDefinition" Dense="true" Class="mb-6">
-            @foreach (var q in SelectedQuestions)
+            @if (QuestionBank is null)
             {
-                <MudListItem>
-
-                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="w-100">
-                        <MudText>@q.Label</MudText>
-
-                        <MudButton Variant="Variant.Filled"
-                                Color="Color.Error"
-                                OnClick="@(() => RemoveQuestion(q))">
-                            Remove
-                        </MudButton>
-                    </MudStack>
-
-                </MudListItem>
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            }  
+            else if (!QuestionBank.Any())
+            {
+                <MudText>No questions found.</MudText>
             }
-        </MudList>
-    }
+            else
+            {
+                <MudPaper Style="max-height: 300px; overflow-y: auto;">
+                    <MudList T="QuestionDefinition" Dense="true" Class="mb-6">
+                        @foreach (var q in QuestionBank)
+                        {
+                            <MudListItem>
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="w-100">
+                                    <div>
+                                        <MudText Typo="Typo.subtitle1">@q.Label</MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">@q.Type</MudText>
+                                    </div>
 
-    <MudDivider Class="my-4" />
+                                    <MudButton Variant="Variant.Filled"
+                                            Color="Color.Primary"
+                                            Disabled="@IsSelected(q)""
+                                            OnClick="@(() => AddQuestion(q))">
+                                        @(IsSelected(q) ? "Added" : "Add")        
+                                    </MudButton>
+                                </MudStack>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudPaper>
+            }
 
-    <MudButton Variant="Variant.Filled"
-            Color="Color.Success"
-            Disabled="@IsSaving"
-            OnClick="SaveSurvey">
+            <MudDivider Class="my-4" />
 
-        Save Survey
+            <MudText Typo="Typo.h5" Class="mb-2">Selected Questions</MudText>
 
-    </MudButton>
+            @if (!SelectedQuestions.Any())
+            {
+                <MudText>No questions selected yet.</MudText>
+            }
+            else
+            {
+                <MudList T="QuestionDefinition" Dense="true" Class="mb-6">
+                    @foreach (var q in SelectedQuestions)
+                    {
+                        <MudListItem>
+
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="w-100">
+                                <MudText>@q.Label</MudText>
+
+                                <MudButton Icon="@Icons.Material.Filled.Delete"
+                                        Color="Color.Error"
+                                        OnClick="@(() => RemoveQuestion(q))">
+                                    Remove
+                                </MudButton>
+                            </MudStack>
+
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+
+            <MudDivider Class="my-4" />
+
+            <MudButton Variant="Variant.Filled"
+                    Color="Color.Success"
+                    Disabled="@(!CanSave)"
+                    OnClick="SaveSurvey">
+
+                Save Survey
+
+            </MudButton>
+        </MudForm>
 
 </MudPaper>
 
 @code {
-    private HttpClient Admin => HttpClientFactory.CreateClient("AdminApi");
+    private MudForm? _form;
+    private bool _isValid;
+    private bool formValid = false;
 
-    private string Title { get; set; } = string.Empty;
-    private string Description { get; set; } = string.Empty;
+    private NewSurvey newSurvey = new();
 
     private List<QuestionDefinition>? QuestionBank;
     private List<QuestionDefinition> SelectedQuestions = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("AdminApi");
+        QuestionBank = await client.GetFromJsonAsync<List<QuestionDefinition>>("api/questions"); 
+    }
+
     private bool IsSelected(QuestionDefinition q)
         => SelectedQuestions.Any(x => x.Id == q.Id);
 
-    private bool IsSaving = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        QuestionBank = await Admin.GetFromJsonAsync<List<QuestionDefinition>>("api/questions"); 
-    }
-
     private void AddQuestion(QuestionDefinition q)
     {
-        if (!SelectedQuestions.Any(x => x.Id == q.Id))
+        if (!IsSelected(q))
+        {
+            newSurvey.QuestionIds.Add(q.Id);
             SelectedQuestions.Add(q);
+            _form?.ValidateAsync();
+        }
     }
 
-private void RemoveQuestion(QuestionDefinition q)
-{
-    SelectedQuestions.RemoveAll(x => x.Id == q.Id);
-}
+    private void RemoveQuestion(QuestionDefinition q)
+    {
+       newSurvey.QuestionIds.Remove(q.Id);
+       SelectedQuestions.RemoveAll(x => x.Id == q.Id);
+       _form?.ValidateAsync();
+    }
+
+    private bool CanSave =>
+        _isValid && newSurvey.QuestionIds.Any();
 
     private async Task SaveSurvey()
     {
-        if (string.IsNullOrWhiteSpace(Title) || !SelectedQuestions.Any())
+        if (_form is null)
             return;
 
-        IsSaving = true;
+        await _form.ValidateAsync();
 
-        var newSurvey = new NewSurvey
-        {
-            Title = Title,
-            Description = Description,
-            QuestionIds = SelectedQuestions.Select(q => q.Id).ToList()
-        };
-
-        var response = await Http.PostAsJsonAsync("api/surveys", newSurvey);
-
-        IsSaving = false;
-
-        if (response.IsSuccessStatusCode)
-        {
-            Nav.NavigateTo("/admin/surveys");
-        }
+        if (!CanSave)
+            return;
     }
 }
