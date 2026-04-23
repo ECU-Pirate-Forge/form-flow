@@ -6,7 +6,7 @@
 
 # FormFlow
 
-FormFlow is a multi-platform dynamic form generation and management system. It allows developers and administrators to define, store, and render survey/form questions with rich validation, conditional visibility logic, and support for multiple frontend platforms. The project is built with a shared .NET data layer, an ASP.NET Core REST API backend, a Blazor Server web UI, and a React TypeScript SPA — with mobile platforms (Flutter, MAUI, React Native) planned.
+FormFlow is a multi-platform dynamic form generation and management system. It allows developers and administrators to define, store, and render survey/form questions with rich validation, conditional visibility logic, and support for multiple frontend platforms. The project is built with a shared .NET data layer, an ASP.NET Core REST API backend, a Blazor Server web UI, and a React TypeScript SPA,  with mobile platforms (Flutter, MAUI, React Native) planned.
 
 ---
 
@@ -17,14 +17,14 @@ FormFlow is a multi-platform dynamic form generation and management system. It a
 - [Planned Roadmap](#planned-roadmap)
 - [Project Directory Structure](#project-directory-structure)
 - [Getting Started](#getting-started)
-  - [Option A — Dev Container (Recommended)](#option-a--dev-container-recommended)
-  - [Option B — Local Setup](#option-b--local-setup)
+  - [Option A,  Dev Container (Recommended)](#option-a--dev-container-recommended)
+  - [Option B,  Local Setup](#option-b--local-setup)
     - [Prerequisites](#prerequisites)
-    - [1 — Clone the Repository](#1--clone-the-repository)
-    - [2 — Run the Backend API](#2--run-the-backend-api)
-    - [3 — Run the Blazor Web UI](#3--run-the-blazor-web-ui)
-    - [4 — Run the React SPA](#4--run-the-react-spa)
-    - [5 — Run the Tests](#5--run-the-tests)
+    - [1,  Clone the Repository](#1--clone-the-repository)
+    - [2,  Run the Backend API](#2--run-the-backend-api)
+    - [3,  Run the Blazor Web UI](#3--run-the-blazor-web-ui)
+    - [4,  Run the React SPA](#4--run-the-react-spa)
+    - [5,  Run the Tests](#5--run-the-tests)
 - [API Reference](#api-reference)
 - [Continuous Integration](#continuous-integration)
 - [Troubleshooting](#troubleshooting)
@@ -36,7 +36,7 @@ FormFlow is a multi-platform dynamic form generation and management system. It a
 
 ## Project Background
 
-Modern organizations frequently need to collect structured data from users through forms and surveys. Hard-coded forms are brittle and expensive to maintain — changing a single field often requires a full release cycle. FormFlow solves this by storing question definitions in a database and rendering them dynamically at runtime.
+Modern organizations frequently need to collect structured data from users through forms and surveys. Hard-coded forms are brittle and expensive to maintain,  changing a single field often requires a full release cycle. FormFlow solves this by storing question definitions in a database and rendering them dynamically at runtime.
 
 Each question carries its own metadata: display label, input type, placeholder text, help text, required flag, selectable options, conditional visibility rules, and a JSON-serialized validation configuration. This design lets administrators update forms without touching source code, and it provides a consistent contract between the backend and any frontend client.
 
@@ -44,7 +44,7 @@ The project was designed from the start to support multiple rendering platforms.
 
 ### What a question definition looks like
 
-The following is a real example from the seed data. It shows a `yes_no` question and a `dropdown` question that only appears when the user answers "Yes" — demonstrating conditional visibility:
+The following is a real example from the seed data. It shows a `yes_no` question and a `dropdown` question that only appears when the user answers "Yes",  demonstrating conditional visibility:
 
 ```json
 {
@@ -73,7 +73,7 @@ The following is a real example from the seed data. It shows a `yes_no` question
 }
 ```
 
-The `campus_preference` dropdown is only rendered when `is_student` equals `true`. Every other question type — text, number, radio, checkbox, multiselect — follows this same schema.
+The `campus_preference` dropdown is only rendered when `is_student` equals `true`. Every other question type,  text, number, radio, checkbox, multiselect,  follows this same schema.
 
 ### Tech Stack
 
@@ -106,13 +106,13 @@ The `campus_preference` dropdown is only rendered when `is_student` equals `true
 - Returns a pass/fail result plus a list of human-readable error messages
 
 ### REST API
-- `GET /api/questions` — retrieve all question definitions
-- `GET /api/questions/{id}` — retrieve a single question by GUID
-- `POST /api/questions` — create a new question (validates key uniqueness and required fields)
+- `GET /api/questions`,  retrieve all question definitions
+- `GET /api/questions/{id}`,  retrieve a single question by GUID
+- `POST /api/questions`,  create a new question (validates key uniqueness and required fields)
 - Correct HTTP status codes throughout: 200, 201, 400, 404, 409
 
 ### LiteDB Persistence & Automatic Seeding
-- Embedded document database — no separate database server required
+- Embedded document database,  no separate database server required
 - On first startup the backend checks if the `questions` collection is empty; if so, it bulk-inserts 10 representative sample questions from `SeedData/questions.json` covering all question types
 
 ### Blazor Server Web UI
@@ -127,10 +127,10 @@ The `campus_preference` dropdown is only rendered when `is_student` equals `true
 - Shared `QuestionDefinition`, `Option`, and `VisibleIf` TypeScript interfaces that mirror the backend models exactly
 
 ### Automated Test Suite
-- **FormFlow.Backend.Tests** — xUnit integration tests using `WebApplicationFactory`; covers all three API endpoints, all 400/404/409 error cases, and database seeding behaviour
-- **FormFlow.Data.Tests** — unit tests for model validation logic and the `QuestionValidationEngine`
-- **FormFlow.Blazor.Tests** — bUnit component tests for all Blazor question renderers
-- **FormFlow.React.Tests** — Jest + React Testing Library tests for React components
+- **FormFlow.Backend.Tests**,  xUnit integration tests using `WebApplicationFactory`; covers all three API endpoints, all 400/404/409 error cases, and database seeding behaviour
+- **FormFlow.Data.Tests**,  unit tests for model validation logic and the `QuestionValidationEngine`
+- **FormFlow.Blazor.Tests**,  bUnit component tests for all Blazor question renderers
+- **FormFlow.React.Tests**,  Jest + React Testing Library tests for React components
 
 ### JSON Schema Validation
 - `question-definition.schema.json` defines the canonical question structure
@@ -208,8 +208,8 @@ form-flow/
 │   │   └── MultiselectQuestion.razor
 │   ├── Pages/
 │   │   ├── Home.razor                    # Landing page; renders all seeded questions
-│   │   ├── AdminQuestions.razor          # /admin/questions — question list
-│   │   └── AdminCreateQuestion.razor     # /admin/questions/create — create form
+│   │   ├── AdminQuestions.razor          # /admin/questions,  question list
+│   │   └── AdminCreateQuestion.razor     # /admin/questions/create,  create form
 │   └── wwwroot/
 │       └── multiple-sample-questions.json  # Shared sample data for Blazor and React
 │
@@ -228,9 +228,9 @@ form-flow/
 │
 ├── FormFlow.React.Tests/           # Jest + React Testing Library tests
 │
-├── FormFlow.Flutter/               # Placeholder — Flutter mobile client (planned)
-├── FormFlow.Maui/                  # Placeholder — .NET MAUI mobile client (planned)
-├── FormFlow.ReactNative/           # Placeholder — React Native client (planned)
+├── FormFlow.Flutter/               # Placeholder,  Flutter mobile client (planned)
+├── FormFlow.Maui/                  # Placeholder,  .NET MAUI mobile client (planned)
+├── FormFlow.ReactNative/           # Placeholder,  React Native client (planned)
 │
 ├── docs/                           # Extended project documentation
 │   ├── index.md                    # Documentation index
@@ -271,18 +271,18 @@ form-flow/
 
 ---
 
-### Option A — Dev Container (Recommended)
+### Option A,  Dev Container (Recommended)
 
-The repository includes a `.devcontainer` configuration. If you use **VS Code** with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), or **GitHub Codespaces**, all required tools are provisioned automatically — no manual installs needed.
+The repository includes a `.devcontainer` configuration. If you use **VS Code** with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), or **GitHub Codespaces**, all required tools are provisioned automatically,  no manual installs needed.
 
 1. Open the repository in VS Code
 2. When prompted, click **Reopen in Container**
 3. Wait for the container to build (first time only, ~2–3 minutes)
-4. Continue from [Step 2 — Run the Backend API](#2--run-the-backend-api) below
+4. Continue from [Step 2,  Run the Backend API](#2--run-the-backend-api) below
 
 ---
 
-### Option B — Local Setup
+### Option B,  Local Setup
 
 #### Prerequisites
 
@@ -292,7 +292,7 @@ Install the following tools before proceeding:
 |------|----------------|----------|
 | .NET SDK | 10.0 | https://dotnet.microsoft.com/download |
 | Node.js | 18 | https://nodejs.org |
-| npm | 9 (bundled with Node) | — |
+| npm | 9 (bundled with Node) |,  |
 | Git | Any recent version | https://git-scm.com |
 
 Verify your installations by running these commands. If any command fails or shows a lower version, install or upgrade that tool before continuing.
@@ -314,7 +314,7 @@ If prompted by your OS to trust the certificate, click **Yes/Allow**. This preve
 
 ---
 
-#### 1 — Clone the Repository
+#### 1,  Clone the Repository
 
 ```bash
 git clone https://github.com/your-org/form-flow.git
@@ -325,9 +325,9 @@ cd form-flow
 
 ---
 
-#### 2 — Run the Backend API
+#### 2,  Run the Backend API
 
-The backend is a self-contained ASP.NET Core application. LiteDB is embedded — **no separate database server or configuration is required**.
+The backend is a self-contained ASP.NET Core application. LiteDB is embedded,  **no separate database server or configuration is required**.
 
 Open a terminal in the repository root and run:
 
@@ -348,7 +348,7 @@ info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 ```
 
-**Verify the API is running** — open a second terminal and run:
+**Verify the API is running**,  open a second terminal and run:
 
 ```bash
 curl http://localhost:5164/api/questions
@@ -360,7 +360,7 @@ You should receive a JSON array of 10 question objects. If you see an empty arra
 
 ---
 
-#### 3 — Run the Blazor Web UI
+#### 3,  Run the Blazor Web UI
 
 Open a **new terminal** in the repository root:
 
@@ -381,12 +381,12 @@ info: Microsoft.Hosting.Lifetime[14]
 
 Open `https://localhost:7230` (or `http://localhost:5224`) in your browser. You should see the FormFlow home page with a rendered list of questions. To manage questions, navigate to:
 
-- `/admin/questions` — view all questions
-- `/admin/questions/create` — create a new question
+- `/admin/questions`,  view all questions
+- `/admin/questions/create`,  create a new question
 
 ---
 
-#### 4 — Run the React SPA
+#### 4,  Run the React SPA
 
 Open a **new terminal** in the repository root:
 
@@ -411,7 +411,7 @@ Your default browser should open automatically to `http://localhost:3000`. If it
 
 ---
 
-#### 5 — Run the Tests
+#### 5,  Run the Tests
 
 **Backend, Data, and Blazor tests (.NET)**
 
@@ -462,7 +462,7 @@ Base URL (HTTPS): `https://localhost:7209`
 | `GET` | `/api/questions/{id}` | Return a single question by GUID | 200 |
 | `POST` | `/api/questions` | Create a new question | 201 |
 
-### POST /api/questions — example request body
+### POST /api/questions,  example request body
 
 ```json
 {
@@ -479,9 +479,9 @@ Base URL (HTTPS): `https://localhost:7209`
 
 | Code | Meaning |
 |------|---------|
-| 400 | Invalid input — missing required field, malformed GUID, or failed validation |
+| 400 | Invalid input,  missing required field, malformed GUID, or failed validation |
 | 404 | No question found for the given ID |
-| 409 | Conflict — a question with that `key` or `id` already exists |
+| 409 | Conflict,  a question with that `key` or `id` already exists |
 
 For full request/response examples, cURL commands, PowerShell snippets, and Postman instructions see [docs/api.md](docs/api.md).
 
@@ -491,12 +491,12 @@ For full request/response examples, cURL commands, PowerShell snippets, and Post
 
 The project uses two GitHub Actions pipelines:
 
-**`ci.yml`** — runs on every push to `main` and on every pull request:
+**`ci.yml`**,  runs on every push to `main` and on every pull request:
 1. Install Node 20, install React dependencies, run React tests, build React app
 2. Install .NET 10, restore and build `FormFlow.Backend` and `FormFlow.Blazor`
 3. Run all .NET tests (`dotnet test`)
 
-**`lint.yml`** — runs the React ESLint check on every pull request.
+**`lint.yml`**,  runs the React ESLint check on every pull request.
 
 All CI checks must pass before a pull request can be merged.
 
