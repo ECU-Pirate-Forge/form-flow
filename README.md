@@ -28,7 +28,6 @@ FormFlow is a multi-platform dynamic form generation and management system. It a
 - [API Reference](#api-reference)
 - [Continuous Integration](#continuous-integration)
 - [Troubleshooting](#troubleshooting)
-- [Third-Party Validation](#third-party-validation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -543,22 +542,6 @@ set PORT=3001 && npm start   # Windows CMD
 
 The backend integration tests spin up a real `WebApplicationFactory` and use an in-memory or temp database. If tests are failing because of a leftover database file, delete `formflow.db` from `FormFlow.Backend` and re-run.
 
----
-
-## Third-Party Validation
-
-The Getting Started instructions in this README were tested end-to-end by a tester with no prior knowledge of this project on a clean machine. The tester confirmed:
-
-- All prerequisite checks passed as described
-- `dotnet run` in `FormFlow.Backend` seeded and served questions correctly
-- `dotnet run` in `FormFlow.Blazor` opened the home page and admin panel without errors
-- `npm install && npm start` in `FormFlow.React` launched the SPA at `http://localhost:3000`
-- `dotnet test` from the repository root passed all .NET tests
-- `npm test -- --watchAll=false` in `FormFlow.React.Tests` passed all Jest tests
-
-If you encounter a step that does not work as described, please open an issue or consult [docs/troubleshooting.md](docs/troubleshooting.md).
-
----
 
 ## Contributing
 
