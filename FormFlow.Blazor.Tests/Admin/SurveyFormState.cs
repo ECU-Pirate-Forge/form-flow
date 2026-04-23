@@ -1,6 +1,7 @@
 using FormFlow.Data.Models;
 
 namespace FormFlow.Blazor.Tests.Admin;
+
 public class SurveyFormState
 {
     public NewSurvey Survey { get; } = new();
