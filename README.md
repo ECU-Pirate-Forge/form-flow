@@ -314,7 +314,7 @@ If prompted by your OS to trust the certificate, click **Yes/Allow**. This preve
 
 ---
 
-#### 1,  Clone the Repository
+#### 1 -  Clone the Repository
 
 ```bash
 git clone https://github.com/your-org/form-flow.git
@@ -325,7 +325,7 @@ cd form-flow
 
 ---
 
-#### 2,  Run the Backend API
+#### 2 -  Run the Backend API
 
 The backend is a self-contained ASP.NET Core application. LiteDB is embedded,  **no separate database server or configuration is required**.
 
@@ -360,7 +360,7 @@ You should receive a JSON array of 10 question objects. If you see an empty arra
 
 ---
 
-#### 3,  Run the Blazor Web UI
+#### 3 -  Run the Blazor Web UI
 
 Open a **new terminal** in the repository root:
 
@@ -386,7 +386,7 @@ Open `https://localhost:7230` (or `http://localhost:5224`) in your browser. You 
 
 ---
 
-#### 4,  Run the React SPA
+#### 4 -  Run the React SPA
 
 Open a **new terminal** in the repository root:
 
@@ -411,7 +411,7 @@ Your default browser should open automatically to `http://localhost:3000`. If it
 
 ---
 
-#### 5,  Run the Tests
+#### 5 -  Run the Tests
 
 **Backend, Data, and Blazor tests (.NET)**
 
