@@ -46,12 +46,12 @@ namespace FormFlow.Backend.Endpoints
             {
                 if (string.IsNullOrWhiteSpace(dto.Title) || string.IsNullOrWhiteSpace(dto.Description))
                 {
-                    return Results.BadRequest(new { error = "Title is required. "});
+                    return Results.BadRequest(new { error = "Title is required. " });
                 }
 
                 if (dto.QuestionIds == null || dto.QuestionIds.Count == 0)
                 {
-                    return Results.BadRequest(new { error = "At least one question is required. "});
+                    return Results.BadRequest(new { error = "At least one question is required. " });
                 }
 
                 var survey = new SurveyDefinition
