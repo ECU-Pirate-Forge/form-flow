@@ -7,6 +7,7 @@ using LiteDB;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Moq;
 
 namespace FormFlow.Backend.Tests.Endpoints;
 
@@ -96,5 +97,55 @@ public class SurveyEndpointsTests : IClassFixture<WebApplicationFactory<Program>
         var response = await client.GetAsync($"/api/surveys/{Guid.NewGuid()}");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostSurvey_ReturnsCreated_AndPersistsSurvey()
+    {
+        // Arrange
+        var mockRepo = new Mock<ISurveyRepository>();
+
+        var mockCollection = new Mock<ILiteCollection<SurveyDefinition>>();
+
+        mockRepo.Setup(r => r.Surveys).Returns(mockCollection.Object);
+        mockRepo.Setup(r => r.Insert(It.IsAny<SurveyDefinition>()))
+                .Returns((SurveyDefinition s) => s);
+
+        var client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                // Replace real repo with mock
+                services.AddSingleton<ISurveyRepository>(mockRepo.Object);
+            });
+        }).CreateClient();
+
+        var newSurvey = new NewSurvey
+        {
+            Title = "Test Survey",
+            Description = "A unit test survey",
+            QuestionIds = new List<Guid> { Guid.NewGuid() }
+        };
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/surveys", newSurvey);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        var created = await response.Content.ReadFromJsonAsync<SurveyDefinition>();
+        Assert.NotNull(created);
+
+        // Backend-generated fields
+        Assert.NotEqual(Guid.Empty, created.Id);
+        Assert.True(created.CreatedAt > DateTime.UtcNow.AddMinutes(-1));
+
+        // Mapped fields
+        Assert.Equal(newSurvey.Title, created.Title);
+        Assert.Equal(newSurvey.Description, created.Description);
+        Assert.Equal(newSurvey.QuestionIds, created.QuestionIds);
+
+        // Verify repository was called
+        mockRepo.Verify(r => r.Insert(It.IsAny<SurveyDefinition>()), Times.Once);
     }
 }
