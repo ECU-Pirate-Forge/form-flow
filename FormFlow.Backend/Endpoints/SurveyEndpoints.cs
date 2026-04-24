@@ -19,7 +19,7 @@ namespace FormFlow.Backend.Endpoints
             // GET survey by id
             app.MapGet("/api/surveys/{id}", (string id, ISurveyRepository repo) =>
             {
-                if(!Guid.TryParse(id, out var parsedId))
+                if (!Guid.TryParse(id, out var parsedId))
                 {
                     return Results.BadRequest(new
                     {
@@ -33,7 +33,6 @@ namespace FormFlow.Backend.Endpoints
                 {
                     return Results.NotFound();
                 }
-                
                 return Results.Ok(survey);
             })
             .WithName("GetSurveyById")
