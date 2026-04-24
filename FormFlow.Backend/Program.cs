@@ -54,6 +54,7 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 app.MapQuestionEndpoints();
+app.MapSurveyEndpoints();
 
 
 app.Run();
