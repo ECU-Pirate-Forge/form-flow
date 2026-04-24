@@ -148,20 +148,6 @@ Returned when no survey exists with the given ID.
 
 ---
 
-Absolutely — and now that your POST endpoint behavior is stable and we know exactly how it works, I can generate **clean, professional, API‑ready documentation** for it.
-
-I’ll follow the same structure you’ve been using in your project:
-
-- Endpoint summary
-- Request schema
-- Response schema
-- Status codes
-- Example request
-- Example response
-
-This will drop directly into your `/docs` folder or your API.md.
-
----
 
 ## **POST /api/surveys**
 
