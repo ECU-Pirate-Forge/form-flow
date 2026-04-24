@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
-builder.Services.AddHttpClient<QuestionService>(client => 
+builder.Services.AddHttpClient<QuestionService>(client =>
 {
     var url = builder.Configuration["BackendAPI:BaseUrl"];
     client.BaseAddress = new Uri(url ?? throw new Exception("URL Missing!"));

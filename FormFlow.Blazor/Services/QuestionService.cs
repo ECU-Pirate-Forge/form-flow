@@ -43,7 +43,7 @@ namespace FormFlow.Blazor.Services
 
             if (response.IsSuccessStatusCode)
             {
-               return (true, null);
+                return (true, null);
             }
             var body = await response.Content.ReadAsStringAsync();
             return (false, $"API ERROR: {(int)response.StatusCode} {response.ReasonPhrase}. Body: {body}");
