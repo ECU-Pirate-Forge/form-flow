@@ -1,4 +1,6 @@
 @page "/admin/questions/create"
+@using FormFlow.Blazor.Services
+@inject QuestionService QuestionService
 
 <MudPaper Class="pa-6" MaxWidth="600px">
     <MudText Typo="Typo.h5" Class="mb-4">Create Question</MudText>
@@ -103,7 +105,19 @@
                    Color="Color.Primary"
                    Disabled="@(!CanCreate)"
                    OnClick="CreateQuestion">
-            Create Question
+            
+            @if (_isSubmitting)
+            {
+                <MudProgressCircular 
+                    Size="Size.Small" 
+                    Indeterminate="true" 
+                    Class="ml-2" />
+                <span> Saving...</span>
+            }else
+            {
+                <span>Create Question</span>
+            }
+            
         </MudButton>
     </MudForm>
 </MudPaper>
@@ -111,6 +125,11 @@
 @code {
     private MudForm? _form;
     private bool _isValid;
+
+    bool _isSubmitting;
+
+    private string? _errorMessage;
+    private string? _successMessage;
 
     private NewQuestion newQuestion = new();
 
@@ -137,13 +156,30 @@
 
     private async Task CreateQuestion()
     {
-        if (_form is null)
+        if (_form is null || !CanCreate)
             return;
 
         await _form.ValidateAsync();
 
-        if (!CanCreate)
+        if (!_isValid)
             return;
+        _isSubmitting = true;
+        _successMessage = null;
+        _errorMessage = null;
+
+        var (success, error) = await QuestionService.CreateQuestionAsync(newQuestion);
+        
+        if(success)
+        {
+            _successMessage = $"Question '{newQuestion.Label}' created successfully.";
+            newQuestion = new();
+            await _form.ResetAsync();
+        }
+        else
+        {
+            _errorMessage = error ?? "An error occurred while creating the question.";
+        }
+        _isSubmitting = false;
 
     }
 }
