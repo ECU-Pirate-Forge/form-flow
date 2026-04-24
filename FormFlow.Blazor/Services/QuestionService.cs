@@ -19,7 +19,7 @@ namespace FormFlow.Blazor.Services
                 return new List<QuestionDefinition>();
             }
 
-            return await httpClient.GetFromJsonAsync<List<QuestionDefinition>>("api/questions")
+            return await response.Content.ReadFromJsonAsync<List<QuestionDefinition>>()
                 ?? new List<QuestionDefinition>();
         }
 
