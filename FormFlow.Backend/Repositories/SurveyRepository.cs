@@ -13,10 +13,18 @@ namespace FormFlow.Backend.Repositories
 
             Surveys.EnsureIndex(s => s.Id, true);
         }
+
+        public SurveyDefinition Insert(SurveyDefinition survey)
+        {
+            Surveys.Insert(survey);
+            return survey;
+        }
     }
 
     public interface ISurveyRepository
     {
         ILiteCollection<SurveyDefinition> Surveys { get; }
+
+        SurveyDefinition Insert(SurveyDefinition survey);
     }
 }

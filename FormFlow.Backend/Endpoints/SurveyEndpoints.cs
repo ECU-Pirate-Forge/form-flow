@@ -1,5 +1,7 @@
 using FormFlow.Data.Models;
 using FormFlow.Backend.Repositories;
+using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 
 namespace FormFlow.Backend.Endpoints
 {
@@ -39,6 +41,35 @@ namespace FormFlow.Backend.Endpoints
             .Produces<SurveyDefinition>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound);
+
+            app.MapPost("/api/surveys", (NewSurvey dto, ISurveyRepository repo) =>
+            {
+                if (string.IsNullOrWhiteSpace(dto.Title) || string.IsNullOrWhiteSpace(dto.Description))
+                {
+                    return Results.BadRequest(new { error = "Title is required. " });
+                }
+
+                if (dto.QuestionIds == null || dto.QuestionIds.Count == 0)
+                {
+                    return Results.BadRequest(new { error = "At least one question is required. " });
+                }
+
+                var survey = new SurveyDefinition
+                {
+                    Id = Guid.NewGuid(),
+                    Title = dto.Title,
+                    Description = dto.Description,
+                    QuestionIds = dto.QuestionIds,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                repo.Insert(survey);
+
+                return Results.Created($"/api/surveys/{survey.Id}", survey);
+            })
+            .WithName("CreateSurvey")
+            .Produces<SurveyDefinition>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest);
         }
     }
 }
