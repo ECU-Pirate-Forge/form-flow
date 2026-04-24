@@ -34,9 +34,9 @@ Creates a new question and uses `QuestionRepository.cs` to insert into `LiteDb`
 
 ## GET `/api/questions`
 
-This endpoint uses `QuestionRepository.cs` to find all the questions in the `questions` collection. 
-It then produces a list of all the questions in the database. 
----
+This endpoint uses `QuestionRepository.cs` to find all the questions in the `questions` collection.
+It then produces a list of all the questions in the database.
+-------------------------------------------------------------
 
 # **Survey Endpoints**
 
@@ -51,6 +51,7 @@ Returns a list of all saved surveys.
 
 **200 OK**
 **Response Body**
+
 ```json
 [
   {
@@ -74,9 +75,9 @@ Retrieve a single survey by its ID.
 
 **Parameters**
 
-| Name | In | Type | Required | Description |
-|------|----|------|----------|-------------|
-| `id` | path | string (uuid) | Yes | The survey’s unique identifier |
+| Name   | In   | Type          | Required | Description                     |
+| ------ | ---- | ------------- | -------- | ------------------------------- |
+| `id` | path | string (uuid) | Yes      | The survey’s unique identifier |
 
 ---
 
@@ -84,6 +85,7 @@ Retrieve a single survey by its ID.
 
 **200 OK**
 **Response Body**
+
 ```json
 {
   "surveyId": "c1b2e3d4-5678-49ab-9cde-1234567890ab",
@@ -103,6 +105,7 @@ Retrieve a single survey by its ID.
 Returned when the provided ID is not a valid GUID.
 
 **Response Body**
+
 ```json
 {
   "error": "Invalid survey id. Must be a GUID."
@@ -115,6 +118,7 @@ Returned when the provided ID is not a valid GUID.
 Returned when no survey exists with the given ID.
 
 **Response Body**
+
 ```json
 {
   "error": "Survey not found."
@@ -123,3 +127,134 @@ Returned when no survey exists with the given ID.
 
 ---
 
+Absolutely — and now that your POST endpoint behavior is stable and we know exactly how it works, I can generate **clean, professional, API‑ready documentation** for it.
+
+I’ll follow the same structure you’ve been using in your project:
+
+- Endpoint summary
+- Request schema
+- Response schema
+- Status codes
+- Example request
+- Example response
+
+This will drop directly into your `/docs` folder or your API.md.
+
+---
+
+## **POST /api/surveys**
+
+**Endpoint**
+
+```
+POST /api/surveys - Create a New Survey
+```
+
+Creates a new survey using the data provided by the client.
+The server generates the survey ID and timestamp.
+
+---
+
+**Request Body (NewSurvey)**
+
+```json
+{
+  "title": "string",
+  "description": "string",
+  "questionIds": ["guid"]
+}
+```
+
+**Field Descriptions**
+
+| Field           | Type           | Required | Description                                      |
+| --------------- | -------------- | -------- | ------------------------------------------------ |
+| `title`       | string         | yes      | The title of the survey.                         |
+| `description` | string         | yes      | A short description of the survey’s purpose.    |
+| `questionIds` | array of GUIDs | yes      | The list of question IDs included in the survey. |
+
+---
+
+**Response Body (SurveyDefinition)**
+
+```json
+{
+  "id": "guid",
+  "title": "string",
+  "description": "string",
+  "questionIds": ["guid"],
+  "createdAt": "2024-01-01T00:00:00Z"
+}
+```
+
+**Field Descriptions**
+
+| Field           | Type           | Description                                         |
+| --------------- | -------------- | --------------------------------------------------- |
+| `id`          | GUID           | Server‑generated unique identifier for the survey. |
+| `title`       | string         | Title of the survey.                                |
+| `description` | string         | Description of the survey.                          |
+| `questionIds` | array of GUIDs | IDs of questions included in the survey.            |
+| `createdAt`   | datetime       | Server‑generated timestamp of creation.            |
+
+---
+
+**Status Codes**
+
+| Code                                | Meaning                                                                |
+| ----------------------------------- | ---------------------------------------------------------------------- |
+| **201 Created**               | Survey successfully created. Response includes the full survey object. |
+| **400 Bad Request**           | Invalid input (e.g., malformed JSON, missing required fields).         |
+| **500 Internal Server Error** | Unexpected server error.                                               |
+
+---
+
+**Example Request**
+
+```http
+POST /api/surveys
+Content-Type: application/json
+
+{
+  "title": "Employee Satisfaction Survey",
+  "description": "Quarterly feedback survey",
+  "questionIds": [
+    "c1f6d9c3-4b8e-4c1f-9e1f-2a1a1b1c1d1e",
+    "b2e7f0a4-5c9f-4d2f-8e2f-3b2b2c2d2e2f"
+  ]
+}
+```
+
+---
+
+**Example Response (201 Created)**
+
+```http
+HTTP/1.1 201 Created
+Location: /api/surveys/7f3c2a1b-9d4e-4c2f-8b1e-123456789abc
+Content-Type: application/json
+
+{
+  "id": "7f3c2a1b-9d4e-4c2f-8b1e-123456789abc",
+  "title": "Employee Satisfaction Survey",
+  "description": "Quarterly feedback survey",
+  "questionIds": [
+    "c1f6d9c3-4b8e-4c1f-9e1f-2a1a1b1c1d1e",
+    "b2e7f0a4-5c9f-4d2f-8e2f-3b2b2c2d2e2f"
+  ],
+  "createdAt": "2024-01-01T14:23:11.123Z"
+}
+```
+
+---
+
+**Behavior Summary**
+
+- The client provides only editable fields (`title`, `description`, `questionIds`).
+- The server generates:
+  - `id`
+  - `createdAt`
+- The repository’s `Insert()` method is called to persist the survey.
+- The endpoint returns **201 Created** with the full survey object.
+
+---
