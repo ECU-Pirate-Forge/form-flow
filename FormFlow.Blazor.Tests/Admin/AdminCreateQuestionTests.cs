@@ -7,7 +7,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using System.Reflection;
 
-namespace FormFlow.Blazor.Tests.Components;
+namespace FormFlow.Blazor.Tests.Admin;
 
 public class AdminCreateQuestionTests
 {
