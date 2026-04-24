@@ -39,14 +39,20 @@ namespace FormFlow.Blazor.Services
             };
             // TODO: Consider moving the mapping logic to a separate method or extension for better testability and separation of concerns.
 
-            var response = await httpClient.PostAsJsonAsync("/api/questions", question);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return (true, null);
+                var response = await httpClient.PostAsJsonAsync("/api/questions", question);
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, null);
+                }
+                var body = await response.Content.ReadAsStringAsync();
+                return (false, $"API ERROR: {(int)response.StatusCode} {response.ReasonPhrase}. Body: {body}");
             }
-            var body = await response.Content.ReadAsStringAsync();
-            return (false, $"API ERROR: {(int)response.StatusCode} {response.ReasonPhrase}. Body: {body}");
+            catch (HttpRequestException ex)
+            {
+                return (false, $"Could not reach the server: {ex.Message}");
+            }
         }
     }
 }
