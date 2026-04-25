@@ -25,23 +25,10 @@ namespace FormFlow.Blazor.Services
 
         public async Task<(bool Success, string? Error)> CreateQuestionAsync(NewQuestion newQuestion)
         {
-            var question = new QuestionDefinition
-            {
-                Id = Guid.NewGuid(),
-                Key = newQuestion.Key,
-                Label = newQuestion.Label,
-                Type = newQuestion.Type,
-                Required = newQuestion.Required,
-                Placeholder = newQuestion.Placeholder,
-                DefaultValue = newQuestion.DefaultValue,
-                HelpText = newQuestion.HelpText,
-                Options = newQuestion.Options
-            };
-            // TODO: Consider moving the mapping logic to a separate method or extension for better testability and separation of concerns.
-
+            
             try
             {
-                var response = await httpClient.PostAsJsonAsync("/api/questions", question);
+                var response = await httpClient.PostAsJsonAsync("/api/questions", newQuestion);
                 if (response.IsSuccessStatusCode)
                 {
                     return (true, null);
