@@ -4,13 +4,20 @@
 
 
 <MudPaper Class="pa-4" Elevation="1">
-    <h3>Question Management</h3>
+    <MudText Typo="Typo.h5" Class="mb-2">Question Management</MudText>
 
-    <p>This page will contain the admin UI for creating and managing questions.</p>
+    <MudStack Row="true" Spacing="2" Class="mb-4">
+        <MudButton Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Href="/admin/questions/create">
+            Create New Question            
+        </MudButton>
 
-    <MudButton Variant="Variant.Filled"
+        <MudButton Variant="Variant.Filled"
                 Color="Color.Primary"
-                Href="/admin/questions/create">
-        Create New Question            
-    </MudButton>
+                Href="/admin/surveys/create">
+            Create Survey
+        </MudButton>
+    </MudStack>
+
 </MudPaper>
