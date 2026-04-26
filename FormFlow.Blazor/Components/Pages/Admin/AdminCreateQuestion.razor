@@ -4,6 +4,24 @@
 
 <MudPaper Class="pa-6" MaxWidth="600px">
     <MudText Typo="Typo.h5" Class="mb-4">Create Question</MudText>
+    @if (_successMessage is not null)
+    {
+        <MudAlert Severity="Severity.Success" 
+            Class="mb-4" 
+            ShowCloseIcon="true" 
+            CloseIconClicked="()=> _successMessage = null">
+                @_successMessage
+        </MudAlert>
+    }
+    @if (_errorMessage is not null)
+    {
+        <MudAlert Severity="Severity.Error" 
+            Class="mb-4" 
+            ShowCloseIcon="true" 
+            CloseIconClicked="()=> _errorMessage = null">
+                @_errorMessage
+        </MudAlert>
+    }
 
     <MudForm @ref="_form" Model="@newQuestion" @bind-IsValid="_isValid">
         <MudTextField T="string"
