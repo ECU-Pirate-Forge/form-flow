@@ -1,0 +1,51 @@
+@page "/admin/surveys/{Id:guid}/preview"
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Nav
+
+<MudPaper Class="pa-6" Elevation="2">
+
+    <PageTitle>Survey Preview</PageTitle>
+
+    @if (survey is null || questions is null)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudText Typo="Typo.h4" Class="mb-4">@survey.Title</MudText>
+
+        <MudStack Spacing="2">
+            @foreach (var question in questions)
+            {
+                <QuestionRenderer @key="question.Id" Question="question" />
+            }
+        </MudStack>
+    }
+
+</MudPaper>
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private SurveyDefinition? survey;
+    private List<QuestionDefinition>? questions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("AdminApi");
+
+        survey = await client.GetFromJsonAsync<SurveyDefinition>($"api/surveys/{Id}");
+
+            if (survey is null)
+                return;
+
+        questions = new List<QuestionDefinition>();
+
+        foreach (var qid in survey.QuestionIds)
+        {
+            var q = await client.GetFromJsonAsync<QuestionDefinition>($"api/questions/{qid}");
+            if (q != null)
+                questions.Add(q);
+        }
+    }
+}
