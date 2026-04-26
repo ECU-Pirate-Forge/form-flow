@@ -3,7 +3,6 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -12,48 +11,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # --- Frontend (React) ---
+      # --- React Project ---
+      # --- React Setup ---
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # --- Install dependences ---
       - name: Install React dependencies
         working-directory: ./FormFlow.React
         run: npm install
 
+      # --- Run Tests ---
       - name: Run React tests
         working-directory: ./FormFlow.React
-        run: npm test -- --passWithNoTests
+        run: npm test
 
+      # --- Build application ---
       - name: Build React app
         working-directory: ./FormFlow.React
-        run: npm run build --if-present
+        run: npm run build
 
+      # --- .NET Projects ---
       # --- .NET Setup ---
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
-      # --- Backend Build ---
-      - name: Restore Backend
-        working-directory: ./FormFlow.Backend
-        run: dotnet restore
+      # --- Restore entire solution ---
+      - name: Restore solution
+        run: dotnet restore FormFlow.slnx
 
-      - name: Build Backend
-        working-directory: ./FormFlow.Backend
-        run: dotnet build --no-restore
+      # --- Build entire solution ---
+      - name: Build solution
+        run: dotnet build FormFlow.slnx --no-restore
 
-      # --- Blazor Build ---
-      - name: Restore Blazor
-        working-directory: ./FormFlow.Blazor
-        run: dotnet restore
-
-      - name: Build Blazor
-        working-directory: ./FormFlow.Blazor
-        run: dotnet build --no-restore
-
-      # --- Run All .NET Tests ---
-      - name: Run .NET tests
-        run: dotnet test --no-build --verbosity normal
+      # --- Run ALL tests in the solution ---
+      - name: Run Tests
+        run: dotnet test FormFlow.slnx --no-build
