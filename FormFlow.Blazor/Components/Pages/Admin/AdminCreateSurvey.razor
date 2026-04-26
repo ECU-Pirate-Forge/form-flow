@@ -1,8 +1,10 @@
 @page "/admin/surveys/create"
 @using System.Reflection.Emit
+@using FormFlow.Blazor.Services
 @inject HttpClient Http
-@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager Nav
+
+@inject IQuestionService QuestionService
 
 <MudPaper Class="pa-6" Elevation="2">
 
@@ -122,8 +124,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var client = HttpClientFactory.CreateClient("AdminApi");
-        QuestionBank = await client.GetFromJsonAsync<List<QuestionDefinition>>("api/questions"); 
+        QuestionBank = await QuestionService.GetAllQuestionsAsync();
     }
 
     private bool IsSelected(QuestionDefinition q)
