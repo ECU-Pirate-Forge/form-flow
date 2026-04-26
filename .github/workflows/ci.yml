@@ -25,7 +25,7 @@ jobs:
 
       # --- Run Tests ---
       - name: Run React tests
-        working-directory: ./FormFlow.React
+        working-directory: ./FormFlow.React.Tests
         run: npm test
 
       # --- Build application ---
