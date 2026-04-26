@@ -3,7 +3,7 @@ using FormFlow.Data.Models;
 
 namespace FormFlow.Blazor.Services
 {
-    public class QuestionService(HttpClient httpClient)
+    public class QuestionService(HttpClient httpClient) : IQuestionService
     {
 
         public async Task<List<QuestionDefinition>?> GetAllQuestionsAsync()
