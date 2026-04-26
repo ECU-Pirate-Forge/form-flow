@@ -120,6 +120,38 @@ Implemented in the Blazor admin module.
 - Other fields are captured if provided, but they are not required for form submission.
 
 **Current Limitation:**
+- No client-side validation beyond the three required fields. Invalid data (e.g. bad format, empty options on an option-based type) is caught by the backend and surfaced as an error alert.
+- No draft saving. The form does not persist if you navigate away before submitting.
+- No network error handling. If the backend is unreachable the button will lock. Refresh the page to recover.
+---
+**How to Create a Question:**
+ 
+This guide covers how an admin creates a new question using the admin form.
+ 
+**Prerequisites**
+ 
+Both the backend and Blazor front end must be running locally before using the admin form.
+
+---
+ 
+**Steps**
+ 
+1. Navigate to the admin area and click **Create Question**.
+2. Fill in the required fields — **Label**, **Key**, and **Type**. The Save button stays disabled until all three are provided.
+3. Fill in any optional fields — Placeholder, Default Value, Help Text, and the Required toggle.
+4. If the selected Type is `dropdown`, `radio`, `checkbox`, or `multiselect`, an **Options** section appears. Use **Add Option** to add label/value pairs. Use the trash icon to remove one.
+5. Click **Create Question** to submit.
+---
+**After Submitting**
+ 
+**On success:**
+- A success alert appears confirming the question was created.
+- The form clears, ready for another entry.
+
+**On failure:**
+- An error alert appears with the reason (e.g. duplicate key, validation error).
+- The form stays filled so the admin can correct and resubmit.
+---
 
 - Submit action currently validates client-side form state, but backend persistence integration is still pending.
 

@@ -1,6 +1,8 @@
 using Bunit;
 using FluentAssertions;
 using FormFlow.Blazor.Components.Pages.Admin;
+using FormFlow.Blazor.Services;
+using FormFlow.Data.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
@@ -8,6 +10,23 @@ using MudBlazor.Services;
 using System.Reflection;
 
 namespace FormFlow.Blazor.Tests.Admin;
+
+file sealed class FakeQuestionService : IQuestionService
+{
+    public (bool Success, string? Error) NextResult { get; set; } = (true, null);
+    public NewQuestion? LastPayload { get; private set; }
+    public int CreateCallCount { get; private set; }
+
+    public Task<List<QuestionDefinition>?> GetAllQuestionsAsync()
+        => Task.FromResult<List<QuestionDefinition>?>(new());
+
+    public Task<(bool Success, string? Error)> CreateQuestionAsync(NewQuestion newQuestion)
+    {
+        LastPayload = newQuestion;
+        CreateCallCount++;
+        return Task.FromResult(NextResult);
+    }
+}
 
 public class AdminCreateQuestionTests
 {
@@ -30,20 +49,31 @@ public class AdminCreateQuestionTests
         items.Should().HaveCount(7);
     }
 
+    // [Fact]
+    // public async Task Validation_Triggers_On_Submit()
+    // {
+    //     await using var ctx = CreateContext();
+    //     var cut = ctx.Render<AdminCreateQuestion>();
+
+    //     await InvokeCreateQuestionAsync(cut);
+
+    //     cut.WaitForAssertion(() =>
+    //     {
+    //         cut.Markup.Should().Contain("Label is required.");
+    //         cut.Markup.Should().Contain("Key is required.");
+    //         cut.Markup.Should().Contain("Type is required.");
+    //     });
+    // }
     [Fact]
-    public async Task Validation_Triggers_On_Submit()
+    public async Task CreateButton_Is_Disabled_When_Form_Is_Empty()
     {
         await using var ctx = CreateContext();
         var cut = ctx.Render<AdminCreateQuestion>();
 
-        await InvokeCreateQuestionAsync(cut);
+        var button = cut.FindComponents<MudButton>()
+            .First(b => b.Markup.Contains("Create Question"));
 
-        cut.WaitForAssertion(() =>
-        {
-            cut.Markup.Should().Contain("Label is required.");
-            cut.Markup.Should().Contain("Key is required.");
-            cut.Markup.Should().Contain("Type is required.");
-        });
+        button.Instance.Disabled.Should().BeTrue();
     }
 
     [Theory]
@@ -135,6 +165,11 @@ public class AdminCreateQuestionTests
         var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.Services.AddMudServices();
+
+        var fake = new FakeQuestionService();
+        ctx.Services.AddSingleton<FakeQuestionService>(fake);
+        ctx.Services.AddSingleton<IQuestionService>(fake);
+
 
         ctx.Render<MudThemeProvider>();
         ctx.Render<MudPopoverProvider>();

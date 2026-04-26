@@ -17,7 +17,7 @@ namespace FormFlow.Backend.Endpoints
                     });
                 }
 
-                var question = repository.Questions.FindById(parsedId);
+                var question = repository.FindById(parsedId);
 
                 if (question is null)
                 {
@@ -32,6 +32,7 @@ namespace FormFlow.Backend.Endpoints
             .Produces(StatusCodes.Status404NotFound);
 
             app.MapGet("/api/questions", (IQuestionRepository repository) =>
+<<<<<<< HEAD
             {
                 return Results.Json(repository.Questions.FindAll().ToList());
             })
@@ -39,7 +40,28 @@ namespace FormFlow.Backend.Endpoints
             .Produces<List<QuestionDefinition>>(StatusCodes.Status200OK);
 
             app.MapPost("/api/questions", async (QuestionDefinition question, IQuestionRepository repository, QuestionValidator validator) =>
+=======
+>>>>>>> main
             {
+                return Results.Json(repository.FindAll().ToList());
+            })
+            .WithName("GetAllQuestions")
+            .Produces<List<QuestionDefinition>>(StatusCodes.Status200OK);
+
+            app.MapPost("/api/questions", async (NewQuestion newQuestion, IQuestionRepository repository, QuestionValidator validator) =>
+            {
+                var question = new QuestionDefinition
+                {
+                    Id = Guid.NewGuid(),
+                    Key = newQuestion.Key,
+                    Label = newQuestion.Label,
+                    Type = newQuestion.Type,
+                    Required = newQuestion.Required,
+                    Placeholder = newQuestion.Placeholder,
+                    DefaultValue = newQuestion.DefaultValue,
+                    HelpText = newQuestion.HelpText,
+                    Options = newQuestion.Options
+                };
                 var validationResult = validator.Validate(question);
                 if (!validationResult.Valid)
                 {
@@ -47,31 +69,16 @@ namespace FormFlow.Backend.Endpoints
                 }
 
                 // Check if key is unique
-                var existingQuestion = repository.Questions.FindOne(q => q.Key == question.Key);
+                var existingQuestion = repository.FindOne(q => q.Key == question.Key);
                 if (existingQuestion != null)
                 {
                     return Results.Conflict($"A question with key '{question.Key}' already exists");
                 }
 
-                // Ensure unique id
-                if (question.Id == Guid.Empty)
-                {
-                    question.Id = Guid.NewGuid();
-                }
-                else
-                {
-                    // Check if id is unique
-                    var existingById = repository.Questions.FindOne(q => q.Id == question.Id);
-                    if (existingById != null)
-                    {
-                        return Results.Conflict($"A question with id '{question.Id}' already exists");
-                    }
-                }
-
                 // Insert using repository
                 try
                 {
-                    repository.Questions.Insert(question);
+                    repository.Insert(question);
                     return Results.Created($"/api/questions/{question.Id}", question);
                 }
                 catch (ArgumentNullException)
@@ -87,8 +94,6 @@ namespace FormFlow.Backend.Endpoints
             .Produces<QuestionDefinition>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict);
-
-
         }
     }
 }
