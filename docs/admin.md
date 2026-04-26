@@ -257,3 +257,69 @@ This logic is enforced through the component’s internal state and MudBlazor fo
 
 ---
 
+## **3. Survey List Page**  
+**Route:** `/admin/surveys`  
+**Component:** `AdminSurveysList.razor`  
+**Purpose:** Displays all existing surveys and provides navigation to preview each one.
+
+**Overview**
+The Survey List Page allows administrators to view all surveys that have been created in the system. Each survey entry includes its title, description, and question count, along with a “Preview” action that navigates to the survey preview page.
+
+This page serves as the central hub for managing and reviewing surveys.
+
+---
+
+**Features**
+- Loads all surveys from the backend via `GET /api/surveys`
+- Displays survey metadata in a MudTable:
+  - Title  
+  - Description  
+  - Number of questions  
+- Provides a **Preview** button for each survey
+- Handles empty states when no surveys exist
+- Integrated into the Admin Layout and sidebar navigation
+
+---
+
+**Backend Integration**
+**API Endpoint**
+```
+GET /api/surveys
+```
+
+**Data Model**
+Each survey is returned as a `SurveyDefinition`:
+
+- `Id` (string / GUID)
+- `Title`
+- `Description`
+- `QuestionIds` (list of question IDs)
+
+---
+
+**UI Behavior**
+- On initialization, the component fetches all surveys.
+- If the API returns an empty list, the page displays:  
+  **“No surveys found.”**
+- Each row includes a **Preview** button:
+  - Navigates to `/admin/surveys/{id}/preview`
+  - Uses absolute navigation (`/admin/...`) to avoid relative path issues
+
+---
+
+**Navigation Flow**
+- From the sidebar: **Surveys → Survey List**
+- From the Question Bank: admins may create a survey, then return here to view it
+- From this page: clicking **Preview** opens the read‑only preview page
+
+---
+
+**Error Handling**
+- If the API request fails, the page displays a generic error message
+- The table does not render until data is loaded
+- Loading state is handled via MudBlazor progress indicators (if implemented)
+
+---
+
+
+

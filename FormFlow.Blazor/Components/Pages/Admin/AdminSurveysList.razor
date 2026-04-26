@@ -1,0 +1,59 @@
+@page "/admin/surveys"
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Nav
+
+<MudPaper Class="pa-6" Elevation="2">
+
+    <MudText Typo="Typo.h4" Class="mb-4">Surveys</MudText>
+
+    @if (surveys is null)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (!surveys.Any())
+    {
+        <MudText>No surveys found.</MudText>
+    }
+    else
+    {
+        <MudTable Items="@surveys" Hover="true" Dense="true">
+            <HeaderContent>
+                <MudTh>Title</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh>Questions</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd>@context.Title</MudTd>
+                <MudTd>@context.Description</MudTd>
+                <MudTd>@context.QuestionIds.Count</MudTd>
+
+                <MudTd>
+                    <MudButton Variant="Variant.Filled"
+                            Color="Color.Primary"
+                            OnClick="@(_ => PreviewSurvey(context.Id))">
+                        Preview 
+                    </MudButton>
+                </MudTd>
+            </RowTemplate>
+    
+        </MudTable>
+    }
+</MudPaper>  
+
+@code {
+    private List<SurveyDefinition>? surveys;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("AdminApi");
+        surveys = await client.GetFromJsonAsync<List<SurveyDefinition>>("api/surveys");
+    }
+
+    private async Task PreviewSurvey(Guid surveyId)
+    {
+        Nav.NavigateTo($"/admin/surveys/{surveyId}/preview");
+    }
+}
+    
