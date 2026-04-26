@@ -1,8 +1,13 @@
 name: CI
 
-on:
-  pull_request:
+on: 
   push:
+    branches:
+      - "**"
+
+    pull_request:
+      branches:
+      - "**"
 
 jobs:
   build-and-test:
@@ -28,7 +33,7 @@ jobs:
       - name: Install Node dependencies
         working-directory: ./FormFlow.React.Tests
         run: npm install
-        
+
       - name: Run React tests
         working-directory: ./FormFlow.React.Tests
         run: npm test
