@@ -51,9 +51,9 @@
         surveys = await client.GetFromJsonAsync<List<SurveyDefinition>>("api/surveys");
     }
 
-    private async Task PreviewSurvey(Guid surveyId)
+    private async Task PreviewSurvey(Guid Id)
     {
-        Nav.NavigateTo($"/admin/surveys/{surveyId}/preview");
+        Nav.NavigateTo($"/admin/surveys/{Id}/preview");
     }
 }
     
