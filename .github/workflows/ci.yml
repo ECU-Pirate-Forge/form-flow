@@ -24,6 +24,11 @@ jobs:
         run: npm install
 
       # --- Run Tests ---
+
+      - name: Install Node dependencies
+        working-directory: ./FormFlow.React.Tests
+        run: npm install
+        
       - name: Run React tests
         working-directory: ./FormFlow.React.Tests
         run: npm test
