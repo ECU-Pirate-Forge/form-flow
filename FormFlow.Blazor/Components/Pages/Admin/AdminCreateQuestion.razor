@@ -137,6 +137,7 @@
         new(StringComparer.OrdinalIgnoreCase) { "dropdown", "radio", "checkbox", "multiselect" };
 
     private bool IsOptionBasedType => OptionBasedTypes.Contains(newQuestion.Type);
+    
 
     private bool CanCreate =>
         _isValid &&
@@ -173,7 +174,8 @@
         {
             _successMessage = $"Question '{newQuestion.Label}' created successfully.";
             newQuestion = new();
-            await _form.ResetAsync();
+            _isValid = false;
+            _form = null;
         }
         else
         {
