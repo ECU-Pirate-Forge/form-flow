@@ -438,3 +438,52 @@ This JSON produces a number input with:
   "helpText": "Choose one option."
 }
 ```
+# Services
+### Whats the point?
+We utilize services to seperate concerns. Services act as a "middleman" between the backend and blazor. A pages interest lies in UI user interaction e.g. `Home.razor`, while a service focuses on data retrival and logic.
+## QuestionService.cs
+By using `QuestionService`,`Home.razor` page doesn't even know it's talking to an HTTP endpoint; it just asks for a list of questions, making the code much easier to test and read.
+
+### Architecture
+`QuestionService` is registered with `builder.Services.AddHttpClient<QuestionService>()` to create a typed client.A typed client allows for:
+- Encapsulation: All logic for communicating with the "Questions" part of our API is in one file.
+
+- Type Safety: We don't have to deal with raw strings or manual JSON parsing in our UI components.
+
+- Maintenance: If the API URL changes from `/api/questions` to `/api/v2/questions`, we change it in one service file instead of multiple different `.razor` pages.
+---
+ 
+## Methods
+ 
+### `GetAllQuestionsAsync`
+ 
+Calls `GET /api/questions` and returns all questions in the database.
+ 
+```csharp
+public async Task<List<QuestionDefinition>?> GetAllQuestionsAsync()
+```
+ 
+**Returns:** A list of `QuestionDefinition` objects, or an empty list on failure.
+ 
+**On error:** Logs the status code and response body to the console and returns an empty list rather than throwing, so the UI degrades gracefully.
+ 
+**Used by:** `Home.razor` to populate the questions table on the home screen.
+ 
+---
+### `CreateQuestionAsync`
+ 
+ Calls `POST /api/questions` and passes along the new question to post endpoint
+ 
+```csharp
+public async Task<(bool Success, string? Error)> CreateQuestionAsync(NewQuestion newQuestion)
+```
+ 
+**Parameters:** `newQuestion` — the form model captured from `AdminCreateQuestion.razor`.
+ 
+**Returns:** A tuple:
+- `Success: true, Error: null` on `201 Created`
+- `Success: false, Error: "<status code>: <response body>"` on any non-success status
+**Known errors the backend may return:**
+- `400 Bad Request` — validation failed (missing fields, bad data)
+- `409 Conflict` — a question with that `Key` already exists
+**Used by:** `AdminCreateQuestion.razor` to submit the create form.

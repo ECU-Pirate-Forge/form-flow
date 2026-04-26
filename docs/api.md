@@ -30,13 +30,14 @@ This endpoint is used by frontend clients to load and render real question data.
 
 ## POST `/api/questions`
 
-Creates a new question and uses `QuestionRepository.cs` to insert into `LiteDb`
+Maps `NewQuestion` to `QuestionDefinition` and uses `QuestionRepository.cs` to insert into `LiteDb`
 
 ## GET `/api/questions`
 
-This endpoint uses `QuestionRepository.cs` to find all the questions in the `questions` collection.
+This endpoint uses `QuestionRepository.cs` to find all the questions in the `questions` collection. 
 It then produces a list of all the questions in the database.
--------------------------------------------------------------
+
+---
 
 # **Survey Endpoints**
 
@@ -124,6 +125,26 @@ Returned when no survey exists with the given ID.
   "error": "Survey not found."
 }
 ```
+
+### **Postman Instructions**
+
+1. Open Postman
+2. Create a new **GET** request
+3. Enter the URL:
+   ```
+    https://localhost:7209/api/questions/b5d8f0e1-1c5b-4f7b-8cfa-6cab5f7fd001
+   ```
+4. Set header:
+   ```
+   Accept: application/json
+   ```
+5. Click **Send**
+
+**Expected Response:**
+
+* Status: `200 OK`
+* Body: JSON object matching `QuestionDefinition`
+* Content-Type: `application/json; charset=utf-8`
 
 ---
 

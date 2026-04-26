@@ -1,8 +1,9 @@
 ﻿@page "/"
-@inject HttpClient Http
+@inject IQuestionService QuestionService
 @inject NavigationManager Nav
 @using System.Text.Json
 @using FormFlow.Blazor.Components.QuestionTypes
+@using FormFlow.Blazor.Services
 
 <h3>Dynamic Question</h3>
 
@@ -23,19 +24,21 @@ else
 }
 
 @code {
-    private List<QuestionDefinition>? questions;
+    private List<QuestionDefinition>? questions = new();
+
 
     protected override async Task OnInitializedAsync()
     {
-        questions = await LoadQuestionsAsync("multiple-sample-questions.json");
+        @* questions = await LoadQuestionsAsync("multiple-sample-questions.json"); *@
+        questions = await QuestionService.GetAllQuestionsAsync();
     }
 
-    private async Task<List<QuestionDefinition>?> LoadQuestionsAsync(string path)
+    @* private async Task<List<QuestionDefinition>?> LoadQuestionsAsync(string path)
     {
         var json = await Http.GetStringAsync($"{Nav.BaseUri}{path}");
 
         return JsonSerializer.Deserialize<List<QuestionDefinition>>(json, 
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-    }
+    } *@
 }
 
