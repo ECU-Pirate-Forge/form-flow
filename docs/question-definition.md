@@ -120,6 +120,79 @@ Unit tests verify that:
 
 ---
 
+## **Options Example JSON**
+
+The following examples show valid JSON structures for option-based question types. Options are required for `dropdown`, `radio`, `checkbox`, and `multiselect` types.
+
+### Dropdown
+
+```json
+{
+  "id": "a1b2c3d4-0000-0000-0000-000000000001",
+  "key": "study_level",
+  "label": "Study Level",
+  "type": "dropdown",
+  "required": true,
+  "options": [
+    { "label": "Undergraduate", "value": "undergrad" },
+    { "label": "Postgraduate", "value": "postgrad" },
+    { "label": "PhD", "value": "phd" }
+  ]
+}
+```
+
+### Radio
+
+```json
+{
+  "id": "a1b2c3d4-0000-0000-0000-000000000002",
+  "key": "contact_method",
+  "label": "Preferred Contact Method",
+  "type": "radio",
+  "required": true,
+  "options": [
+    { "label": "Email", "value": "email" },
+    { "label": "Phone", "value": "phone" },
+    { "label": "Post", "value": "post" }
+  ]
+}
+```
+
+### Multiselect
+
+```json
+{
+  "id": "a1b2c3d4-0000-0000-0000-000000000003",
+  "key": "skills",
+  "label": "Skills",
+  "type": "multiselect",
+  "required": false,
+  "options": [
+    { "label": "C#", "value": "csharp" },
+    { "label": "JavaScript", "value": "javascript" },
+    { "label": "Python", "value": "python" },
+    { "label": "SQL", "value": "sql" }
+  ]
+}
+```
+
+### Checkbox
+
+```json
+{
+  "id": "a1b2c3d4-0000-0000-0000-000000000004",
+  "key": "subscribe_newsletter",
+  "label": "Subscribe to newsletter",
+  "type": "checkbox",
+  "required": false,
+  "options": [
+    { "label": "Yes, subscribe me", "value": "yes" }
+  ]
+}
+```
+
+---
+
 ## **Usage in the System**
 
 The `QuestionDefinition` model is used by:

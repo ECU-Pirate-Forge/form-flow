@@ -4,9 +4,10 @@
     "description": "Schema for defining a survey, which consists of multiple questions.",
     "type": "object",
     "properties": {
-        "surveyId": {
+        "id": {
             "type": "string",
-            "description": "Unique identifier for the survey."
+            "description": "Unique identifier for the survey.",
+            "format": "uuid"
         },
         "title": {
             "type": "string",
@@ -18,9 +19,10 @@
         },
         "questions": {
             "type": "array",
-            "description": "List of questions in the survey.",
+            "description": "List of question Ids included in the survey.",
             "items": {
-                "$ref": "question-definition.schema.json"
+                "type": "string",
+                "format": "uuid"
             },
             "minItems": 1
             
@@ -35,5 +37,5 @@
             "description": "Timestamp when the survey was created."
         }
     },
-    "required": ["surveyId", "title", "questions", "description","createdAt"]
+    "required": ["id", "title", "questions", "description","createdAt"]
 }
