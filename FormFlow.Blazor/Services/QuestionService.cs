@@ -25,7 +25,6 @@ namespace FormFlow.Blazor.Services
 
         public async Task<(bool Success, string? Error)> CreateQuestionAsync(NewQuestion newQuestion)
         {
-            
             try
             {
                 var response = await httpClient.PostAsJsonAsync("/api/questions", newQuestion);

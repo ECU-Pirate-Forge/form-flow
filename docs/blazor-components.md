@@ -472,7 +472,7 @@ public async Task<List<QuestionDefinition>?> GetAllQuestionsAsync()
 ---
 ### `CreateQuestionAsync`
  
-Maps a `NewQuestion` form model to a `QuestionDefinition` and sends it to `POST /api/questions`.
+ Calls `POST /api/questions` and passes along the new question to post endpoint
  
 ```csharp
 public async Task<(bool Success, string? Error)> CreateQuestionAsync(NewQuestion newQuestion)
