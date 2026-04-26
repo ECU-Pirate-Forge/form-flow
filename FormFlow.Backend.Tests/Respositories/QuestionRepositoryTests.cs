@@ -14,21 +14,6 @@ namespace FormFlow.Tests
     {
         private ILiteDatabase CreateInMemoryDatabase() => new LiteDatabase("Filename=:memory:");
 
-
-        [Fact]
-        public void Repository_Intializes_Questions_Collection()
-        {
-            // Arrange
-            using var db = CreateInMemoryDatabase();
-
-            // Act
-            var repository = new QuestionRepository(db);
-
-            // Assert
-            repository.Questions.Should().NotBeNull();
-            repository.Questions.Should().Be("questions");
-
-        }
         [Fact]
         public void Repository_Creates_Unique_Id_Index()
         {
@@ -39,7 +24,7 @@ namespace FormFlow.Tests
             var question = BuildQuestion();
             repository.Insert(question);
 
-            Action act = () => repository.Questions.Insert(question);
+            Action act = () => repository.Insert(question);
 
             act.Should().Throw<LiteException>();
 
@@ -54,7 +39,7 @@ namespace FormFlow.Tests
             var question = BuildQuestion(key: "SuperSecretKey", label: "Super Secret Label");
             repository.Insert(question);
 
-            var retrieved = repository.Questions.FindById(question.Id);
+            var retrieved = repository.FindById(question.Id);
             retrieved.Should().NotBeNull();
             retrieved!.Key.Should().Be("SuperSecretKey");
             retrieved.Label.Should().Be("Super Secret Label");
@@ -90,7 +75,7 @@ namespace FormFlow.Tests
 
             repository.Insert(question);
 
-            var retrieved = repository.Questions.FindById(question.Id);
+            var retrieved = repository.FindById(question.Id);
             retrieved!.Options.Should().HaveCount(2);
             retrieved.Options[0].Value.Should().Be("option1");
             retrieved.Options[1].Value.Should().Be("option2");
@@ -192,8 +177,8 @@ namespace FormFlow.Tests
             string type = "text") => new()
             {
                 Id = Guid.NewGuid(),
-                Key = key,
-                Label = label,
+                Key = key!,
+                Label = label!,
                 Type = type,
                 Required = true
 
