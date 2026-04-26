@@ -66,6 +66,12 @@
         @if (IsOptionBasedType)
         {
             <MudText Typo="Typo.subtitle1" Class="mb-2">Options</MudText>
+            @if (!AreOptionsValid)
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-2">
+                    Each option must have a non-empty label and value.
+                </MudAlert>
+            }
 
             @for (int i = 0; i < newQuestion.Options.Count; i++)
             {
@@ -137,10 +143,16 @@
         new(StringComparer.OrdinalIgnoreCase) { "dropdown", "radio", "checkbox", "multiselect" };
 
     private bool IsOptionBasedType => OptionBasedTypes.Contains(newQuestion.Type);
-    
+    private bool AreOptionsValid =>
+        !IsOptionBasedType ||
+        (newQuestion.Options.Count > 0 &&
+         newQuestion.Options.All(o => 
+            !string.IsNullOrWhiteSpace(o.Label) && 
+            !string.IsNullOrWhiteSpace(o.Value)));
 
     private bool CanCreate =>
         _isValid &&
+        AreOptionsValid &&
         !string.IsNullOrWhiteSpace(newQuestion.Label) &&
         !string.IsNullOrWhiteSpace(newQuestion.Key) &&
         !string.IsNullOrWhiteSpace(newQuestion.Type);
