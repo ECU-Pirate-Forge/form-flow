@@ -1,44 +1,33 @@
 ﻿@page "/"
-@inject IQuestionService QuestionService
-@inject NavigationManager Nav
-@using System.Text.Json
-@using FormFlow.Blazor.Components.QuestionTypes
-@using FormFlow.Blazor.Services
 
-<h3>Dynamic Question</h3>
+<MudPaper Class="pa-6 mx-auto mt-10" MaxWidth="500px" Elevation="3">
+    <MudText Typo="Typo.h4" Class="mb-4" Align="Align.Center">
+        Welcome to FormFlow
+    </MudText>
 
-@if (questions is not null)
-{
-    <p>Loaded @questions.Count questions.</p>
+    <MudText Typo="Typo.subtitle1" Class="mb-6" Align="Align.Center">
+        Choose your portal
+    </MudText>
 
-    <MudStack Spacing="2">
-        @foreach (var question in questions)
-        {
-            <QuestionRenderer @key="question.Id" Question="question" />
-        }
+    <MudStack Spacing="3" AlignItems="AlignItems.Center">
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Href="/admin/surveys"
+                   StartIcon="@Icons.Material.Filled.AdminPanelSettings"
+                   Style="width: 250px;">
+            Admin Portal
+        </MudButton>
+
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Secondary"
+                   Disabled="true"
+                   StartIcon="@Icons.Material.Filled.Person"
+                   Style="width: 250px;">
+            User Portal (Coming Soon)
+        </MudButton>
+
     </MudStack>
-}
-else
-{
-    <p>Loading...</p>
-}
+</MudPaper>
 
-@code {
-    private List<QuestionDefinition>? questions = new();
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        @* questions = await LoadQuestionsAsync("multiple-sample-questions.json"); *@
-        questions = await QuestionService.GetAllQuestionsAsync();
-    }
-
-    @* private async Task<List<QuestionDefinition>?> LoadQuestionsAsync(string path)
-    {
-        var json = await Http.GetStringAsync($"{Nav.BaseUri}{path}");
-
-        return JsonSerializer.Deserialize<List<QuestionDefinition>>(json, 
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-    } *@
-}
 

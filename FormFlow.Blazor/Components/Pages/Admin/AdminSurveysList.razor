@@ -4,7 +4,17 @@
 
 <MudPaper Class="pa-6" Elevation="2">
 
-    <MudText Typo="Typo.h4" Class="mb-4">Surveys</MudText>
+    <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mb-4">
+
+        <MudText Typo="Typo.h5" Class="mb-4">Survey Management</MudText>
+
+        <MudButton Variant="Variant.Filled"
+                Color="Color.Primary"
+                Href="/admin/surveys/create">
+            + Create Survey
+        </MudButton>
+
+    </MudStack>
 
     @if (surveys is null)
     {
@@ -16,7 +26,14 @@
     }
     else
     {
-        <MudTable Items="@surveys" Hover="true" Dense="true">
+        <MudTable Items="@surveys" 
+                Hover="true" 
+                Dense="true"
+                Bordered="true"
+                Elevation="3">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Surveys</MudText>
+            </ToolBarContent>
             <HeaderContent>
                 <MudTh>Title</MudTh>
                 <MudTh>Description</MudTh>
@@ -30,13 +47,27 @@
                 <MudTd>@context.QuestionIds.Count</MudTd>
 
                 <MudTd>
-                    <MudButton Variant="Variant.Filled"
-                            Color="Color.Primary"
-                            OnClick="@(_ => PreviewSurvey(context.Id))">
-                        Preview 
-                    </MudButton>
+                    <MudStack Row="true" Spacing="2" Class="mb-4" >
+
+                        <MudButton Variant="Variant.Filled"
+                                Color="Color.Primary"
+                                OnClick="@(_ => { })">
+                            Edit        
+                        </MudButton>
+
+                        <MudButton Variant="Variant.Filled"
+                                Color="Color.Primary"
+                                OnClick="@(_ => PreviewSurvey(context.Id))">
+                            Preview 
+                        </MudButton>
+
+                    </MudStack>
                 </MudTd>
             </RowTemplate>
+
+            <PagerContent>
+                <MudTablePager RowsPerPageString="10" />
+            </PagerContent>
     
         </MudTable>
     }

@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Nav
 @using MudBlazor
+
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -7,7 +9,13 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        @if (Nav.Uri.Contains("/admin"))
+        {
+            <AdminNavMenu />
+        }
+        else{
+            <NavMenu />
+        }
     </div>
 
     <main>
