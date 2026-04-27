@@ -120,28 +120,33 @@ Implemented in the Blazor admin module.
 - Other fields are captured if provided, but they are not required for form submission.
 
 **Current Limitation:**
+
 - No client-side validation beyond the three required fields. Invalid data (e.g. bad format, empty options on an option-based type) is caught by the backend and surfaced as an error alert.
 - No draft saving. The form does not persist if you navigate away before submitting.
 - No network error handling. If the backend is unreachable the button will lock. Refresh the page to recover.
+
 ---
+
 **How to Create a Question:**
- 
+
 This guide covers how an admin creates a new question using the admin form.
- 
+
 **Prerequisites**
- 
+
 Both the backend and Blazor front end must be running locally before using the admin form.
 
 ---
- 
+
 **Steps**
- 
+
 1. Navigate to the admin area and click **Create Question**.
 2. Fill in the required fields — **Label**, **Key**, and **Type**. The Save button stays disabled until all three are provided.
 3. Fill in any optional fields — Placeholder, Default Value, Help Text, and the Required toggle.
 4. If the selected Type is `dropdown`, `radio`, `checkbox`, or `multiselect`, an **Options** section appears. Use **Add Option** to add label/value pairs. Use the trash icon to remove one.
 5. Click **Create Question** to submit.
+
 ---
+
 **After Submitting**
 
 **On success:**
@@ -169,7 +174,7 @@ Both the backend and Blazor front end must be running locally before using the a
 **Purpose:**
 Provides an interface for admins to create a new survey by entering metadata and selecting questions from the question bank.
 
-**Status:**  
+**Status:**
 Implemented in the Blazor admin module.
 
 Absolutely, Maysun — I can fold **AdminCreateSurvey** into your Admin Module Documentation so it sits naturally alongside the other admin pages. I’ll keep the structure, tone, and formatting consistent with the rest of your document, and I’ll make sure it reflects the actual behavior of your component (question selection, validation, save‑button logic, etc.).
@@ -183,14 +188,15 @@ Here is the updated documentation section with **AdminCreateSurvey** added clean
 **Survey Metadata Fields**
 The top section of the page contains a form for entering basic survey information:
 
-1. **Survey Title**  
-   - Required  
-   - Displayed to end users as the survey’s main heading  
-   - Validation: Must not be empty
+1. **Survey Title**
 
-2. **Description**  
-   - Required  
-   - Provides context or instructions for the survey  
+   - Required
+   - Displayed to end users as the survey’s main heading
+   - Validation: Must not be empty
+2. **Description**
+
+   - Required
+   - Provides context or instructions for the survey
    - Validation: Must not be empty
 
 Validation is handled through MudBlazor’s `MudForm` and updates the internal form state.
@@ -202,8 +208,8 @@ Below the metadata fields, the page displays a scrollable list of all available 
 
 Each question entry shows:
 
-- **Label** (e.g., “Age”, “Favorite Color”)  
-- **Type** (e.g., text, number, dropdown)  
+- **Label** (e.g., “Age”, “Favorite Color”)
+- **Type** (e.g., text, number, dropdown)
 - An **Add** button
 
 **Add Button Behavior:**
@@ -219,14 +225,14 @@ A separate list shows all questions chosen for the survey.
 
 Each entry includes:
 
-- The question label  
-- A **Remove** button  
+- The question label
+- A **Remove** button
 
 **Remove Button Behavior:**
 
-- Removes the question from the selected list  
-- Re‑enables the “Add” button in the question bank  
-- Keeps the UI in sync with the internal survey state  
+- Removes the question from the selected list
+- Re‑enables the “Add” button in the question bank
+- Keeps the UI in sync with the internal survey state
 
 ---
 
@@ -243,6 +249,7 @@ The button becomes enabled only when:
 This logic is enforced through the component’s internal state and MudBlazor form validation.
 
 **Current Behavior**
+
 - The button is disabled until all requirements are met.
 - The save action currently logs the survey model and navigates back to `/admin/surveys`.
 - Backend persistence integration is planned for a future update.
@@ -250,17 +257,19 @@ This logic is enforced through the component’s internal state and MudBlazor fo
 ---
 
 **Future Enhancements**
-- Persist surveys to backend storage  
-- Add survey editing functionality  
-- Add preview mode  
-- Add question ordering (drag‑and‑drop)  
-- Add survey activation/deactivation controls  
+
+- Persist surveys to backend storage
+- Add survey editing functionality
+- Add preview mode
+- Add question ordering (drag‑and‑drop)
+- Add survey activation/deactivation controls
 
 ---
 
-## **3. Survey List Page**  
-**Route:** `/admin/surveys`  
-**Component:** `AdminSurveysList.razor`  
+## **3. Survey List Page**
+
+**Route:** `/admin/surveys`
+**Component:** `AdminSurveysList.razor`
 **Purpose:** Displays all existing surveys and provides navigation to preview each one.
 
 **Overview**
@@ -271,11 +280,12 @@ This page serves as the central hub for managing and reviewing surveys.
 ---
 
 **Features**
+
 - Loads all surveys from the backend via `GET /api/surveys`
 - Displays survey metadata in a MudTable:
-  - Title  
-  - Description  
-  - Number of questions  
+  - Title
+  - Description
+  - Number of questions
 - Provides a **Preview** button for each survey
 - Handles empty states when no surveys exist
 - Integrated into the Admin Layout and sidebar navigation
@@ -284,6 +294,7 @@ This page serves as the central hub for managing and reviewing surveys.
 
 **Backend Integration**
 **API Endpoint**
+
 ```
 GET /api/surveys
 ```
@@ -299,9 +310,9 @@ Each survey is returned as a `SurveyDefinition`:
 ---
 
 **UI Behavior**
+
 - On initialization, the component fetches all surveys.
-- If the API returns an empty list, the page displays:  
-  **“No surveys found.”**
+- If the API returns an empty list, the page displays:**“No surveys found.”**
 - Each row includes a **Preview** button:
   - Navigates to `/admin/surveys/{id}/preview`
   - Uses absolute navigation (`/admin/...`) to avoid relative path issues
@@ -309,6 +320,7 @@ Each survey is returned as a `SurveyDefinition`:
 ---
 
 **Navigation Flow**
+
 - From the sidebar: **Surveys → Survey List**
 - From the Question Bank: admins may create a survey, then return here to view it
 - From this page: clicking **Preview** opens the read‑only preview page
@@ -316,11 +328,107 @@ Each survey is returned as a `SurveyDefinition`:
 ---
 
 **Error Handling**
+
 - If the API request fails, the page displays a generic error message
 - The table does not render until data is loaded
 - Loading state is handled via MudBlazor progress indicators (if implemented)
 
 ---
 
+## **4. Survey Preview Page**  
+**Route:** `/admin/surveys/{id}/preview`  
+**Component:** `AdminSurveyPreview.razor`  
+**Purpose:** Allows administrators to view a fully rendered, read‑only preview of a survey before publishing or sharing it.
+
+---
+
+**Overview**
+The Survey Preview Page displays a complete, user‑facing rendering of a survey.  
+It loads the survey definition and all associated questions, then renders each question using the shared `QuestionRenderer` component.
+
+This page is used by admins to verify:
+
+- Survey title and metadata  
+- Question order  
+- Question text and configuration  
+- Conditional visibility (if implemented)  
+- Rendering consistency with the public survey experience  
+
+---
+
+**Features**
+- Loads a single survey definition via:  
+  `GET /api/surveys/{id}`
+- Loads each question referenced by the survey via:  
+  `GET /api/questions/{questionId}`
+- Displays:
+  - Survey title  
+  - All questions in the correct order  
+  - Each question rendered through `QuestionRenderer`
+- Shows a loading spinner while data is being fetched
+- Gracefully handles missing or invalid survey IDs
+- Read‑only preview (no editing or answering)
+
+---
+
+**Backend Integration**
+
+**API Endpoints**
+```
+GET /api/surveys/{id}
+GET /api/questions/{questionId}
+```
+
+**Data Models**
+**SurveyDefinition**
+- `Id` (Guid)  
+- `Title`  
+- `Description`  
+- `QuestionIds` (List<Guid>)  
+- `CreatedAt`
+
+**QuestionDefinition**
+- `Id`  
+- `Label`  
+- `Key`  
+- `Type`  
+- `Required`  
+- `Options` (if applicable)  
+- `Placeholder`  
+- `HelpText`  
+
+---
+
+**UI Behavior**
+- On initialization:
+  - Fetches the survey definition
+  - Fetches each referenced question
+- While loading:
+  - Displays a `MudProgressCircular` spinner
+- After loading:
+  - Renders the survey title (`MudText Typo="h4"`)
+  - Renders each question using `<QuestionRenderer />`
+- If the survey is not found:
+  - Spinner remains visible (or can be replaced with an error message if desired)
+
+---
+
+**Navigation Flow**
+- From Survey List Page → **Preview**
+- From Preview Page → (optional future buttons)
+  - Back to Survey List
+  - Publish Survey
+  - Edit Survey
+
+---
+
+**Error Handling**
+- If the survey request returns 404:
+  - Page stays in loading state (current behavior)
+- If any question fails to load:
+  - That question is skipped
+- No UI crashes — the page always renders safely
+
+---
 
 
