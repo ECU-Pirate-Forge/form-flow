@@ -143,17 +143,18 @@ Both the backend and Blazor front end must be running locally before using the a
 5. Click **Create Question** to submit.
 ---
 **After Submitting**
- 
+
 **On success:**
-- A success alert appears confirming the question was created.
-- The form clears, ready for another entry.
+- A green success alert appears below the page title confirming the question was created, including the question label (e.g. "Question 'Age' created successfully.").
+- The form clears and is ready for another entry.
+- The alert can be manually dismissed using the close icon.
 
 **On failure:**
-- An error alert appears with the reason (e.g. duplicate key, validation error).
+- A red error alert appears below the page title with the reason returned from the server (e.g. "409: A question with key 'age' already exists").
 - The form stays filled so the admin can correct and resubmit.
----
+- The alert can be manually dismissed using the close icon.
 
-- Submit action currently validates client-side form state, but backend persistence integration is still pending.
+**Note:** Both alerts are mutually exclusive — a new submit attempt clears any previous alert before the next result appears.
 
 ---
 
