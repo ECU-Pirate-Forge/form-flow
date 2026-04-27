@@ -1,8 +1,9 @@
 @page "/admin/surveys/create"
 @using System.Reflection.Emit
 @using FormFlow.Blazor.Services
-@inject HttpClient Http
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager Nav
+@inject ISnackbar Snackbar
 
 @inject IQuestionService QuestionService
 
@@ -158,6 +159,23 @@
         await _form.ValidateAsync();
 
         if (!CanSave)
+        {
+            Snackbar.Add("Please complete all required fields before saving.", Severity.Warning);
             return;
+        }
+
+        var client = HttpClientFactory.CreateClient("AdminApi");
+
+        var response = await client.PostAsJsonAsync("api/surveys", newSurvey);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Survey created successfully!", Severity.Success);
+            Nav.NavigateTo("/admin/surveys");
+        }
+        else
+        {
+            Snackbar.Add("Failed to create survey. Please try again.", Severity.Error);
+        }
     }
 }
