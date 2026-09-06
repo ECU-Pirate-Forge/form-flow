@@ -6,37 +6,52 @@ using FormFlow.Blazor.Components.Pages.Admin;
 using FormFlow.Data.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using MudBlazor.Services;
 
 
 namespace FormFlow.Blazor.Tests.Admin
 {
-    public class AdminSurveysListTests : BunitContext
+    public class AdminSurveysListTests
     {
-        public AdminSurveysListTests()
+        private static BunitContext CreateContext()
         {
-            Services.AddMudServices();
+            var ctx = new BunitContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddMudServices();
+
+            ctx.JSInterop.SetupVoid("mudPopover.initialize", _ => true);
+            ctx.JSInterop.SetupVoid("mudElementRef.addOnBlurEvent", _ => true);
+            ctx.JSInterop.SetupVoid("mudKeyInterceptor.connect", _ => true);
 
             // Register the mock handler as a service
-            Services.AddSingleton<MockHttpMessageHandler>();
+            ctx.Services.AddSingleton<MockHttpMessageHandler>();
 
             // Register HttpClientFactory using the mock handler
-            Services.AddHttpClient("AdminApi", client =>
+            ctx.Services.AddHttpClient("AdminApi", client =>
             {
                 client.BaseAddress = new Uri("http://localhost/");
             })
             .AddHttpMessageHandler<MockHttpMessageHandler>();
 
+            ctx.Render<MudThemeProvider>();
+            ctx.Render<MudPopoverProvider>();
+            ctx.Render<MudDialogProvider>();
+            ctx.Render<MudSnackbarProvider>();
+
+            return ctx;
         }
 
         // -------------------------------------------------------
         // 1. Loads surveys and displays them
         // -------------------------------------------------------
         [Fact]
-        public void SurveyList_LoadsAndDisplaysSurveys()
+        public async Task SurveyList_LoadsAndDisplaysSurveys()
         {
+            await using var ctx = CreateContext();
+
             // Arrange
-            var mockHandler = Services.GetRequiredService<MockHttpMessageHandler>();
+            var mockHandler = ctx.Services.GetRequiredService<MockHttpMessageHandler>();
             mockHandler.SetJsonResponse("api/surveys", new List<SurveyDefinition>
             {
                 new() { Id = Guid.NewGuid(), Title = "Survey A", Description = "Desc A", QuestionIds = [ Guid.NewGuid() ], CreatedAt = DateTime.UtcNow },
@@ -44,34 +59,38 @@ namespace FormFlow.Blazor.Tests.Admin
             });
 
             // Act
-            var cut = Render<AdminSurveysList>();
+            var cut = ctx.Render<AdminSurveysList>();
 
             // Assert
-            cut.Markup.Contains("Survey A");
-            cut.Markup.Contains("Survey B");
+            cut.WaitForAssertion(() => Assert.Contains("Survey A", cut.Markup));
+            Assert.Contains("Survey B", cut.Markup);
         }
 
         // -------------------------------------------------------
         // 2. Shows empty state when no surveys exist
         // -------------------------------------------------------
         [Fact]
-        public void SurveyList_ShowsEmptyMessage_WhenNoSurveys()
+        public async Task SurveyList_ShowsEmptyMessage_WhenNoSurveys()
         {
-            var mockHandler = Services.GetRequiredService<MockHttpMessageHandler>();
+            await using var ctx = CreateContext();
+
+            var mockHandler = ctx.Services.GetRequiredService<MockHttpMessageHandler>();
             mockHandler.SetJsonResponse("api/surveys", new List<SurveyDefinition>());
 
-            var cut = Render<AdminSurveysList>();
+            var cut = ctx.Render<AdminSurveysList>();
 
-            cut.Markup.Contains("No surveys found");
+            cut.WaitForAssertion(() => Assert.Contains("No surveys found", cut.Markup));
         }
 
         // -------------------------------------------------------
         // 3. Preview button navigates correctly
         // -------------------------------------------------------
         [Fact]
-        public void SurveyList_PreviewButton_NavigatesToPreviewPage()
+        public async Task SurveyList_PreviewButton_NavigatesToPreviewPage()
         {
-            var mockHandler = Services.GetRequiredService<MockHttpMessageHandler>();
+            await using var ctx = CreateContext();
+
+            var mockHandler = ctx.Services.GetRequiredService<MockHttpMessageHandler>();
             var id = Guid.NewGuid();
 
             mockHandler.SetJsonResponse("api/surveys", new List<SurveyDefinition>
@@ -79,12 +98,15 @@ namespace FormFlow.Blazor.Tests.Admin
                 new() { Id = id, Title = "Survey A", Description = "Desc", QuestionIds = [], CreatedAt = DateTime.UtcNow }
             });
 
-            var nav = Services.GetRequiredService<NavigationManager>();
+            var nav = ctx.Services.GetRequiredService<NavigationManager>();
 
-            var cut = Render<AdminSurveysList>();
+            var cut = ctx.Render<AdminSurveysList>();
 
-            // Click the first Preview button
-            cut.Find("button").Click();
+            cut.WaitForAssertion(() => Assert.Contains("Survey A", cut.Markup));
+
+            // Click the Preview action for the rendered survey row.
+            var previewButton = cut.FindAll("button").First(b => b.TextContent.Contains("Preview", StringComparison.OrdinalIgnoreCase));
+            previewButton.Click();
 
             Assert.Equal($"admin/surveys/{id}/preview", nav.Uri.Replace(nav.BaseUri, ""));
         }

@@ -4,6 +4,24 @@
 
 <MudPaper Class="pa-6" MaxWidth="600px">
     <MudText Typo="Typo.h5" Class="mb-4">Create Question</MudText>
+    @if (_successMessage is not null)
+    {
+        <MudAlert Severity="Severity.Success" 
+            Class="mb-4" 
+            ShowCloseIcon="true" 
+            CloseIconClicked="()=> _successMessage = null">
+                @_successMessage
+        </MudAlert>
+    }
+    @if (_errorMessage is not null)
+    {
+        <MudAlert Severity="Severity.Error" 
+            Class="mb-4" 
+            ShowCloseIcon="true" 
+            CloseIconClicked="()=> _errorMessage = null">
+                @_errorMessage
+        </MudAlert>
+    }
 
     <MudForm @ref="_form" Model="@newQuestion" @bind-IsValid="_isValid">
         <MudTextField T="string"
@@ -66,6 +84,12 @@
         @if (IsOptionBasedType)
         {
             <MudText Typo="Typo.subtitle1" Class="mb-2">Options</MudText>
+            @if (!AreOptionsValid)
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-2">
+                    Each option must have a non-empty label and value.
+                </MudAlert>
+            }
 
             @for (int i = 0; i < newQuestion.Options.Count; i++)
             {
@@ -137,9 +161,16 @@
         new(StringComparer.OrdinalIgnoreCase) { "dropdown", "radio", "checkbox", "multiselect" };
 
     private bool IsOptionBasedType => OptionBasedTypes.Contains(newQuestion.Type);
+    private bool AreOptionsValid =>
+        !IsOptionBasedType ||
+        (newQuestion.Options.Count > 0 &&
+         newQuestion.Options.All(o => 
+            !string.IsNullOrWhiteSpace(o.Label) && 
+            !string.IsNullOrWhiteSpace(o.Value)));
 
     private bool CanCreate =>
         _isValid &&
+        AreOptionsValid &&
         !string.IsNullOrWhiteSpace(newQuestion.Label) &&
         !string.IsNullOrWhiteSpace(newQuestion.Key) &&
         !string.IsNullOrWhiteSpace(newQuestion.Type);
@@ -173,7 +204,8 @@
         {
             _successMessage = $"Question '{newQuestion.Label}' created successfully.";
             newQuestion = new();
-            await _form.ResetAsync();
+            _isValid = false;
+            _form = null;
         }
         else
         {

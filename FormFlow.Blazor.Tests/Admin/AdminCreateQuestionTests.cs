@@ -49,21 +49,6 @@ public class AdminCreateQuestionTests
         items.Should().HaveCount(7);
     }
 
-    // [Fact]
-    // public async Task Validation_Triggers_On_Submit()
-    // {
-    //     await using var ctx = CreateContext();
-    //     var cut = ctx.Render<AdminCreateQuestion>();
-
-    //     await InvokeCreateQuestionAsync(cut);
-
-    //     cut.WaitForAssertion(() =>
-    //     {
-    //         cut.Markup.Should().Contain("Label is required.");
-    //         cut.Markup.Should().Contain("Key is required.");
-    //         cut.Markup.Should().Contain("Type is required.");
-    //     });
-    // }
     [Fact]
     public async Task CreateButton_Is_Disabled_When_Form_Is_Empty()
     {
@@ -158,6 +143,67 @@ public class AdminCreateQuestionTests
 
         cut.WaitForAssertion(() =>
             cut.FindAll("[data-option-row]").Should().HaveCount(3));
+    }
+
+    [Fact]
+    public async Task SuccessAlert_Renders_When_SuccessMessage_IsSet()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await cut.InvokeAsync(() =>
+        {
+            typeof(AdminCreateQuestion)
+                .GetField("_successMessage", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(cut.Instance, "Question 'Age' created successfully.");
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
+
+        cut.WaitForAssertion(() =>
+            cut.FindComponents<MudAlert>().Should().ContainSingle(a =>
+                a.Instance.Severity == Severity.Success));
+    }
+    [Fact]
+    public async Task ErrorAlert_Renders_When_ErrorMessage_IsSet()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        await cut.InvokeAsync(() =>
+        {
+            typeof(AdminCreateQuestion)
+                .GetField("_errorMessage", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(cut.Instance, "409: A question with key 'age' already exists");
+            _stateHasChanged!.Invoke(cut.Instance, null);
+        });
+
+        cut.WaitForAssertion(() =>
+            cut.FindComponents<MudAlert>().Should().ContainSingle(a =>
+                a.Instance.Severity == Severity.Error));
+    }
+
+    [Fact]
+    public async Task SuccessAlert_DoesNotRender_When_SuccessMessage_IsNull()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        cut.WaitForAssertion(() =>
+            cut.FindComponents<MudAlert>()
+                .Where(a => a.Instance.Severity == Severity.Success)
+                .Should().BeEmpty());
+    }
+
+    [Fact]
+    public async Task ErrorAlert_DoesNotRender_When_ErrorMessage_IsNull()
+    {
+        await using var ctx = CreateContext();
+        var cut = ctx.Render<AdminCreateQuestion>();
+
+        cut.WaitForAssertion(() =>
+            cut.FindComponents<MudAlert>()
+                .Where(a => a.Instance.Severity == Severity.Error)
+                .Should().BeEmpty());
     }
 
     private static BunitContext CreateContext()

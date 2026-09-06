@@ -17,6 +17,9 @@ namespace FormFlow.Blazor.Tests.Admin
         public AdminSurveyPreviewTests()
         {
             Services.AddMudServices();
+            JSInterop.SetupVoid("mudElementRef.addOnBlurEvent", _ => true);
+            JSInterop.SetupVoid("mudElementRef.addOnFocusEvent", _ => true);
+            JSInterop.SetupVoid("mudElementRef.addKeyDownEvent", _ => true);
         }
 
         private readonly Guid surveyId = Guid.NewGuid();
